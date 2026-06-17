@@ -1,0 +1,111 @@
+// Lumen V1 data model.
+// This is the real backbone the single-file prototype can't have: persistent users,
+// payments, the spec structure, verified notes, and a generation cache.
+//
+//   datasource: Postgres (Neon / Supabase / RDS).  `npx prisma migrate dev` to apply.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---- accounts ------------------------------------------------------------
+model User {
+  id            String        @id @default(cuid())
+  email         String        @unique
+  name          String?
+  // account setup (was window.storage 'lumen-account' in the prototype)
+  curriculum    String?       // "GCSE" | "IGCSE" | "A-Level" | "IB Diploma" | "AP"
+  subjects      String[]      // chosen subject names
+  createdAt     DateTime      @default(now())
+  subscription  Subscription?
+  reviews       ReviewEvent[]
+}
+
+model Subscription {
+  id                 String   @id @default(cuid())
+  userId             String   @unique
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  stripeCustomerId   String?  @unique
+  stripeSubId        String?  @unique
+  plan               String   @default("free")   // "free" | "pro"
+  status             String   @default("inactive")
+  currentPeriodEnd   DateTime?
+}
+
+// ---- specification structure (the single source of truth) ----------------
+// Seeded from the notes-pipeline manifest.json. Drives the app's tree AND notes.
+model Subject {
+  id          String   @id @default(cuid())
+  curriculum  String
+  board       String
+  name        String
+  topics      Topic[]
+  @@unique([curriculum, board, name])
+}
+
+model Topic {
+  id           String      @id @default(cuid())
+  subjectId    String
+  subject      Subject     @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  name         String
+  specTopicRef String?
+  order        Int         @default(0)
+  objectives   Objective[]
+  @@unique([subjectId, name])
+}
+
+model Objective {
+  id        String  @id @default(cuid())
+  topicId   String
+  topic     Topic   @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  specRef   String
+  text      String
+  order     Int     @default(0)
+  note      Note?
+  @@unique([topicId, specRef])
+}
+
+// ---- content -------------------------------------------------------------
+enum NoteStatus {
+  DRAFT       // AI-generated + self-checked, not yet human-reviewed
+  FLAGGED     // critic flagged; needs attention
+  APPROVED    // human-signed-off (shows the gold "Verified" badge)
+}
+
+model Note {
+  id          String     @id @default(cuid())
+  objectiveId String     @unique
+  objective   Objective  @relation(fields: [objectiveId], references: [id], onDelete: Cascade)
+  body        Json       // { summary, sections[], keyTerms[], examTips[] }  (matches the app schema)
+  status      NoteStatus @default(DRAFT)
+  generatedBy String?
+  verifiedBy  String?    // critic model
+  check       Json?      // { verdict, flags[] }
+  reviewedBy  String?    // human reviewer (User id / email)
+  updatedAt   DateTime   @updatedAt
+}
+
+// Cache for the other generated tabs (flashcards / quiz / past papers / topic lists)
+// and for generated notes on subjects that have no manifest yet.
+model GenerationCache {
+  id         String   @id @default(cuid())
+  scopeKey   String   @unique   // e.g. "GCSE|Biology|Gas exchange|quiz"
+  kind       String              // "notes" | "cards" | "quiz" | "papers" | "topics"
+  payload    Json
+  createdAt  DateTime @default(now())
+}
+
+// ---- audit ---------------------------------------------------------------
+model ReviewEvent {
+  id        String   @id @default(cuid())
+  noteId    String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  action    String   // "approved" | "flagged" | "edited"
+  createdAt DateTime @default(now())
+}

@@ -1,0 +1,22 @@
+# --- secrets / env ---
+.env
+.env.local
+.env.*.local
+
+# --- node / Next.js (lumen-v1) ---
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+next-env.d.ts
+
+# --- python pipeline (lumen-notes-pipeline) ---
+__pycache__/
+*.pyc
+.venv/
+venv/
+build/
+
+# --- os / editor ---
+.DS_Store
+*.log

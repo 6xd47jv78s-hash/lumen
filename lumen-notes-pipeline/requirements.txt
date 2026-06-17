@@ -1,0 +1,4 @@
+# Core (real runs):
+anthropic>=0.40.0
+# Optional — only needed to ingest spec PDFs:
+pdfplumber>=0.11.0

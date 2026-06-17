@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Lumen — Study, illuminated</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --void:#060611;
+    --ink:#0b0b18;
+    --surface:rgba(255,255,255,0.04);
+    --surface-2:rgba(255,255,255,0.065);
+    --border:rgba(255,255,255,0.09);
+    --border-bright:rgba(255,255,255,0.16);
+    --text:#ECEDF5;
+    --muted:#9498B0;
+    --faint:#5b5f78;
+
+    /* the lumen — warm white-gold light source */
+    --core:#FFE6AE;
+    --gold:#FFC368;
+    --gold-deep:#FFB347;
+
+    /* prism spectrum = the five pillars */
+    --learn:#B69CFF;
+    --plan:#6E8BFF;
+    --analyse:#45D6E6;
+    --adapt:#43E0A6;
+    --predict:#FFC368;
+
+    --maxw:1180px;
+    --ease:cubic-bezier(0.16,1,0.3,1);
+    --serif:'Fraunces',Georgia,'Times New Roman',serif;
+    --sans:'Inter',system-ui,-apple-system,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,'SFMono-Regular',monospace;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+  body{
+    background:var(--void);
+    color:var(--text);
+    font-family:var(--sans);
+    line-height:1.6;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+    position:relative;
+    min-height:100vh;
+  }
+
+  /* ---------- ambient layers ---------- */
+  #photons{position:fixed;inset:0;z-index:0;pointer-events:none}
+  .blob{position:fixed;border-radius:50%;filter:blur(90px);z-index:0;pointer-events:none;opacity:.5;will-change:transform}
+  .blob.b1{width:46vw;height:46vw;left:-12vw;top:-8vw;background:radial-gradient(circle,rgba(110,139,255,.30),transparent 68%);animation:drift1 26s var(--ease) infinite alternate}
+  .blob.b2{width:42vw;height:42vw;right:-14vw;top:34vh;background:radial-gradient(circle,rgba(255,179,71,.20),transparent 66%);animation:drift2 32s var(--ease) infinite alternate}
+  .blob.b3{width:38vw;height:38vw;left:18vw;bottom:-16vw;background:radial-gradient(circle,rgba(67,224,166,.16),transparent 66%);animation:drift3 30s var(--ease) infinite alternate}
+  @keyframes drift1{to{transform:translate(8vw,6vh)}}
+  @keyframes drift2{to{transform:translate(-7vw,-5vh)}}
+  @keyframes drift3{to{transform:translate(6vw,-7vh)}}
+
+  .cursor-glow{
+    position:fixed;top:0;left:0;width:520px;height:520px;border-radius:50%;
+    margin:-260px 0 0 -260px;z-index:1;pointer-events:none;opacity:0;
+    background:radial-gradient(circle,rgba(255,221,150,.10),rgba(255,221,150,.04) 38%,transparent 64%);
+    transition:opacity .5s ease;mix-blend-mode:screen;will-change:transform;
+  }
+
+  main,nav,footer{position:relative;z-index:2}
+
+  /* ---------- nav ---------- */
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:50;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px clamp(20px,5vw,48px);
+    transition:background .4s ease,border-color .4s ease,padding .4s ease;
+    border-bottom:1px solid transparent;
+  }
+  nav.scrolled{background:rgba(6,6,17,.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:12px clamp(20px,5vw,48px)}
+  .brand{display:flex;align-items:center;gap:11px;text-decoration:none;color:var(--text)}
+  .monogram{
+    width:30px;height:30px;border-radius:8px;display:grid;place-items:center;
+    font-family:var(--serif);font-weight:500;font-size:17px;color:#2a1e05;
+    background:radial-gradient(circle at 35% 30%,var(--core),var(--gold-deep));
+    box-shadow:0 0 16px rgba(255,196,104,.55),0 0 38px rgba(255,196,104,.25);
+  }
+  .brand-name{font-family:var(--serif);font-size:21px;font-weight:500;letter-spacing:.01em}
+  .nav-links{display:flex;align-items:center;gap:30px}
+  .nav-links a{color:var(--muted);text-decoration:none;font-size:14.5px;transition:color .25s ease}
+  .nav-links a:hover{color:var(--text)}
+  .nav-cta{
+    font-family:var(--sans);font-size:14px;font-weight:500;color:#2a1e05;cursor:pointer;
+    padding:9px 18px;border-radius:999px;border:none;text-decoration:none;
+    background:linear-gradient(180deg,var(--core),var(--gold-deep));
+    box-shadow:0 0 18px rgba(255,196,104,.4);transition:transform .25s var(--ease),box-shadow .25s ease;
+  }
+  .nav-cta:hover{transform:translateY(-1px);box-shadow:0 0 26px rgba(255,196,104,.6)}
+  .nav-toggle{display:none}
+
+  /* ---------- shared ---------- */
+  .section{padding:clamp(80px,12vh,150px) clamp(20px,5vw,48px);scroll-margin-top:80px}
+  .wrap{max-width:var(--maxw);margin:0 auto}
+  .eyebrow{
+    font-family:var(--mono);font-size:12px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--gold);opacity:.85;display:inline-flex;align-items:center;gap:9px;margin-bottom:22px;
+  }
+  .eyebrow::before{content:"";width:22px;height:1px;background:linear-gradient(90deg,var(--gold),transparent)}
+  h1,h2,h3{font-family:var(--serif);font-weight:400;line-height:1.04;letter-spacing:-.015em}
+  .glow-word{color:var(--core);font-style:italic;text-shadow:0 0 28px rgba(255,221,150,.55),0 0 60px rgba(255,196,104,.3)}
+  .lead{color:var(--muted);font-size:clamp(16px,2.1vw,19px);max-width:54ch;line-height:1.65}
+
+  /* ---------- reveal ---------- */
+  .reveal{opacity:0;transform:translateY(26px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+  .reveal.in{opacity:1;transform:none}
+
+  /* ---------- hero ---------- */
+  .hero{
+    min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;padding:120px clamp(20px,5vw,48px) 90px;position:relative;
+  }
+  .light-source{position:absolute;top:50%;left:50%;transform:translate(-50%,-58%);width:min(680px,92vw);height:min(680px,92vw);z-index:-1;pointer-events:none}
+  .orb{
+    position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:170px;height:170px;border-radius:50%;
+    background:radial-gradient(circle at 50% 45%,#fff,var(--core) 26%,var(--gold) 52%,rgba(255,179,71,0) 72%);
+    box-shadow:0 0 80px 10px rgba(255,221,150,.5),0 0 180px 40px rgba(255,196,104,.32),0 0 320px 80px rgba(255,179,71,.16);
+    animation:pulse 5.5s ease-in-out infinite;
+  }
+  @keyframes pulse{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.96}50%{transform:translate(-50%,-50%) scale(1.07);opacity:1}}
+  .rays{position:absolute;inset:0;border-radius:50%;
+    background:repeating-conic-gradient(from 0deg,rgba(255,221,150,.16) 0deg 1.4deg,transparent 1.4deg 12deg);
+    -webkit-mask:radial-gradient(circle,transparent 12%,#000 26%,transparent 60%);
+    mask:radial-gradient(circle,transparent 12%,#000 26%,transparent 60%);
+    animation:spin 70s linear infinite;opacity:.8}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  .hero .eyebrow{justify-content:center}
+  .hero h1{font-size:clamp(46px,9vw,108px);margin-bottom:26px}
+  .hero .lead{margin:0 auto 38px;max-width:50ch;font-size:clamp(16px,2.3vw,20px)}
+  .cta-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:30px}
+  .btn{font-family:var(--sans);font-size:15px;font-weight:500;cursor:pointer;border-radius:999px;padding:14px 26px;text-decoration:none;display:inline-flex;align-items:center;gap:9px;transition:transform .25s var(--ease),box-shadow .3s ease,background .3s ease,border-color .3s ease}
+  .btn-primary{color:#2a1e05;border:none;background:linear-gradient(180deg,var(--core),var(--gold-deep));box-shadow:0 0 24px rgba(255,196,104,.45)}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 34px rgba(255,196,104,.62)}
+  .btn-ghost{color:var(--text);background:var(--surface);border:1px solid var(--border-bright)}
+  .btn-ghost:hover{transform:translateY(-2px);background:var(--surface-2);border-color:rgba(255,255,255,.28)}
+  .hero-meta{font-family:var(--mono);font-size:12.5px;color:var(--faint);letter-spacing:.06em}
+  .hero-meta b{color:var(--muted);font-weight:500}
+  .scroll-cue{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--faint);font-family:var(--mono);font-size:10.5px;letter-spacing:.2em}
+  .scroll-cue .dot{width:5px;height:5px;border-radius:50%;background:var(--gold);box-shadow:0 0 10px var(--gold);animation:fall 1.8s var(--ease) infinite}
+  @keyframes fall{0%{transform:translateY(-6px);opacity:0}30%{opacity:1}100%{transform:translateY(10px);opacity:0}}
+
+  /* ---------- shift / philosophy ---------- */
+  .shift h2{font-size:clamp(30px,5.4vw,58px);max-width:18ch;margin-bottom:18px}
+  .shift .lead{margin-bottom:54px}
+  .compare{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  .pane{border:1px solid var(--border);border-radius:18px;padding:30px;background:var(--surface);transition:opacity .6s ease}
+  .pane h3{font-family:var(--mono);font-weight:500;font-size:12px;letter-spacing:.18em;text-transform:uppercase;margin-bottom:20px;font-style:normal}
+  .pane.dim{color:var(--faint)}
+  .pane.dim h3{color:var(--faint)}
+  .pane.dim ul{list-style:none}
+  .pane.dim li{padding:7px 0;font-size:15px;display:flex;align-items:center;gap:10px}
+  .pane.dim li::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--faint);flex:none}
+  .pane.dim .tail{margin-top:14px;color:var(--muted);font-size:14px;font-style:italic}
+  .pane.lit{
+    border-color:rgba(255,196,104,.35);
+    background:linear-gradient(165deg,rgba(255,196,104,.07),var(--surface));
+    box-shadow:0 0 0 1px rgba(255,196,104,.06) inset,0 24px 70px -30px rgba(255,196,104,.4);
+  }
+  .pane.lit h3{color:var(--gold)}
+  .pane.lit .directive{font-family:var(--serif);font-size:clamp(20px,2.6vw,26px);line-height:1.3;color:var(--text)}
+  .pane.lit .directive b{color:var(--core);font-weight:500}
+  .pane.lit .sub{margin-top:16px;font-family:var(--mono);font-size:12.5px;color:var(--predict);letter-spacing:.04em}
+
+  /* ---------- pillars / prism ---------- */
+  .pillars h2{font-size:clamp(30px,5.4vw,58px);margin-bottom:18px}
+  .pillars .lead{margin-bottom:42px}
+  .prism-stage{width:100%;margin:0 auto 40px;max-width:900px}
+  .prism-svg{width:100%;height:auto;display:block;overflow:visible}
+  .beam{transition:opacity .35s ease,stroke-width .35s ease}
+  .beam.dimmed{opacity:.18}
+  .beam.active{opacity:1}
+  .prism-tri{fill:rgba(255,255,255,.03);stroke:rgba(255,255,255,.4);stroke-width:1.5}
+  .beam-label{font-family:var(--mono);font-size:13px;letter-spacing:.04em;fill:var(--muted);transition:fill .3s ease}
+  .pillar-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+  .pillar-card{
+    border:1px solid var(--border);border-radius:16px;padding:22px 18px;background:var(--surface);cursor:default;
+    transition:transform .35s var(--ease),border-color .35s ease,box-shadow .35s ease,background .35s ease;
+    position:relative;overflow:hidden;
+  }
+  .pillar-card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:var(--pc);opacity:.55;transition:opacity .35s ease,box-shadow .35s ease}
+  .pillar-card:hover,.pillar-card:focus-within{transform:translateY(-6px);border-color:color-mix(in srgb,var(--pc) 50%,transparent);background:var(--surface-2);box-shadow:0 22px 50px -28px var(--pc)}
+  .pillar-card:hover::before,.pillar-card:focus-within::before{opacity:1;box-shadow:0 0 16px var(--pc)}
+  .pillar-num{font-family:var(--mono);font-size:11px;color:var(--pc);letter-spacing:.1em;opacity:.8}
+  .pillar-card h3{font-family:var(--serif);font-size:21px;margin:8px 0 10px;color:var(--text)}
+  .pillar-card p{font-size:13.5px;color:var(--muted);line-height:1.55}
+
+  /* ---------- engine ---------- */
+  .engine h2{font-size:clamp(30px,5.4vw,58px);max-width:16ch;margin-bottom:18px}
+  .engine h2 .glow-word{font-size:inherit}
+  .engine .lead{margin-bottom:48px}
+  .engine-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:22px;align-items:stretch}
+  .card{border:1px solid var(--border);border-radius:18px;background:var(--surface);padding:28px}
+  .card-label{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
+  .rank{display:flex;flex-direction:column;gap:10px}
+  .opt{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:13px 16px;border-radius:12px;border:1px solid var(--border);background:rgba(255,255,255,.02);transition:opacity .4s ease}
+  .opt .t{font-size:14px;color:var(--muted)}
+  .opt .v{font-family:var(--mono);font-size:13px;color:var(--faint)}
+  .opt.faded{opacity:.5}
+  .opt.win{
+    border-color:rgba(255,196,104,.4);background:linear-gradient(120deg,rgba(255,196,104,.1),rgba(255,255,255,.02));
+    box-shadow:0 0 28px -8px rgba(255,196,104,.5);position:relative;
+  }
+  .opt.win .t{color:var(--text);font-weight:500}
+  .opt.win .t b{color:var(--core);font-weight:600}
+  .opt.win .v{color:var(--predict);font-weight:500}
+  .opt.win::after{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:3px;background:var(--gold);box-shadow:0 0 14px var(--gold)}
+  .engine-note{margin-top:20px;font-size:13px;color:var(--faint);font-style:italic}
+
+  .forecast{display:flex;flex-direction:column}
+  .fc-subject{font-family:var(--mono);font-size:12px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
+  .fc-grade{display:flex;align-items:baseline;gap:12px;margin:14px 0 4px}
+  .fc-grade .now{font-family:var(--serif);font-size:64px;line-height:1;color:var(--text)}
+  .fc-grade .arrow{color:var(--faint);font-size:22px}
+  .fc-grade .target{font-family:var(--serif);font-size:64px;line-height:1;color:var(--predict);text-shadow:0 0 30px rgba(255,196,104,.45)}
+  .fc-prob{font-family:var(--mono);font-size:13px;color:var(--muted);margin-bottom:18px}
+  .fc-prob b{color:var(--predict)}
+  .band{height:8px;border-radius:99px;background:rgba(255,255,255,.06);overflow:hidden;margin-bottom:8px}
+  .band span{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--gold-deep),var(--core));box-shadow:0 0 14px rgba(255,196,104,.6);transition:width 1.4s var(--ease)}
+  .fc-needed{margin-top:auto;padding-top:20px;border-top:1px solid var(--border);font-size:13px;color:var(--muted)}
+  .fc-needed .row{display:flex;justify-content:space-between;padding:5px 0;font-family:var(--mono);font-size:12.5px}
+  .fc-needed .row span:last-child{color:var(--analyse)}
+
+  /* ---------- adapt / check-in ---------- */
+  .adapt h2{font-size:clamp(30px,5.4vw,58px);margin-bottom:18px}
+  .adapt .lead{margin-bottom:48px}
+  .checkin{display:grid;grid-template-columns:1fr 1fr;gap:26px;align-items:center}
+  .sliders{display:flex;flex-direction:column;gap:26px}
+  .slider-row label{display:flex;justify-content:space-between;font-family:var(--mono);font-size:12.5px;letter-spacing:.06em;color:var(--muted);margin-bottom:12px;text-transform:uppercase}
+  .slider-row label b{color:var(--text);font-weight:500}
+  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:4px;border-radius:99px;background:rgba(255,255,255,.12);outline:none;cursor:pointer}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:20px;height:20px;border-radius:50%;background:radial-gradient(circle at 35% 30%,var(--core),var(--gold-deep));box-shadow:0 0 14px rgba(255,196,104,.7);border:none;cursor:pointer;transition:transform .2s ease}
+  input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.15)}
+  input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--gold);box-shadow:0 0 14px rgba(255,196,104,.7);border:none;cursor:pointer}
+  input[type=range]:focus-visible::-webkit-slider-thumb{outline:2px solid var(--core);outline-offset:3px}
+  .outcome{border-radius:18px;border:1px solid var(--border);padding:30px;background:var(--surface);transition:background .5s ease,border-color .5s ease,box-shadow .5s ease;min-height:230px;display:flex;flex-direction:column;justify-content:center}
+  .outcome .mode{font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--om,var(--gold));margin-bottom:14px;transition:color .5s ease}
+  .outcome .verdict{font-family:var(--serif);font-size:clamp(22px,3vw,30px);line-height:1.25;color:var(--text);margin-bottom:14px}
+  .outcome .detail{font-size:14.5px;color:var(--muted)}
+  .outcome[data-mode=strong]{border-color:rgba(67,224,166,.34);box-shadow:0 24px 70px -34px rgba(67,224,166,.5);--om:var(--adapt)}
+  .outcome[data-mode=light]{border-color:rgba(110,139,255,.34);box-shadow:0 24px 70px -34px rgba(110,139,255,.5);--om:var(--plan)}
+  .outcome[data-mode=recovery]{border-color:rgba(182,156,255,.34);box-shadow:0 24px 70px -34px rgba(182,156,255,.5);--om:var(--learn)}
+  .outcome[data-mode=balanced]{border-color:rgba(255,196,104,.34);box-shadow:0 24px 70px -34px rgba(255,196,104,.45);--om:var(--gold)}
+
+  /* ---------- features ---------- */
+  .features h2{font-size:clamp(30px,5.4vw,58px);margin-bottom:18px}
+  .features .lead{margin-bottom:48px}
+  .feature-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  .feat{border:1px solid var(--border);border-radius:16px;padding:24px;background:var(--surface);position:relative;overflow:hidden;transition:transform .35s var(--ease),border-color .35s ease,background .35s ease}
+  .feat::after{content:"";position:absolute;inset:0;border-radius:16px;opacity:0;transition:opacity .4s ease;background:radial-gradient(280px circle at var(--mx,50%) var(--my,0%),rgba(255,221,150,.12),transparent 60%);pointer-events:none}
+  .feat:hover{transform:translateY(-5px);border-color:var(--border-bright);background:var(--surface-2)}
+  .feat:hover::after{opacity:1}
+  .feat .ico{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;background:rgba(255,255,255,.05);border:1px solid var(--border);margin-bottom:16px;color:var(--gold)}
+  .feat .ico svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+  .feat h3{font-family:var(--serif);font-size:19px;margin-bottom:9px;color:var(--text)}
+  .feat p{font-size:13px;color:var(--muted);line-height:1.55}
+  .feat.span2{grid-column:span 2}
+
+  /* ---------- closing ---------- */
+  .closing{text-align:center;position:relative;overflow:hidden}
+  .closing .halo{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:600px;max-width:120vw;border-radius:50%;background:radial-gradient(circle,rgba(255,196,104,.16),transparent 62%);z-index:-1;pointer-events:none}
+  .closing h2{font-size:clamp(34px,7vw,76px);margin-bottom:22px}
+  .closing .lead{margin:0 auto 36px}
+  .closing .fineprint{margin-top:30px;font-family:var(--mono);font-size:12px;color:var(--faint);letter-spacing:.04em;max-width:46ch;margin-left:auto;margin-right:auto}
+
+  /* ---------- footer ---------- */
+  footer{border-top:1px solid var(--border);padding:46px clamp(20px,5vw,48px);background:rgba(6,6,17,.5)}
+  .foot-wrap{max-width:var(--maxw);margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap}
+  .foot-brand{display:flex;align-items:center;gap:11px}
+  .foot-tag{color:var(--faint);font-size:13px;max-width:30ch}
+  .foot-links{display:flex;gap:24px;flex-wrap:wrap}
+  .foot-links a{color:var(--muted);text-decoration:none;font-size:13.5px;transition:color .25s ease}
+  .foot-links a:hover{color:var(--text)}
+  .copy{width:100%;text-align:center;color:var(--faint);font-size:12px;font-family:var(--mono);letter-spacing:.05em;margin-top:14px;border-top:1px solid var(--border);padding-top:22px}
+
+  /* ---------- focus ---------- */
+  a:focus-visible,button:focus-visible,.pillar-card:focus-within{outline:2px solid var(--core);outline-offset:3px;border-radius:8px}
+
+  /* ---------- responsive ---------- */
+  @media(max-width:860px){
+    .nav-links{display:none}
+    .nav-links.open{display:flex;position:absolute;top:100%;left:0;right:0;flex-direction:column;gap:18px;padding:22px clamp(20px,5vw,48px);background:rgba(6,6,17,.96);backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}
+    .nav-toggle{display:grid;place-items:center;width:38px;height:38px;background:var(--surface);border:1px solid var(--border);border-radius:9px;cursor:pointer}
+    .nav-toggle svg{width:20px;height:20px;stroke:var(--text);fill:none;stroke-width:1.8;stroke-linecap:round}
+    .compare,.engine-grid,.checkin{grid-template-columns:1fr}
+    .pillar-grid{grid-template-columns:repeat(2,1fr)}
+    .feature-grid{grid-template-columns:repeat(2,1fr)}
+    .feat.span2{grid-column:span 2}
+    .beam-label{font-size:18px}
+    .fc-grade .now,.fc-grade .target{font-size:52px}
+  }
+  @media(max-width:480px){
+    .pillar-grid{grid-template-columns:1fr}
+    .feature-grid{grid-template-columns:1fr}
+    .feat.span2{grid-column:span 1}
+    .hero h1{font-size:clamp(40px,13vw,60px)}
+  }
+
+  @media(prefers-reduced-motion:reduce){
+    *{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+    .reveal{opacity:1;transform:none}
+    .blob{animation:none}
+    .orb{animation:none}
+    .rays{animation:none}
+    html{scroll-behavior:auto}
+  }
+</style>
+</head>
+<body>
+  <canvas id="photons"></canvas>
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="blob b3"></div>
+  <div class="cursor-glow" id="cglow"></div>
+
+  <nav id="nav">
+    <a class="brand" href="#top" aria-label="Lumen home">
+      <span class="monogram">L</span>
+      <span class="brand-name">Lumen</span>
+    </a>
+    <div class="nav-links" id="navLinks">
+      <a href="#shift">The shift</a>
+      <a href="#pillars">Pillars</a>
+      <a href="#engine">How it thinks</a>
+      <a href="#features">Features</a>
+      <a class="nav-cta" href="#cta">Get early access</a>
+    </div>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu">
+      <svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+  </nav>
+
+  <main id="top">
+    <!-- HERO -->
+    <header class="hero">
+      <div class="light-source" aria-hidden="true">
+        <div class="rays"></div>
+        <div class="orb"></div>
+      </div>
+      <span class="eyebrow">AI Academic Operating System</span>
+      <h1>Study, <span class="glow-word">illuminated</span>.</h1>
+      <p class="lead">Lumen runs your whole academic life and decides the next move — what to study, for exactly how long, and the grade it'll move. Not a library of notes. A decision, lit up.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="#cta">Start with one subject</a>
+        <a class="btn btn-ghost" href="#engine">See how it thinks</a>
+      </div>
+      <p class="hero-meta"><b>5 pillars</b> · <b>1 decision engine</b> · <b>0 wasted hours</b></p>
+      <div class="scroll-cue" aria-hidden="true"><span class="dot"></span><span>SCROLL</span></div>
+    </header>
+
+    <!-- SHIFT -->
+    <section class="section shift" id="shift">
+      <div class="wrap">
+        <span class="eyebrow reveal">The shift</span>
+        <h2 class="reveal">Everyone else hands you more. Lumen tells you what to ignore.</h2>
+        <p class="lead reveal">A content platform gives you resources and leaves the hardest decision — what's actually worth your next hour — entirely to you. Lumen makes that decision the product.</p>
+        <div class="compare">
+          <div class="pane dim reveal">
+            <h3>Content platforms</h3>
+            <ul>
+              <li>Notes</li>
+              <li>Videos</li>
+              <li>Flashcards</li>
+              <li>Past papers</li>
+              <li>Mark schemes</li>
+            </ul>
+            <p class="tail">…and the job of working out what matters? Yours.</p>
+          </div>
+          <div class="pane lit reveal">
+            <h3>A decision platform</h3>
+            <p class="directive">Study <b>Electrochemistry</b> for <b>37 minutes</b>. It moves your Chemistry grade more than anything else you could touch today.</p>
+            <p class="sub">+2.3% predicted grade · highest value action · Tue 14 Jun</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PILLARS / PRISM -->
+    <section class="section pillars" id="pillars">
+      <div class="wrap">
+        <span class="eyebrow reveal">Five beams, one system</span>
+        <h2 class="reveal">White light, split five ways.</h2>
+        <p class="lead reveal">One engine. Point it at your week and it separates into the five things that actually change a grade. Hover a beam to follow it through.</p>
+
+        <div class="prism-stage reveal">
+          <svg class="prism-svg" viewBox="0 0 900 360" role="img" aria-label="A white beam entering a prism and splitting into five coloured beams, one per pillar">
+            <defs>
+              <linearGradient id="whiteBeam" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="#fff" stop-opacity="0"/>
+                <stop offset="1" stop-color="#fff" stop-opacity=".9"/>
+              </linearGradient>
+              <filter id="soft" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="2.2"/>
+              </filter>
+            </defs>
+            <!-- incoming white beam -->
+            <line x1="20" y1="180" x2="300" y2="180" stroke="url(#whiteBeam)" stroke-width="3.5" filter="url(#soft)"/>
+            <!-- prism -->
+            <polygon class="prism-tri" points="300,110 300,250 410,180"/>
+            <!-- spectral beams -->
+            <g filter="url(#soft)">
+              <line id="beam-learn"   class="beam" x1="395" y1="172" x2="700" y2="60"  stroke="var(--learn)"   stroke-width="3"/>
+              <line id="beam-plan"    class="beam" x1="398" y1="176" x2="700" y2="120" stroke="var(--plan)"    stroke-width="3"/>
+              <line id="beam-analyse" class="beam" x1="400" y1="180" x2="700" y2="180" stroke="var(--analyse)" stroke-width="3"/>
+              <line id="beam-adapt"   class="beam" x1="398" y1="184" x2="700" y2="240" stroke="var(--adapt)"   stroke-width="3"/>
+              <line id="beam-predict" class="beam" x1="395" y1="188" x2="700" y2="300" stroke="var(--predict)" stroke-width="3"/>
+            </g>
+            <!-- labels -->
+            <text class="beam-label" x="712" y="64">Learn</text>
+            <text class="beam-label" x="712" y="124">Plan</text>
+            <text class="beam-label" x="712" y="184">Analyse</text>
+            <text class="beam-label" x="712" y="244">Adapt</text>
+            <text class="beam-label" x="712" y="304">Predict</text>
+          </svg>
+        </div>
+
+        <div class="pillar-grid">
+          <div class="pillar-card reveal" data-beam="learn" tabindex="0" style="--pc:var(--learn)">
+            <div class="pillar-num">01</div><h3>Learn</h3>
+            <p>Notes, papers, mark schemes and an AI tutor. The table stakes — done properly.</p>
+          </div>
+          <div class="pillar-card reveal" data-beam="plan" tabindex="0" style="--pc:var(--plan)">
+            <div class="pillar-num">02</div><h3>Plan</h3>
+            <p>Pulls every deadline from your school and builds the timetable so you never have to.</p>
+          </div>
+          <div class="pillar-card reveal" data-beam="analyse" tabindex="0" style="--pc:var(--analyse)">
+            <div class="pillar-num">03</div><h3>Analyse</h3>
+            <p>Tracks mastery, retention, speed and stress. Finds exactly where marks leak out.</p>
+          </div>
+          <div class="pillar-card reveal" data-beam="adapt" tabindex="0" style="--pc:var(--adapt)">
+            <div class="pillar-num">04</div><h3>Adapt</h3>
+            <p>Tell it your energy today; the plan rewrites itself. Tired day, lighter load.</p>
+          </div>
+          <div class="pillar-card reveal" data-beam="predict" tabindex="0" style="--pc:var(--predict)">
+            <div class="pillar-num">05</div><h3>Predict</h3>
+            <p>A live grade forecast with a confidence band — and the precise gap that closes it.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ENGINE -->
+    <section class="section engine" id="engine">
+      <div class="wrap">
+        <span class="eyebrow reveal">The engine</span>
+        <h2 class="reveal">It doesn't say <span class="glow-word">do more</span> Chemistry.</h2>
+        <p class="lead reveal">Every hour has a price and a payoff. Lumen ranks everything you could do by the marks it would actually add, then points at the single brightest move.</p>
+        <div class="engine-grid">
+          <div class="card reveal">
+            <div class="card-label">Today · ranked by expected mark gain</div>
+            <div class="rank">
+              <div class="opt win">
+                <span class="t"><b>Electrochemistry</b> · 37 min</span>
+                <span class="v">Chem 6 → 7 · +2.3%</span>
+              </div>
+              <div class="opt faded">
+                <span class="t">More Physics past papers</span>
+                <span class="v">+0.6%</span>
+              </div>
+              <div class="opt faded">
+                <span class="t">Re-read Biology notes</span>
+                <span class="v">+0.2%</span>
+              </div>
+              <div class="opt faded">
+                <span class="t">Reorganise flashcards</span>
+                <span class="v">+0.0%</span>
+              </div>
+            </div>
+            <p class="engine-note">Same four hours. One of them is worth eleven times the others. Lumen finds it before you waste the afternoon.</p>
+          </div>
+
+          <div class="card forecast reveal">
+            <div class="fc-subject">Chemistry · forecast</div>
+            <div class="fc-grade"><span class="now">6</span><span class="arrow">→</span><span class="target">7</span></div>
+            <div class="fc-prob">P(grade 7) now <b><span data-count="82" data-suffix="%">0%</span></b> · confidence band ±1</div>
+            <div class="band"><span data-fill="82"></span></div>
+            <div class="fc-needed">
+              <div class="row"><span>Electrochemistry</span><span>+9%</span></div>
+              <div class="row"><span>Stoichiometry</span><span>+5%</span></div>
+              <div class="row"><span>Est. effort to close</span><span>~6 hrs</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ADAPT / CHECK-IN -->
+    <section class="section adapt" id="adapt">
+      <div class="wrap">
+        <span class="eyebrow reveal">Every login</span>
+        <h2 class="reveal">Tell it how today feels.</h2>
+        <p class="lead reveal">Three sliders. The plan reshapes itself before you've finished your coffee — because a session that fits today beats a perfect one you abandon.</p>
+        <div class="checkin">
+          <div class="sliders reveal">
+            <div class="slider-row">
+              <label>Energy <b id="vEnergy">7</b></label>
+              <input type="range" id="energy" min="1" max="10" value="7" aria-label="Energy level 1 to 10" />
+            </div>
+            <div class="slider-row">
+              <label>Motivation <b id="vMot">6</b></label>
+              <input type="range" id="motivation" min="1" max="10" value="6" aria-label="Motivation level 1 to 10" />
+            </div>
+            <div class="slider-row">
+              <label>Stress <b id="vStress">3</b></label>
+              <input type="range" id="stress" min="1" max="10" value="3" aria-label="Stress level 1 to 10" />
+            </div>
+          </div>
+          <div class="outcome" id="outcome" data-mode="strong">
+            <div class="mode" id="oMode">Strong day</div>
+            <div class="verdict" id="oVerdict">Past paper, timed: Physics — Waves.</div>
+            <div class="detail" id="oDetail">High energy, low stress. Push hard while it's there — 45 minutes under exam conditions, no notes.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section class="section features" id="features">
+      <div class="wrap">
+        <span class="eyebrow reveal">Everything else it does</span>
+        <h2 class="reveal">The rest of the system.</h2>
+        <p class="lead reveal">The decision engine is the spine. These are the organs around it — each one feeding the same goal: the highest grade for the least wasted effort.</p>
+        <div class="feature-grid">
+          <div class="feat span2 reveal">
+            <div class="ico"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M12 7v4M12 13.5v.5"/></svg></div>
+            <h3>AI Study Coach</h3>
+            <p>A persistent companion that remembers your grades, deadlines and weak spots — and every day nudges the one thing actually worth doing. The reason to open the app.</p>
+          </div>
+          <div class="feat reveal">
+            <div class="ico"><svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg></div>
+            <h3>Mistake Bank</h3>
+            <p>Every error you've ever made, sorted into careless, knowledge-gap or technique. You revise mistakes, not chapters.</p>
+          </div>
+          <div class="feat reveal">
+            <div class="ico"><svg viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1M12 18v3"/></svg></div>
+            <h3>AI Oral Studio</h3>
+            <p>Examiner personalities, accents and live pronunciation feedback for language orals. Practise under pressure, safely.</p>
+          </div>
+          <div class="feat reveal">
+            <div class="ico"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></div>
+            <h3>AI Exam Twin</h3>
+            <p>A digital model of you that predicts which questions you'll drop — then drills exactly those before the real thing.</p>
+          </div>
+          <div class="feat reveal">
+            <div class="ico"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></div>
+            <h3>Burnout Guard</h3>
+            <p>Spots overworking before you feel it and forces recovery into the schedule — protecting the grade and the student.</p>
+          </div>
+          <div class="feat reveal">
+            <div class="ico"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg></div>
+            <h3>Knowledge Graph</h3>
+            <p>Maps how topics connect across subjects, so fixing one weak spot lights up several grades at once.</p>
+          </div>
+          <div class="feat reveal">
+            <div class="ico"><svg viewBox="0 0 24 24"><path d="M13 2 3 14h8l-1 8 10-12h-8z"/></svg></div>
+            <h3>Crisis Mode</h3>
+            <p>Exam in two days? Lumen builds a realistic rescue plan in seconds — triaged to the marks still in reach.</p>
+          </div>
+          <div class="feat reveal">
+            <div class="ico"><svg viewBox="0 0 24 24"><path d="M2 2l20 20M17.7 17.7A6 6 0 0 1 15 18H7a5 5 0 0 1-1.3-9.8M8.3 5.5A6 6 0 0 1 18.6 9 4.5 4.5 0 0 1 21 11"/></svg></div>
+            <h3>Offline Intelligence</h3>
+            <p>Notes, flashcards, quizzes and a small on-device tutor that all work with no signal. Syncs when you're back.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CLOSING -->
+    <section class="section closing" id="cta">
+      <div class="halo" aria-hidden="true"></div>
+      <div class="wrap">
+        <h2 class="reveal">Stop revising in the dark.</h2>
+        <p class="lead reveal">Point Lumen at one subject and watch the next move light up. The grade comes from knowing where to look.</p>
+        <div class="cta-row reveal" style="justify-content:center">
+          <a class="btn btn-primary" href="#top">Get early access</a>
+          <a class="btn btn-ghost" href="#pillars">Explore the pillars</a>
+        </div>
+        <p class="fineprint reveal">Lumen — a lumen is the unit of light. A fitting name for the thing that shows you the way.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="foot-wrap">
+      <div>
+        <div class="foot-brand"><span class="monogram">L</span><span class="brand-name">Lumen</span></div>
+        <p class="foot-tag" style="margin-top:12px">The AI operating system for students who are done guessing.</p>
+      </div>
+      <div class="foot-links">
+        <a href="#shift">The shift</a>
+        <a href="#pillars">Pillars</a>
+        <a href="#engine">How it thinks</a>
+        <a href="#features">Features</a>
+        <a href="#cta">Early access</a>
+      </div>
+    </div>
+    <div class="copy">© 2026 Lumen · Built for the next exam, and the one after that.</div>
+  </footer>
+
+<script>
+(function(){
+  "use strict";
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var touch = window.matchMedia && window.matchMedia('(hover: none)').matches;
+
+  /* ---- nav scroll state + mobile menu ---- */
+  var nav = document.getElementById('nav');
+  var navLinks = document.getElementById('navLinks');
+  document.getElementById('navToggle').addEventListener('click', function(){ navLinks.classList.toggle('open'); });
+  navLinks.addEventListener('click', function(e){ if(e.target.tagName==='A') navLinks.classList.remove('open'); });
+  function onScroll(){ if(window.scrollY>20) nav.classList.add('scrolled'); else nav.classList.remove('scrolled'); }
+  window.addEventListener('scroll', onScroll, {passive:true}); onScroll();
+
+  /* ---- cursor light ---- */
+  var cg = document.getElementById('cglow');
+  if(touch){ cg.style.display='none'; }
+  else {
+    var cx=window.innerWidth/2, cy=window.innerHeight/2, tx=cx, ty=cy, shown=false;
+    window.addEventListener('mousemove', function(e){
+      tx=e.clientX; ty=e.clientY;
+      if(!shown){ shown=true; cg.style.opacity='1'; }
+    });
+    (function loop(){
+      cx += (tx-cx)*0.14; cy += (ty-cy)*0.14;
+      cg.style.transform = 'translate('+cx+'px,'+cy+'px)';
+      requestAnimationFrame(loop);
+    })();
+  }
+
+  /* ---- photon field ---- */
+  var canvas = document.getElementById('photons');
+  var ctx = canvas.getContext('2d');
+  var dpr = Math.min(window.devicePixelRatio||1, 2);
+  var W=0,H=0,particles=[],mx=-999,my=-999;
+  // pre-render a soft light sprite
+  var sprite = document.createElement('canvas'); sprite.width=sprite.height=40;
+  var sctx = sprite.getContext('2d');
+  var g = sctx.createRadialGradient(20,20,0,20,20,20);
+  g.addColorStop(0,'rgba(255,236,190,1)'); g.addColorStop(.4,'rgba(255,210,130,.4)'); g.addColorStop(1,'rgba(255,200,120,0)');
+  sctx.fillStyle=g; sctx.fillRect(0,0,40,40);
+
+  function resize(){
+    W=window.innerWidth; H=window.innerHeight;
+    canvas.width=W*dpr; canvas.height=H*dpr; canvas.style.width=W+'px'; canvas.style.height=H+'px';
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    var target = Math.min(110, Math.round(W*H/16000));
+    particles = [];
+    for(var i=0;i<target;i++){
+      particles.push({
+        x:Math.random()*W, y:Math.random()*H,
+        r:Math.random()*1.6+0.5,
+        vx:(Math.random()-.5)*0.18, vy:(Math.random()-.5)*0.18,
+        a:Math.random()*0.4+0.18
+      });
+    }
+  }
+  window.addEventListener('resize', resize); resize();
+  if(!touch){ window.addEventListener('mousemove', function(e){ mx=e.clientX; my=e.clientY; }); }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    ctx.globalCompositeOperation='lighter';
+    for(var i=0;i<particles.length;i++){
+      var p=particles[i];
+      p.x+=p.vx; p.y+=p.vy;
+      if(p.x<-20)p.x=W+20; if(p.x>W+20)p.x=-20;
+      if(p.y<-20)p.y=H+20; if(p.y>H+20)p.y=-20;
+      var alpha=p.a, scale=p.r;
+      var dx=p.x-mx, dy=p.y-my, d2=dx*dx+dy*dy;
+      if(d2<26000){ var boost=1-(d2/26000); alpha=Math.min(1,p.a+boost*0.7); scale=p.r*(1+boost*1.6); }
+      var s=scale*6;
+      ctx.globalAlpha=alpha;
+      ctx.drawImage(sprite, p.x-s/2, p.y-s/2, s, s);
+    }
+    ctx.globalAlpha=1; ctx.globalCompositeOperation='source-over';
+  }
+  if(reduce){ draw(); }
+  else {
+    var running=true;
+    document.addEventListener('visibilitychange', function(){ running=!document.hidden; if(running) raf(); });
+    function raf(){ if(!running)return; draw(); requestAnimationFrame(raf); }
+    raf();
+  }
+
+  /* ---- reveal on scroll ---- */
+  var revs = document.querySelectorAll('.reveal');
+  if('IntersectionObserver' in window && !reduce){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if(en.isIntersecting){
+          var sibs = en.target.parentElement.querySelectorAll('.reveal');
+          var idx = Array.prototype.indexOf.call(sibs, en.target);
+          en.target.style.transitionDelay = Math.min(idx,6)*70 + 'ms';
+          en.target.classList.add('in');
+          io.unobserve(en.target);
+        }
+      });
+    }, {threshold:0.12, rootMargin:'0px 0px -8% 0px'});
+    revs.forEach(function(r){ io.observe(r); });
+  } else { revs.forEach(function(r){ r.classList.add('in'); }); }
+
+  /* ---- prism interactivity ---- */
+  var beams = ['learn','plan','analyse','adapt','predict'];
+  var cards = document.querySelectorAll('.pillar-card');
+  function setBeam(active){
+    beams.forEach(function(b){
+      var el=document.getElementById('beam-'+b);
+      if(!el)return;
+      el.classList.remove('active','dimmed');
+      if(active){ el.classList.add(b===active?'active':'dimmed'); }
+    });
+  }
+  cards.forEach(function(c){
+    var b=c.getAttribute('data-beam');
+    c.addEventListener('mouseenter', function(){ setBeam(b); });
+    c.addEventListener('focusin', function(){ setBeam(b); });
+    c.addEventListener('mouseleave', function(){ setBeam(null); });
+    c.addEventListener('focusout', function(){ setBeam(null); });
+  });
+
+  /* ---- feature spotlight follow ---- */
+  document.querySelectorAll('.feat').forEach(function(f){
+    f.addEventListener('mousemove', function(e){
+      var r=f.getBoundingClientRect();
+      f.style.setProperty('--mx', (e.clientX-r.left)+'px');
+      f.style.setProperty('--my', (e.clientY-r.top)+'px');
+    });
+  });
+
+  /* ---- count-up + band fill ---- */
+  function runCounts(scope){
+    scope.querySelectorAll('[data-count]').forEach(function(el){
+      if(el.dataset.done) return; el.dataset.done='1';
+      var target=parseFloat(el.getAttribute('data-count'));
+      var suf=el.getAttribute('data-suffix')||'';
+      var dec=(target%1!==0)?1:0;
+      if(reduce){ el.textContent=target.toFixed(dec)+suf; return; }
+      var start=null, dur=1300;
+      function step(ts){ if(!start)start=ts; var p=Math.min((ts-start)/dur,1);
+        var e=1-Math.pow(1-p,3);
+        el.textContent=(target*e).toFixed(dec)+suf;
+        if(p<1) requestAnimationFrame(step); }
+      requestAnimationFrame(step);
+    });
+    scope.querySelectorAll('[data-fill]').forEach(function(el){
+      el.style.width = el.getAttribute('data-fill')+'%';
+    });
+  }
+  var engineSec=document.getElementById('engine');
+  if('IntersectionObserver' in window){
+    var io2=new IntersectionObserver(function(en){ en.forEach(function(e){ if(e.isIntersecting){ runCounts(engineSec); io2.disconnect(); } }); },{threshold:0.3});
+    io2.observe(engineSec);
+  } else { runCounts(engineSec); }
+
+  /* ---- adaptive check-in ---- */
+  var energy=document.getElementById('energy'), mot=document.getElementById('motivation'), stress=document.getElementById('stress');
+  var vE=document.getElementById('vEnergy'), vM=document.getElementById('vMot'), vS=document.getElementById('vStress');
+  var outcome=document.getElementById('outcome'), oMode=document.getElementById('oMode'), oVerdict=document.getElementById('oVerdict'), oDetail=document.getElementById('oDetail');
+
+  function plan(){
+    var e=+energy.value, m=+mot.value, s=+stress.value;
+    vE.textContent=e; vM.textContent=m; vS.textContent=s;
+    var mode,modeLabel,verdict,detail;
+    if(s>=7){
+      mode='recovery'; modeLabel='Recovery mode';
+      verdict='Light review only — then stop.';
+      detail='Stress is running high. Lumen pulls the hard sessions and protects you: 20 minutes of gentle recall, then step away. Tomorrow is for pushing.';
+    } else if(e>=7 && s<=5){
+      mode='strong'; modeLabel='Strong day';
+      verdict='Past paper, timed: Physics — Waves.';
+      detail='High energy, low stress. Push hard while it\u2019s there — 45 minutes under exam conditions, no notes, then mark it honestly.';
+    } else if(e<=4){
+      mode='light'; modeLabel='Light day';
+      verdict='Active recall: 20 cards, Biology transport.';
+      detail='Low energy. No heavy problem-solving today — short, high-frequency recall keeps momentum without draining the tank. 15 minutes is a win.';
+    } else {
+      mode='balanced'; modeLabel='Balanced day';
+      verdict='Targeted set: Chemistry — Electrochemistry.';
+      detail='Steady levels. A focused 30-minute set on your highest-value weak topic moves the grade most for the effort. ' + (m<=4 ? 'Motivation\u2019s low, so we keep it short and finishable.' : 'Ride the focus.');
+    }
+    outcome.setAttribute('data-mode',mode);
+    oMode.textContent=modeLabel; oVerdict.textContent=verdict; oDetail.textContent=detail;
+  }
+  [energy,mot,stress].forEach(function(s){ s.addEventListener('input', plan); });
+  plan();
+})();
+</script>
+</body>
+</html>

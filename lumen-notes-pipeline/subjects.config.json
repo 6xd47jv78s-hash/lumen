@@ -1,0 +1,11 @@
+{
+  "_comment": "Your V1 target: one curriculum, a handful of subjects. Point each at its spec file. build_all.py drafts them all. Add/remove rows freely.",
+  "defaults": { "mode": "batch" },
+  "subjects": [
+    { "curriculum": "GCSE", "board": "AQA", "subject": "Biology",          "input": "specs/aqa_gcse_biology.md" },
+    { "curriculum": "GCSE", "board": "AQA", "subject": "Chemistry",        "input": "specs/aqa_gcse_chemistry.md" },
+    { "curriculum": "GCSE", "board": "AQA", "subject": "Physics",          "input": "specs/aqa_gcse_physics.md" },
+    { "curriculum": "GCSE", "board": "AQA", "subject": "Mathematics",      "input": "specs/aqa_gcse_mathematics.md" },
+    { "curriculum": "GCSE", "board": "AQA", "subject": "English Language", "input": "specs/aqa_gcse_english_language.md" }
+  ]
+}

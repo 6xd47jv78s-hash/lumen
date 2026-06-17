@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Lumen — Study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --void:#060611;--ink:#0b0b18;--surface:rgba(255,255,255,.04);--surface-2:rgba(255,255,255,.07);
+    --border:rgba(255,255,255,.09);--border-bright:rgba(255,255,255,.17);
+    --text:#ECEDF5;--muted:#9498B0;--faint:#5b5f78;
+    --core:#FFE6AE;--gold:#FFC368;--gold-deep:#FFB347;
+    --bio:#43E0A6;--chem:#B69CFF;--phys:#45D6E6;--math:#FFC368;--econ:#6E8BFF;--eng:#FF9FB2;--hum:#FFB347;--psy:#C9A6FF;--cs:#5EE0C0;
+    --ok:#43E0A6;--bad:#FF7A85;
+    --ease:cubic-bezier(0.16,1,0.3,1);
+    --serif:'Fraunces',Georgia,serif;--sans:'Inter',system-ui,sans-serif;--mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{background:var(--void);color:var(--text);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden}
+  .blob{position:fixed;border-radius:50%;filter:blur(100px);z-index:0;pointer-events:none;opacity:.42;will-change:transform}
+  .blob.b1{width:44vw;height:44vw;left:-12vw;top:-10vw;background:radial-gradient(circle,rgba(110,139,255,.30),transparent 68%);animation:d1 28s var(--ease) infinite alternate}
+  .blob.b2{width:40vw;height:40vw;right:-14vw;bottom:-12vh;background:radial-gradient(circle,rgba(255,179,71,.18),transparent 66%);animation:d2 34s var(--ease) infinite alternate}
+  @keyframes d1{to{transform:translate(7vw,5vh)}}
+  @keyframes d2{to{transform:translate(-6vw,-5vh)}}
+  .layer{position:relative;z-index:2}
+  button{font-family:inherit;cursor:pointer}
+  .mono{font-family:var(--mono)}
+  ::-webkit-scrollbar{width:10px;height:10px}
+  ::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:99px}
+  ::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.18)}
+
+  .monogram{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;font-family:var(--serif);font-weight:500;font-size:17px;color:#2a1e05;background:radial-gradient(circle at 35% 30%,var(--core),var(--gold-deep));box-shadow:0 0 16px rgba(255,196,104,.5)}
+  .brand{display:flex;align-items:center;gap:11px}
+  .brand-name{font-family:var(--serif);font-size:21px;font-weight:500}
+  .brand-sub{font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--faint);text-transform:uppercase;align-self:center;padding-left:4px;border-left:1px solid var(--border);margin-left:4px;padding-top:2px}
+
+  /* ---------- onboarding ---------- */
+  #onboarding{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:48px clamp(20px,5vw,40px)}
+  .ob-card{width:100%;max-width:760px}
+  .ob-glow{position:fixed;top:18%;left:50%;transform:translateX(-50%);width:520px;height:520px;max-width:120vw;border-radius:50%;background:radial-gradient(circle,rgba(255,196,104,.14),transparent 62%);z-index:0;pointer-events:none}
+  .ob-eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:9px;margin-bottom:18px}
+  .ob-eyebrow::before{content:"";width:22px;height:1px;background:linear-gradient(90deg,var(--gold),transparent)}
+  .ob-card h1{font-family:var(--serif);font-weight:400;font-size:clamp(34px,6vw,56px);line-height:1.05;letter-spacing:-.015em;margin-bottom:14px}
+  .ob-card h1 em{font-style:italic;color:var(--core);text-shadow:0 0 26px rgba(255,221,150,.5)}
+  .ob-lead{color:var(--muted);font-size:17px;max-width:52ch;margin-bottom:38px}
+  .ob-step-label{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 14px}
+  .ob-step-label b{color:var(--gold);font-weight:500}
+  .chip-row{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:34px}
+  .chip{padding:11px 18px;border-radius:999px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:14.5px;font-weight:500;transition:all .25s var(--ease)}
+  .chip:hover{border-color:var(--border-bright);color:var(--text)}
+  .chip.sel{color:#2a1e05;background:linear-gradient(180deg,var(--core),var(--gold-deep));border-color:transparent;box-shadow:0 0 22px rgba(255,196,104,.45)}
+  .subj-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-bottom:34px}
+  .subj-pick{display:flex;align-items:center;gap:11px;padding:14px 16px;border-radius:13px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:14.5px;text-align:left;transition:all .25s var(--ease)}
+  .subj-pick:hover{border-color:var(--border-bright);background:var(--surface-2);transform:translateY(-2px)}
+  .subj-pick .dot{width:9px;height:9px;border-radius:50%;flex:none;background:var(--sc,var(--gold));box-shadow:0 0 10px var(--sc,var(--gold))}
+  .subj-pick.sel{border-color:color-mix(in srgb,var(--sc) 55%,transparent);box-shadow:0 0 0 1px color-mix(in srgb,var(--sc) 22%,transparent) inset,0 16px 40px -26px var(--sc)}
+  .subj-pick .tick{margin-left:auto;color:var(--sc);opacity:0;transition:opacity .2s}
+  .subj-pick.sel .tick{opacity:1}
+  .ob-foot{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+  .btn{font-family:var(--sans);font-size:15px;font-weight:500;border-radius:999px;padding:13px 26px;border:none;display:inline-flex;align-items:center;gap:9px;transition:transform .25s var(--ease),box-shadow .3s ease,opacity .2s}
+  .btn-primary{color:#2a1e05;background:linear-gradient(180deg,var(--core),var(--gold-deep));box-shadow:0 0 24px rgba(255,196,104,.42)}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 34px rgba(255,196,104,.6)}
+  .btn-primary:disabled{opacity:.4;box-shadow:none;cursor:not-allowed;transform:none}
+  .btn-ghost{color:var(--text);background:var(--surface);border:1px solid var(--border-bright)}
+  .btn-ghost:hover{background:var(--surface-2)}
+  .ob-foot .hint{font-size:13px;color:var(--faint)}
+
+  /* ---------- app shell ---------- */
+  #app{display:none;min-height:100vh;flex-direction:column}
+  .topbar{position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px clamp(16px,3vw,28px);background:rgba(6,6,17,.78);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}
+  .tb-right{display:flex;align-items:center;gap:14px}
+  .pill{font-family:var(--mono);font-size:12px;letter-spacing:.04em;color:var(--muted);padding:6px 12px;border-radius:999px;border:1px solid var(--border);background:var(--surface)}
+  .link-btn{background:none;border:none;color:var(--muted);font-size:13.5px;text-decoration:underline;text-underline-offset:3px;transition:color .2s}
+  .link-btn:hover{color:var(--text)}
+  .shell{display:grid;grid-template-columns:286px 1fr;flex:1;min-height:0}
+  .sidebar{border-right:1px solid var(--border);padding:22px 14px 60px;overflow-y:auto;max-height:calc(100vh - 59px);position:sticky;top:59px}
+  .side-h{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);padding:0 10px;margin-bottom:14px}
+  .subj-block{margin-bottom:6px}
+  .subj-head{width:100%;display:flex;align-items:center;gap:10px;padding:11px 10px;border-radius:10px;background:none;border:none;color:var(--text);font-size:15px;font-weight:500;text-align:left;transition:background .2s}
+  .subj-head:hover{background:var(--surface)}
+  .subj-head .dot{width:9px;height:9px;border-radius:50%;flex:none;background:var(--sc);box-shadow:0 0 9px var(--sc)}
+  .subj-head .caret{margin-left:auto;color:var(--faint);transition:transform .25s var(--ease);font-size:11px}
+  .subj-head.open .caret{transform:rotate(90deg)}
+  .topic-list{overflow:hidden;max-height:0;transition:max-height .35s var(--ease)}
+  .topic-item{width:100%;display:block;padding:9px 10px 9px 30px;border-radius:8px;background:none;border:none;color:var(--muted);font-size:13.5px;text-align:left;line-height:1.4;transition:all .2s;position:relative}
+  .topic-item:hover{color:var(--text);background:var(--surface)}
+  .topic-item.active{color:var(--text);background:color-mix(in srgb,var(--sc) 12%,transparent)}
+  .topic-item.active::before{content:"";position:absolute;left:14px;top:50%;transform:translateY(-50%);width:4px;height:16px;border-radius:3px;background:var(--sc);box-shadow:0 0 10px var(--sc)}
+
+  .main{padding:clamp(20px,3vw,38px);overflow-y:auto;max-height:calc(100vh - 59px)}
+  .main-inner{max-width:860px;margin:0 auto}
+  .topic-header{margin-bottom:26px}
+  .tag{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--sc);margin-bottom:12px}
+  .tag .dot{width:7px;height:7px;border-radius:50%;background:var(--sc);box-shadow:0 0 8px var(--sc)}
+  .topic-header h2{font-family:var(--serif);font-weight:400;font-size:clamp(26px,4vw,40px);line-height:1.08;letter-spacing:-.015em}
+
+  .tabbar{display:flex;gap:4px;border-bottom:1px solid var(--border);margin-bottom:26px;overflow-x:auto;scrollbar-width:none}
+  .tabbar::-webkit-scrollbar{display:none}
+  .tab{position:relative;background:none;border:none;color:var(--muted);font-size:14.5px;font-weight:500;padding:12px 16px;white-space:nowrap;transition:color .2s}
+  .tab:hover{color:var(--text)}
+  .tab.active{color:var(--text)}
+  .tab.active::after{content:"";position:absolute;left:12px;right:12px;bottom:-1px;height:2px;border-radius:2px;background:linear-gradient(90deg,var(--gold),var(--core));box-shadow:0 0 12px rgba(255,196,104,.6)}
+
+  .panel{animation:fadein .4s var(--ease)}
+  @keyframes fadein{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+  /* loading + error */
+  .state-box{padding:40px 24px;text-align:center}
+  .shimmer{height:14px;border-radius:7px;background:linear-gradient(90deg,rgba(255,255,255,.04),rgba(255,221,150,.14),rgba(255,255,255,.04));background-size:200% 100%;animation:sh 1.4s linear infinite;margin:10px auto}
+  @keyframes sh{to{background-position:-200% 0}}
+  .gen-msg{font-family:var(--mono);font-size:13px;color:var(--gold);letter-spacing:.05em;margin-top:18px;display:inline-flex;align-items:center;gap:10px}
+  .spark{width:9px;height:9px;border-radius:50%;background:var(--gold);box-shadow:0 0 12px var(--gold);animation:pulse 1.1s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:.4;transform:scale(.8)}50%{opacity:1;transform:scale(1.2)}}
+  .err{color:var(--muted);font-size:14.5px;max-width:42ch;margin:0 auto 18px}
+
+  /* notes */
+  .note-summary{font-size:16.5px;color:var(--text);line-height:1.7;padding:18px 20px;border-radius:14px;background:linear-gradient(165deg,color-mix(in srgb,var(--sc) 8%,transparent),var(--surface));border:1px solid color-mix(in srgb,var(--sc) 24%,var(--border));margin-bottom:26px}
+  .note-sec{margin-bottom:24px}
+  .note-sec h3{font-family:var(--serif);font-weight:500;font-size:21px;color:var(--text);margin-bottom:10px}
+  .note-sec ul{list-style:none}
+  .note-sec li{position:relative;padding:6px 0 6px 22px;color:var(--muted);font-size:15px;line-height:1.6}
+  .note-sec li::before{content:"";position:absolute;left:3px;top:13px;width:7px;height:7px;border-radius:50%;background:var(--sc);opacity:.7}
+  .terms{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0 24px}
+  .term{padding:14px 16px;border-radius:12px;background:var(--surface);border:1px solid var(--border)}
+  .term b{display:block;color:var(--text);font-size:14px;margin-bottom:4px}
+  .term span{color:var(--muted);font-size:13.5px}
+  .tips{padding:18px 20px;border-radius:14px;background:rgba(255,196,104,.07);border:1px solid rgba(255,196,104,.28)}
+  .tips h3{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+  .tips li{position:relative;padding:5px 0 5px 22px;color:var(--text);font-size:14.5px}
+  .tips li::before{content:"→";position:absolute;left:0;color:var(--gold)}
+  .disclaimer{margin-top:26px;font-family:var(--mono);font-size:11.5px;color:var(--faint);letter-spacing:.03em;display:flex;align-items:center;gap:8px}
+  .nbadge{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;padding:6px 13px;border-radius:99px;margin-bottom:18px}
+  .nbadge.verified{color:#2a1e05;background:linear-gradient(180deg,var(--core),var(--gold-deep));box-shadow:0 0 18px rgba(255,196,104,.4)}
+  .nbadge.checked{color:var(--ok);border:1px solid rgba(67,224,166,.4);background:rgba(67,224,166,.06)}
+  .nbadge.flag{color:var(--gold);border:1px solid rgba(255,196,104,.4);background:rgba(255,196,104,.06)}
+  .nflags{background:rgba(255,196,104,.07);border:1px solid rgba(255,196,104,.28);border-radius:12px;padding:14px 16px;margin:2px 0 20px}
+  .nflags h4{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+  .nflags li{margin-left:20px;color:var(--muted);font-size:13.5px;padding:3px 0;line-height:1.5}
+  .spec-tag{margin-left:7px;font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--ok);border:1px solid rgba(67,224,166,.4);border-radius:99px;padding:2px 7px}
+  .obj-intro{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.04em;margin-bottom:18px}
+  .obj-intro b{color:var(--gold)} .obj-intro b.vtext{color:var(--ok)}
+  .obj-block{border:1px solid var(--border);border-radius:14px;background:var(--surface);margin-bottom:12px;overflow:hidden;transition:border-color .25s}
+  .obj-block.open{border-color:var(--border-bright)}
+  .obj-head{width:100%;display:flex;align-items:center;gap:13px;padding:16px 18px;background:none;border:none;color:var(--text);text-align:left;transition:background .2s}
+  .obj-head:hover{background:var(--surface-2)}
+  .obj-ref{font-family:var(--mono);font-size:11px;color:var(--muted);flex:none}
+  .obj-text{font-size:14px;line-height:1.45;flex:1}
+  .obj-chip{font-family:var(--mono);font-size:10px;letter-spacing:.07em;text-transform:uppercase;padding:4px 10px;border-radius:99px;flex:none}
+  .obj-chip.v{color:#2a1e05;background:linear-gradient(180deg,var(--core),var(--gold-deep))}
+  .obj-chip.g{color:var(--muted);border:1px solid var(--border)}
+  .obj-body{padding:2px 18px 20px}
+  .regen{margin-top:18px}
+  .regen button{font-family:var(--mono);font-size:12px;color:var(--muted);background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:8px 16px;transition:all .2s}
+  .regen button:hover{color:var(--text);border-color:var(--border-bright)}
+
+  /* flashcards */
+  .fc-wrap{max-width:540px;margin:0 auto}
+  .fc-counter{text-align:center;font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.1em;margin-bottom:14px}
+  .fc{perspective:1600px;height:300px;margin-bottom:20px}
+  .fc-inner{position:relative;width:100%;height:100%;transition:transform .6s var(--ease);transform-style:preserve-3d;cursor:pointer}
+  .fc.flipped .fc-inner{transform:rotateY(180deg)}
+  .fc-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:18px;border:1px solid var(--border);background:var(--surface-2);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:34px;text-align:center}
+  .fc-front{box-shadow:0 30px 70px -40px rgba(0,0,0,.7)}
+  .fc-back{transform:rotateY(180deg);border-color:color-mix(in srgb,var(--sc) 40%,var(--border));background:linear-gradient(165deg,color-mix(in srgb,var(--sc) 10%,transparent),var(--surface-2));box-shadow:0 30px 70px -40px var(--sc)}
+  .fc-kicker{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);margin-bottom:16px}
+  .fc-front .q{font-family:var(--serif);font-size:23px;line-height:1.3;color:var(--text)}
+  .fc-back .a{font-size:16px;line-height:1.6;color:var(--text)}
+  .fc-hint{font-family:var(--mono);font-size:11px;color:var(--faint);margin-top:20px}
+  .fc-controls{display:flex;align-items:center;justify-content:center;gap:10px}
+  .icon-btn{width:46px;height:46px;border-radius:50%;background:var(--surface);border:1px solid var(--border);color:var(--text);display:grid;place-items:center;transition:all .2s}
+  .icon-btn:hover{background:var(--surface-2);border-color:var(--border-bright);transform:translateY(-2px)}
+  .icon-btn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .flip-btn{padding:0 22px;width:auto;border-radius:999px;font-size:14px;font-weight:500}
+
+  /* quiz */
+  .quiz-q{font-family:var(--serif);font-size:21px;line-height:1.35;color:var(--text);margin-bottom:6px}
+  .quiz-prog{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.08em;margin-bottom:18px}
+  .opt{width:100%;text-align:left;display:flex;align-items:center;gap:14px;padding:15px 18px;border-radius:13px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:15px;margin-bottom:10px;transition:all .2s}
+  .opt:hover:not(:disabled){border-color:var(--border-bright);background:var(--surface-2)}
+  .opt:disabled{cursor:default}
+  .opt .letter{width:26px;height:26px;border-radius:7px;background:rgba(255,255,255,.06);display:grid;place-items:center;font-family:var(--mono);font-size:13px;color:var(--muted);flex:none}
+  .opt.correct{border-color:var(--ok);background:rgba(67,224,166,.1)}
+  .opt.correct .letter{background:var(--ok);color:#04140d}
+  .opt.wrong{border-color:var(--bad);background:rgba(255,122,133,.09)}
+  .opt.wrong .letter{background:var(--bad);color:#1a0608}
+  .explain{padding:14px 18px;border-radius:12px;background:var(--surface);border:1px solid var(--border);font-size:14px;color:var(--muted);margin:6px 0 18px;line-height:1.6}
+  .explain b{color:var(--text)}
+  .quiz-foot{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-top:8px}
+  .score-big{font-family:var(--serif);font-size:54px;color:var(--core);text-shadow:0 0 30px rgba(255,221,150,.4);text-align:center}
+  .score-sub{text-align:center;color:var(--muted);margin-bottom:20px}
+
+  /* papers */
+  .pp{border:1px solid var(--border);border-radius:16px;background:var(--surface);padding:22px;margin-bottom:16px}
+  .pp-top{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin-bottom:8px}
+  .pp-q{font-size:15.5px;color:var(--text);line-height:1.6}
+  .pp-marks{font-family:var(--mono);font-size:12px;color:var(--gold);border:1px solid rgba(255,196,104,.3);border-radius:999px;padding:4px 11px;white-space:nowrap;flex:none}
+  .pp-reveal{margin-top:14px}
+  .pp-reveal button{font-family:var(--mono);font-size:12.5px;color:var(--muted);background:none;border:1px dashed var(--border-bright);border-radius:10px;padding:9px 16px;transition:all .2s}
+  .pp-reveal button:hover{color:var(--text);border-color:var(--gold);border-style:solid}
+  .ms{margin-top:14px;padding:16px 18px;border-radius:12px;background:rgba(67,224,166,.06);border:1px solid rgba(67,224,166,.22)}
+  .ms h4{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ok);margin-bottom:10px}
+  .ms li{position:relative;padding:5px 0 5px 22px;color:var(--text);font-size:14px;line-height:1.55}
+  .ms li::before{content:"✓";position:absolute;left:0;color:var(--ok);font-size:12px}
+
+  /* tutor */
+  .tutor{display:flex;flex-direction:column;height:min(560px,calc(100vh - 260px))}
+  .chat{flex:1;overflow-y:auto;padding:6px 4px 14px;display:flex;flex-direction:column;gap:14px}
+  .msg{max-width:84%;padding:13px 17px;border-radius:16px;font-size:14.5px;line-height:1.6;white-space:pre-wrap}
+  .msg.user{align-self:flex-end;background:linear-gradient(180deg,rgba(255,221,150,.16),rgba(255,196,104,.08));border:1px solid rgba(255,196,104,.3);color:var(--text);border-bottom-right-radius:5px}
+  .msg.bot{align-self:flex-start;background:var(--surface-2);border:1px solid var(--border);color:var(--text);border-bottom-left-radius:5px}
+  .msg.bot.thinking{color:var(--muted)}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 14px}
+  .chips button{font-size:12.5px;color:var(--muted);background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:7px 13px;transition:all .2s}
+  .chips button:hover{color:var(--text);border-color:var(--border-bright)}
+  .composer{display:flex;gap:10px;padding-top:12px;border-top:1px solid var(--border)}
+  .composer input{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:13px 18px;color:var(--text);font-family:inherit;font-size:14.5px;outline:none;transition:border-color .2s}
+  .composer input:focus{border-color:var(--gold)}
+  .send{width:46px;height:46px;border-radius:50%;border:none;flex:none;background:linear-gradient(180deg,var(--core),var(--gold-deep));color:#2a1e05;display:grid;place-items:center;transition:transform .2s,box-shadow .2s}
+  .send:hover{transform:translateY(-1px);box-shadow:0 0 20px rgba(255,196,104,.5)}
+  .send:disabled{opacity:.45;cursor:not-allowed}
+  .send svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+  a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--core);outline-offset:2px;border-radius:8px}
+
+  .topic-load,.topic-retry{padding:9px 10px 9px 30px;font-family:var(--mono);font-size:12px;color:var(--muted);display:flex;align-items:center;gap:9px}
+  .topic-retry button{font-family:var(--mono);font-size:12px;color:var(--muted);background:none;border:1px dashed var(--border-bright);border-radius:8px;padding:6px 12px}
+  .topic-retry button:hover{color:var(--text);border-color:var(--gold)}
+  .empty{min-height:54vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 20px}
+  .empty-orb{width:88px;height:88px;border-radius:50%;margin-bottom:26px;background:radial-gradient(circle at 50% 45%,#fff,var(--core) 26%,var(--gold) 52%,rgba(255,179,71,0) 72%);box-shadow:0 0 60px 8px rgba(255,221,150,.4),0 0 120px 30px rgba(255,196,104,.22)}
+  .empty h2{font-family:var(--serif);font-weight:400;font-size:clamp(24px,4vw,34px);margin-bottom:12px}
+  .empty p{color:var(--muted);max-width:46ch;font-size:15.5px}
+
+  /* responsive */
+  .menu-btn{display:none}
+  @media(max-width:840px){
+    .shell{grid-template-columns:1fr}
+    .sidebar{position:fixed;top:59px;left:0;bottom:0;width:300px;max-width:86vw;background:rgba(8,8,18,.98);backdrop-filter:blur(14px);z-index:35;transform:translateX(-105%);transition:transform .35s var(--ease);max-height:none}
+    .sidebar.open{transform:none}
+    .main{max-height:none}
+    .menu-btn{display:grid;place-items:center;width:40px;height:40px;border-radius:9px;background:var(--surface);border:1px solid var(--border);color:var(--text)}
+    .menu-btn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round}
+    .scrim{position:fixed;inset:59px 0 0;background:rgba(0,0,0,.5);z-index:34;display:none}
+    .scrim.show{display:block}
+    .terms{grid-template-columns:1fr}
+  }
+  @media(prefers-reduced-motion:reduce){
+    *{animation-duration:.001ms!important;transition-duration:.001ms!important}
+    .blob{animation:none}
+  }
+</style>
+</head>
+<body>
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+
+  <!-- ONBOARDING -->
+  <section id="onboarding" class="layer">
+    <div class="ob-glow" aria-hidden="true"></div>
+    <div class="ob-card">
+      <div class="ob-eyebrow">Set up your Lumen</div>
+      <h1>Tell us what you're <em>studying</em>.</h1>
+      <p class="ob-lead">Pick your course and your subjects. Everything in Lumen — notes, flashcards, quizzes, past papers — is then built around exactly what you chose.</p>
+
+      <p class="ob-step-label">Step <b>01</b> — your curriculum</p>
+      <div class="chip-row" id="curRow"></div>
+
+      <div id="subjStep" style="display:none">
+        <p class="ob-step-label">Step <b>02</b> — your subjects</p>
+        <div class="subj-grid" id="subjGrid"></div>
+      </div>
+
+      <div class="ob-foot">
+        <button class="btn btn-primary" id="startBtn" disabled>Enter Lumen</button>
+        <span class="hint" id="obHint">Choose a curriculum to begin.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- APP -->
+  <section id="app" class="layer">
+    <div class="topbar">
+      <div style="display:flex;align-items:center;gap:12px">
+        <button class="menu-btn" id="menuBtn" aria-label="Toggle subjects"><svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+        <div class="brand"><span class="monogram">L</span><span class="brand-name">Lumen</span><span class="brand-sub" id="curBadge">—</span></div>
+      </div>
+      <div class="tb-right">
+        <span class="pill" id="subjCount">—</span>
+        <button class="link-btn" id="importBtn">Import verified notes</button>
+        <input type="file" id="importFile" accept="application/json,.json" style="display:none" />
+        <button class="link-btn" id="changeBtn">Change subjects</button>
+      </div>
+    </div>
+    <div class="scrim" id="scrim"></div>
+    <div class="shell">
+      <aside class="sidebar" id="sidebar"><div class="side-h">Your subjects</div><div id="subjTree"></div></aside>
+      <main class="main"><div class="main-inner" id="mainInner"></div></main>
+    </div>
+  </section>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------------- curriculum data (starter structure; extend to full official specs) ---------------- */
+  var bio=["Cell structure and organisation","Movement in and out of cells","Enzymes","Biological molecules and nutrition","Transport in animals","Transport in plants","Gas exchange","Respiration","Coordination and response","Homeostasis","Reproduction","Inheritance and variation","Natural selection and evolution","Disease and immunity","Ecology and ecosystems","Human impact on the environment"];
+  var chem=["Atomic structure and the periodic table","Ionic, covalent and metallic bonding","Stoichiometry and the mole","Chemical formulae and equations","States of matter and kinetic theory","Acids, bases and salts","Electrolysis and electrochemistry","Energetics and enthalpy","Rates of reaction","Reversible reactions and equilibria","Redox reactions","Group chemistry and trends","Organic chemistry","Polymers","Chemical analysis and testing"];
+  var phys=["Forces and motion","Energy, work and power","Density and pressure","Waves","Light, reflection and refraction","Sound","Electricity and circuits","Electrical energy and power","Magnetism","Electromagnetism and induction","Thermal physics and heat transfer","Kinetic particle theory","Radioactivity and nuclear physics","The electromagnetic spectrum","Momentum and impulse","Space physics"];
+  var math=["Number, surds and indices","Algebraic manipulation","Equations and inequalities","Functions and graphs","Sequences and series","Trigonometry and identities","Coordinate geometry","Differentiation","Applications of differentiation","Integration","Vectors","Exponentials and logarithms","Probability","Statistical distributions","Hypothesis testing"];
+  var econ=["The basic economic problem","Demand, supply and equilibrium","Price elasticity","Market failure and externalities","Costs, revenue and profit","Market structures","The labour market","Measuring national income","Aggregate demand and supply","Inflation and unemployment","Fiscal policy","Monetary policy","International trade","Exchange rates","Economic growth and development"];
+  var engLit=["Reading prose for meaning","Analysing poetry","Shakespeare and drama","Unseen texts","Context and critical reading","Comparative analysis","Character and relationships","Theme, motif and symbolism","Language, form and structure","Crafting analytical essays"];
+  var engLang=["Reading and comprehension","Analysing language and tone","Persuasive and argumentative writing","Descriptive and narrative writing","Non-fiction and media texts","Structure and rhetorical devices","Summary and synthesis","Directed and transactional writing","Spoken language","Evaluating writers' methods"];
+  var hist=["Causes of the First World War","Treaty of Versailles and the interwar years","Rise of dictatorships","The Second World War","Origins of the Cold War","Cold War crises and détente","Civil rights and protest movements","Empire and decolonisation","Revolution and political change","Working with historical sources"];
+  var psy=["Research methods and design","Memory","Social influence","Attachment","Psychopathology","Approaches in psychology","Biopsychology","Cognition and development","Issues and debates","Applications (forensic / clinical)"];
+
+  // Full subject rosters per curriculum (standard offerings; boards vary slightly — trim/extend as needed).
+  var CUR={
+    "IGCSE":["Mathematics","Additional Mathematics","English – First Language","English – Second Language","English Literature","Biology","Chemistry","Physics","Co-ordinated Sciences","Combined Science","Economics","Business Studies","Accounting","Computer Science","Information & Communication Technology","Global Perspectives","Geography","History","Sociology","Environmental Management","French","Spanish","German","Mandarin Chinese","Art & Design","Music","Drama","Physical Education"],
+    "GCSE":["Mathematics","Statistics","English Language","English Literature","Biology","Chemistry","Physics","Combined Science","Computer Science","Geography","History","Religious Studies","Citizenship Studies","Sociology","Economics","Business","French","Spanish","German","Latin","Art & Design","Design & Technology","Drama","Music","Physical Education","Media Studies","Food Preparation & Nutrition"],
+    "A-Level":["Mathematics","Further Mathematics","Statistics","Biology","Chemistry","Physics","Geology","Environmental Science","Psychology","Sociology","Economics","Business","Accounting","Law","Politics","Philosophy","Religious Studies","History","Geography","Classical Civilisation","English Language","English Literature","English Language & Literature","French","Spanish","German","Latin","Computer Science","Design & Technology","Art & Design","History of Art","Drama & Theatre","Film Studies","Media Studies","Music","Music Technology","Physical Education"],
+    "IB Diploma":["English A: Language & Literature","English A: Literature","Spanish B","French B","Mandarin B","Spanish ab initio","Business Management","Economics","Geography","History","Global Politics","Philosophy","Psychology","Social & Cultural Anthropology","Biology","Chemistry","Physics","Computer Science","Design Technology","Sports, Exercise & Health Science","Environmental Systems & Societies","Mathematics: Analysis & Approaches","Mathematics: Applications & Interpretation","Visual Arts","Music","Theatre","Film","Theory of Knowledge"],
+    "AP":["AP Seminar","AP Research","AP English Language & Composition","AP English Literature & Composition","AP Calculus AB","AP Calculus BC","AP Precalculus","AP Statistics","AP Computer Science A","AP Computer Science Principles","AP Biology","AP Chemistry","AP Environmental Science","AP Physics 1","AP Physics 2","AP Physics C: Mechanics","AP Physics C: Electricity & Magnetism","AP Macroeconomics","AP Microeconomics","AP Psychology","AP US History","AP World History: Modern","AP European History","AP US Government & Politics","AP Comparative Government & Politics","AP Human Geography","AP Art History","AP Music Theory","AP Spanish Language & Culture","AP Spanish Literature & Culture","AP French Language & Culture","AP German Language & Culture","AP Chinese Language & Culture","AP Japanese Language & Culture","AP Italian Language & Culture","AP Latin"]
+  };
+
+  // Common subjects get an instant curated topic list; everything else generates its topic list on demand.
+  function seedTopics(name){
+    var n=name.toLowerCase();
+    if(n.indexOf("art")>-1||n.indexOf("music")>-1||n.indexOf("theat")>-1||n.indexOf("film")>-1||n.indexOf("drama")>-1)return null;
+    if(n.indexOf("biolog")>-1)return bio;
+    if(n.indexOf("chem")>-1)return chem;
+    if(n.indexOf("physic")>-1 && n.indexOf("magnet")===-1)return phys;
+    if(n.indexOf("math")>-1||n.indexOf("calc")>-1)return math;
+    if(n.indexOf("econ")>-1)return econ;
+    if(n.indexOf("english")>-1||n.indexOf("literature")>-1)return (n.indexOf("literature")>-1?engLit:engLang);
+    if(n.indexOf("histor")>-1)return hist;
+    if(n.indexOf("psycholog")>-1)return psy;
+    return null;
+  }
+
+  function subjColor(name){
+    var n=name.toLowerCase();
+    if(n.indexOf("biolog")>-1)return"var(--bio)";
+    if(n.indexOf("chem")>-1)return"var(--chem)";
+    if(n.indexOf("physic")>-1)return"var(--phys)";
+    if(n.indexOf("math")>-1||n.indexOf("calc")>-1||n.indexOf("statist")>-1)return"var(--math)";
+    if(n.indexOf("econ")>-1||n.indexOf("business")>-1||n.indexOf("account")>-1)return"var(--econ)";
+    if(n.indexOf("comput")>-1||n.indexOf("ict")>-1||n.indexOf("communication tech")>-1)return"var(--cs)";
+    if(n.indexOf("english")>-1||n.indexOf("literature")>-1||n.indexOf("french")>-1||n.indexOf("spanish")>-1||n.indexOf("german")>-1||n.indexOf("mandarin")>-1||n.indexOf("chinese")>-1||n.indexOf("japanese")>-1||n.indexOf("italian")>-1||n.indexOf("latin")>-1||n.indexOf("initio")>-1)return"var(--eng)";
+    if(n.indexOf("art")>-1||n.indexOf("music")>-1||n.indexOf("theat")>-1||n.indexOf("drama")>-1||n.indexOf("film")>-1)return"var(--psy)";
+    if(n.indexOf("psycholog")>-1||n.indexOf("sociolog")>-1||n.indexOf("anthropolog")>-1)return"var(--chem)";
+    if(n.indexOf("histor")>-1||n.indexOf("geog")>-1||n.indexOf("politic")>-1||n.indexOf("law")>-1||n.indexOf("philosoph")>-1||n.indexOf("religio")>-1||n.indexOf("global")>-1||n.indexOf("civilis")>-1||n.indexOf("citizen")>-1)return"var(--hum)";
+    return"var(--gold)";
+  }
+  function slug(s){return String(s).toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")}
+
+  /* ---------------- storage (persists across sessions; degrades gracefully) ---------------- */
+  var STORE = (typeof window!=="undefined" && window.storage) ? window.storage : null;
+  async function sGet(key){ if(!STORE)return null; try{ var r=await STORE.get(key); return r? r.value : null; }catch(e){ return null; } }
+  async function sSet(key,val){ if(!STORE)return; try{ await STORE.set(key,val); }catch(e){} }
+
+  /* ---------------- AI generation (live) ---------------- */
+  async function callClaude(system, userText){
+    var res = await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({ model:"claude-sonnet-4-6", max_tokens:1000, system:system, messages:[{role:"user",content:userText}] })
+    });
+    if(!res.ok) throw new Error("status "+res.status);
+    var data = await res.json();
+    return (data.content||[]).filter(function(b){return b.type==="text"}).map(function(b){return b.text}).join("\n");
+  }
+  function parseJSON(text){
+    var t=String(text).replace(/```json/gi,"").replace(/```/g,"").trim();
+    var s=t.indexOf("{"), a=t.indexOf("[");
+    var start=(a>-1 && (a<s||s===-1))?a:s;
+    var end=Math.max(t.lastIndexOf("}"),t.lastIndexOf("]"));
+    if(start>-1 && end>-1) t=t.slice(start,end+1);
+    return JSON.parse(t);
+  }
+  function ctx(){ return label(state.subject); }
+  function label(subject){ return (String(subject).indexOf(state.cur)===0) ? subject : state.cur+" "+subject; }
+
+  var GEN={
+    topics:function(subject){return callClaude(
+      "You are Lumen. You output accurate, concise exam-board syllabus topic lists.",
+      'List the main syllabus topics for "'+subject+'" in '+label(subject)+'. Respond with ONLY valid JSON, no markdown: {"topics":["Topic name", ...]}. Give 10 to 16 concise topic titles that together cover the whole course for this exam board. No numbering, no sub-points.'
+    ).then(parseJSON);},
+    critic:function(note){return callClaude(
+      "You are a meticulous "+ctx()+" examiner and fact-checker reviewing AI-generated revision notes.",
+      'Review these revision notes for the topic "'+state.topic+'" in '+ctx()+'. Notes JSON: '+JSON.stringify(note)+'. Check for factual accuracy, staying on-topic, and reasonable completeness for this level. Respond with ONLY valid JSON, no markdown: {"verdict":"pass" or "revise","flags":["a specific statement that is wrong, out of scope, or a key point that is missing", ...]}. Use "pass" only if the notes are accurate, on-topic and adequately complete; otherwise "revise" with concrete flags.'
+    ).then(parseJSON);},
+    notesObjective:function(ref, objective){return callClaude(
+      "You write accurate, exam-board-appropriate revision notes for "+ctx()+". You stay strictly within the given specification objective and omit rather than guess.",
+      'Write revision notes covering EXACTLY this specification objective and nothing outside it: ['+ref+'] '+objective+'. Respond with ONLY valid JSON, no markdown: {"summary":"1-2 sentence overview","sections":[{"heading":"string","points":["string", ...]}],"keyTerms":[{"term":"string","definition":"string"}],"examTips":["string", ...]}. 2-4 sections, 2-4 key terms, 2-3 exam tips. Original wording, factually accurate, plain text only.'
+    ).then(parseJSON);},
+    notes:function(){return callClaude(
+      "You are Lumen, an expert "+ctx()+" tutor. Write accurate, exam-board-appropriate revision notes. Be precise and concise.",
+      'Create revision notes for the topic "'+state.topic+'" in '+ctx()+'. Respond with ONLY valid JSON, no markdown or backticks, in exactly this shape: {"summary": "1-2 sentence overview", "sections": [{"heading": "string", "points": ["string", ...]}], "keyTerms": [{"term":"string","definition":"string"}], "examTips": ["string", ...]}. 3-4 sections, 3-5 points each, 3-4 key terms, 2-3 exam tips. Plain text only.'
+    ).then(parseJSON);},
+    cards:function(){return callClaude(
+      "You are Lumen, an expert "+ctx()+" tutor making revision flashcards.",
+      'Create 8 flashcards for "'+state.topic+'" in '+ctx()+'. Respond with ONLY valid JSON, no markdown: {"cards":[{"front":"question or term","back":"concise answer"}, ...]}. Keep backs short and accurate.'
+    ).then(parseJSON);},
+    quiz:function(){return callClaude(
+      "You are Lumen, an expert "+ctx()+" tutor writing a multiple-choice quiz.",
+      'Create 5 multiple-choice questions for "'+state.topic+'" in '+ctx()+'. Respond with ONLY valid JSON, no markdown: {"questions":[{"q":"string","options":["a","b","c","d"],"answer":0,"explanation":"why the answer is correct"}, ...]}. "answer" is the 0-based index of the correct option. Make distractors plausible.'
+    ).then(parseJSON);},
+    papers:function(){return callClaude(
+      "You are Lumen, an expert "+ctx()+" examiner writing exam-style questions with mark schemes.",
+      'Create 2 exam-style questions for "'+state.topic+'" in '+ctx()+'. Respond with ONLY valid JSON, no markdown: {"questions":[{"question":"string","marks":6,"markScheme":["marking point (1)", ...]}, ...]}. Use realistic mark allocations and mark-scheme style points.'
+    ).then(parseJSON);}
+  };
+
+  /* ---------------- state ---------------- */
+  var state={ cur:null, subjects:[], subject:null, topic:null, tab:"notes",
+    data:{}, status:{}, notesData:{}, manifest:{},   // generated content keyed by slug
+    objNote:{}, objStatus:{}, objBusy:{}, objOpen:{},
+    quiz:{}, cards:{}, tutor:{}, busy:{} };
+
+  function key(kind){ return kind+":"+slug(state.cur)+":"+slug(state.subject)+":"+slug(state.topic); }
+  function storeKey(kind){ return "lumen-"+slug(state.cur)+"-"+slug(state.subject)+"-"+slug(state.topic)+"-"+kind; }
+
+  /* ---------------- onboarding ---------------- */
+  var ob=document.getElementById("onboarding"), app=document.getElementById("app");
+  var curRow=document.getElementById("curRow"), subjStep=document.getElementById("subjStep"),
+      subjGrid=document.getElementById("subjGrid"), startBtn=document.getElementById("startBtn"), obHint=document.getElementById("obHint");
+  var pickCur=null, pickSubj=[];
+
+  Object.keys(CUR).forEach(function(c){
+    var b=document.createElement("button"); b.className="chip"; b.textContent=c;
+    b.onclick=function(){
+      pickCur=c; pickSubj=[];
+      Array.prototype.forEach.call(curRow.children,function(x){x.classList.remove("sel")});
+      b.classList.add("sel");
+      renderSubjPicker(c); subjStep.style.display="block"; updateStart();
+    };
+    curRow.appendChild(b);
+  });
+  function renderSubjPicker(c){
+    subjGrid.innerHTML="";
+    CUR[c].forEach(function(s){
+      var col=subjColor(s);
+      var b=document.createElement("button"); b.className="subj-pick"; b.style.setProperty("--sc",col);
+      b.innerHTML='<span class="dot"></span><span>'+s+'</span><span class="tick">✓</span>';
+      b.onclick=function(){
+        var i=pickSubj.indexOf(s);
+        if(i>-1){pickSubj.splice(i,1); b.classList.remove("sel");}
+        else {pickSubj.push(s); b.classList.add("sel");}
+        updateStart();
+      };
+      subjGrid.appendChild(b);
+    });
+  }
+  function updateStart(){
+    var ok=pickCur && pickSubj.length>0;
+    startBtn.disabled=!ok;
+    obHint.textContent = !pickCur ? "Choose a curriculum to begin."
+      : pickSubj.length===0 ? "Pick at least one subject."
+      : pickSubj.length+" subject"+(pickSubj.length>1?"s":"")+" selected.";
+  }
+  startBtn.onclick=function(){
+    state.cur=pickCur; state.subjects=pickSubj.slice();
+    sSet("lumen-account", JSON.stringify({cur:state.cur,subjects:state.subjects}));
+    enterApp();
+  };
+
+  document.getElementById("changeBtn").onclick=function(){
+    sSet("lumen-account","");
+    app.style.display="none"; ob.style.display="flex";
+    pickCur=null; pickSubj=[]; subjStep.style.display="none";
+    Array.prototype.forEach.call(curRow.children,function(x){x.classList.remove("sel")});
+    updateStart(); window.scrollTo(0,0);
+  };
+
+  // Import the unified manifest.json (or a legacy pack.json) from the notes pipeline.
+  var importFile=document.getElementById("importFile");
+  document.getElementById("importBtn").onclick=function(){ importFile.click(); };
+  importFile.onchange=function(){
+    var f=importFile.files&&importFile.files[0]; if(!f)return;
+    var r=new FileReader();
+    r.onload=function(){
+      try{
+        var data=JSON.parse(r.result);
+        var incoming = toManifest(data);            // {curriculum, subjects:{subj:{topic:[objs]}}}
+        var cur = incoming.curriculum || state.cur;
+        var mkey = "lumen-manifest-"+slug(cur);
+        sGet(mkey).then(function(existing){
+          var merged = existing ? (JSON.parse(existing)) : {curriculum:cur, subjects:{}};
+          merged.subjects = merged.subjects || {};
+          var n=0;
+          Object.keys(incoming.subjects).forEach(function(subj){
+            merged.subjects[subj]=merged.subjects[subj]||{};
+            Object.keys(incoming.subjects[subj]).forEach(function(topic){
+              merged.subjects[subj][topic]=incoming.subjects[subj][topic];
+              n+=incoming.subjects[subj][topic].length;
+            });
+          });
+          sSet(mkey, JSON.stringify(merged));
+          if(slug(cur)===slug(state.cur)){
+            state.manifest=merged.subjects; state.notesData={}; state.objNote={}; state.objStatus={};
+            buildTree(); if(state.topic) renderMain();
+          }
+          alert("Imported "+n+" spec objective"+(n===1?"":"s")+" for "+cur+". Covered subjects now follow the spec, with verified notes where approved.");
+        });
+      }catch(e){ alert("That doesn't look like a valid manifest/pack: "+e.message); }
+    };
+    r.readAsText(f); importFile.value="";
+  };
+  // Accept either the unified manifest (has .subjects) or a flat pack (.items)
+  function toManifest(data){
+    if(data && data.subjects) return data;
+    var subjects={}, cur=null;
+    (data.items||[]).forEach(function(it){
+      cur = it.curriculum || cur;
+      var subj=it.subject, topic=it.topic||"General";
+      if(!subj||!it.note)return;
+      subjects[subj]=subjects[subj]||{}; subjects[subj][topic]=subjects[subj][topic]||[];
+      subjects[subj][topic].push({spec_ref:it.spec_ref||"", objective:it.objective||"", status:"approved", note:it.note});
+    });
+    return {curriculum:cur, subjects:subjects};
+  }
+
+  /* ---------------- app shell ---------------- */
+  var menuBtn=document.getElementById("menuBtn"), sidebar=document.getElementById("sidebar"), scrim=document.getElementById("scrim");
+  function toggleMenu(open){ var o = open===undefined ? !sidebar.classList.contains("open") : open; sidebar.classList.toggle("open",o); scrim.classList.toggle("show",o); }
+  menuBtn.onclick=function(){toggleMenu()}; scrim.onclick=function(){toggleMenu(false)};
+
+  function enterApp(){
+    ob.style.display="none"; app.style.display="flex";
+    document.getElementById("curBadge").textContent=state.cur;
+    document.getElementById("subjCount").textContent=state.subjects.length+" subject"+(state.subjects.length>1?"s":"");
+    state.subject=null; state.topic=null; state.tab="notes"; state.topics={};
+    loadManifest().then(function(){ buildTree(); renderMain(); });
+  }
+  function loadManifest(){
+    return sGet("lumen-manifest-"+slug(state.cur)).then(function(v){
+      state.manifest={};
+      if(v){ try{ var m=JSON.parse(v); state.manifest=m.subjects||m||{}; }catch(e){} }
+    });
+  }
+
+  function buildTree(){
+    var tree=document.getElementById("subjTree"); tree.innerHTML="";
+    state.subjects.forEach(function(s,si){
+      var col=subjColor(s);
+      var block=document.createElement("div"); block.className="subj-block"; block.style.setProperty("--sc",col);
+      var head=document.createElement("button"); head.className="subj-head";
+      var specked = !!(state.manifest && state.manifest[s]);
+      head.innerHTML='<span class="dot"></span><span>'+s+'</span>'+(specked?'<span class="spec-tag">spec</span>':'')+'<span class="caret">▶</span>';
+      var list=document.createElement("div"); list.className="topic-list";
+      block.appendChild(head); block.appendChild(list); tree.appendChild(block);
+
+      var loaded=false, expanded=false;
+      head.onclick=function(){
+        expanded=!expanded; head.classList.toggle("open",expanded);
+        if(expanded && !loaded){ loaded=true; resolveTopics(s,list); }
+        else { list.style.maxHeight = expanded ? list.scrollHeight+"px" : "0"; }
+      };
+      // auto-expand the first subject when its topics are instant (manifest or seeded)
+      var instant = specked ? Object.keys(state.manifest[s]) : seedTopics(s);
+      if(si===0 && instant){ loaded=true; expanded=true; head.classList.add("open"); renderTopicItems(list,s,instant); }
+    });
+  }
+
+  function resolveTopics(subject,list){
+    if(state.manifest && state.manifest[subject]){ renderTopicItems(list,subject,Object.keys(state.manifest[subject])); return; }
+    var seed=seedTopics(subject);
+    if(seed){ renderTopicItems(list,subject,seed); return; }
+    if(state.topics[subject]){ renderTopicItems(list,subject,state.topics[subject]); return; }
+    list.innerHTML=""; var row=document.createElement("div"); row.className="topic-load";
+    row.innerHTML='<span class="spark"></span> generating topics…'; list.appendChild(row); openList(list);
+    sGet("lumen-topics-"+slug(state.cur)+"-"+slug(subject)).then(function(cached){
+      if(cached){ try{ var a=JSON.parse(cached); if(a&&a.length){ state.topics[subject]=a; renderTopicItems(list,subject,a); return Promise.reject("done"); } }catch(e){} }
+      return GEN.topics(subject);
+    }).then(function(obj){
+      var arr=(obj&&obj.topics)||[]; state.topics[subject]=arr;
+      sSet("lumen-topics-"+slug(state.cur)+"-"+slug(subject), JSON.stringify(arr));
+      renderTopicItems(list,subject,arr);
+    }).catch(function(err){
+      if(err==="done")return;
+      list.innerHTML=""; var r=document.createElement("div"); r.className="topic-retry";
+      var b=document.createElement("button"); b.textContent="Couldn't load — retry"; b.onclick=function(){ resolveTopics(subject,list); };
+      r.appendChild(b); list.appendChild(r); openList(list);
+    });
+  }
+  function openList(list){ requestAnimationFrame(function(){ list.style.maxHeight=list.scrollHeight+"px"; }); }
+  function renderTopicItems(list,subject,topics){
+    list.innerHTML="";
+    topics.forEach(function(t){
+      var it=document.createElement("button"); it.className="topic-item"; it.textContent=t;
+      it.dataset.s=subject; it.dataset.t=t;
+      it.onclick=function(){
+        state.subject=subject; state.topic=t; state.tab="notes";
+        markActiveTopic(); renderMain(); toggleMenu(false);
+        var m=document.querySelector(".main"); if(m)m.scrollTop=0;
+      };
+      list.appendChild(it);
+    });
+    markActiveTopic(); openList(list);
+  }
+  function markActiveTopic(){
+    document.querySelectorAll(".topic-item").forEach(function(it){
+      var on = it.dataset.s===state.subject && it.dataset.t===state.topic;
+      it.classList.toggle("active",on);
+      if(on) it.style.setProperty("--sc",subjColor(state.subject));
+    });
+  }
+
+  /* ---------------- main render ---------------- */
+  var TABS=[["notes","Notes"],["cards","Flashcards"],["quiz","Quiz"],["papers","Past Papers"],["tutor","AI Tutor"]];
+  function el(tag,attrs,children){
+    var n=document.createElement(tag);
+    if(attrs)for(var k in attrs){ if(k==="class")n.className=attrs[k]; else if(k==="html")n.innerHTML=attrs[k]; else if(k.slice(0,2)==="on")n[k]=attrs[k]; else n.setAttribute(k,attrs[k]); }
+    if(children)children.forEach(function(c){ if(c==null)return; n.appendChild(typeof c==="string"?document.createTextNode(c):c); });
+    return n;
+  }
+
+  function emptyState(){
+    return el("div",{class:"empty"},[
+      el("div",{class:"empty-orb"}),
+      el("h2",null,["Pick a topic to begin"]),
+      el("p",null,["Open one of your subjects on the left and choose a topic. Lumen will light up its notes, flashcards, quiz, past papers and tutor — built for "+state.cur+"."])
+    ]);
+  }
+  function renderMain(){
+    var inner=document.getElementById("mainInner");
+    if(!state.topic){ inner.innerHTML=""; inner.style.removeProperty("--sc"); inner.appendChild(emptyState()); return; }
+    var col=subjColor(state.subject);
+    inner.style.setProperty("--sc",col);
+    inner.innerHTML="";
+
+    var header=el("div",{class:"topic-header"},[
+      el("div",{class:"tag"},[el("span",{class:"dot"}),document.createTextNode(state.subject+" · "+state.cur)]),
+      el("h2",null,[state.topic])
+    ]);
+    inner.appendChild(header);
+
+    var bar=el("div",{class:"tabbar"});
+    TABS.forEach(function(t){
+      var b=el("button",{class:"tab"+(state.tab===t[0]?" active":""),onclick:function(){state.tab=t[0];renderMain();}},[t[1]]);
+      bar.appendChild(b);
+    });
+    inner.appendChild(bar);
+
+    var panel=el("div",{class:"panel"});
+    inner.appendChild(panel);
+
+    if(state.tab==="tutor"){ renderTutor(panel); return; }
+    if(state.tab==="notes"){ renderNotesFlow(panel); return; }
+    renderGenerated(panel, state.tab);
+  }
+
+  /* ---- notes: objective-structured (spec manifest) OR a single generated note ---- */
+  function topicObjectives(){
+    if(state.manifest && state.manifest[state.subject] && state.manifest[state.subject][state.topic]) return state.manifest[state.subject][state.topic];
+    return null;
+  }
+  function renderNotesFlow(panel){
+    var objs = topicObjectives();
+    if(objs && objs.length){ renderObjectiveNotes(panel, objs); return; }
+    renderSingleNote(panel);
+  }
+
+  function renderSingleNote(panel){
+    var k=key("notes");
+    if(state.notesData[k]){ renderNotesContent(panel, state.notesData[k]); return; }
+    if(state.status[k]==="error"){ renderError(panel,"notes"); return; }
+    renderLoading(panel,"notes");
+    if(state.busy[k]) return;
+    state.busy[k]=true;
+    sGet(storeKey("notes")).then(function(cached){
+      if(cached){ try{ var o=JSON.parse(cached); state.notesData[k]=o.note?o:{note:o,status:"checked",check:null}; state.busy[k]=false; if(state.tab==="notes")renderMain(); return Promise.reject("done"); }catch(e){} }
+      return GEN.notes();
+    }).then(function(note){
+      return GEN.critic(note).then(function(check){ return {note:note,check:check,status:"checked"}; })
+                             .catch(function(){ return {note:note,check:null,status:"checked"}; });
+    }).then(function(obj){
+      state.notesData[k]=obj; state.busy[k]=false;
+      sSet(storeKey("notes"), JSON.stringify(obj));
+      if(state.tab==="notes") renderMain();
+    }).catch(function(err){
+      if(err==="done") return;
+      state.status[k]="error"; state.busy[k]=false;
+      if(state.tab==="notes") renderMain();
+    });
+  }
+
+  function objKey(ref){ return key("notes")+":"+slug(ref); }
+  function objStoreKey(ref){ return "lumen-objnote-"+slug(state.cur)+"-"+slug(state.subject)+"-"+slug(state.topic)+"-"+slug(ref); }
+  function renderObjectiveNotes(panel, objs){
+    var tk=key("notes");
+    var verified = objs.filter(function(o){ return o.note && o.status==="approved"; }).length;
+    if(!state.objOpen[tk]){ var s={}; objs.forEach(function(o,i){ if(o.note&&o.status==="approved")s[i]=true; }); state.objOpen[tk]=s; }
+    panel.appendChild(el("div",{class:"obj-intro"},[el("b",null,[String(objs.length)]),document.createTextNode(" spec objective"+(objs.length===1?"":"s")+" · "),el("b",{class:"vtext"},[String(verified)]),document.createTextNode(" verified")]));
+    objs.forEach(function(o,i){ panel.appendChild(objBlock(o,i,tk)); });
+    panel.appendChild(el("div",{class:"disclaimer"},["Structure and verified notes come from the specification. Unverified objectives generate on demand and are self-checked."]));
+  }
+  function objBlock(o,i,tk){
+    var open = !!state.objOpen[tk][i];
+    var verified = o.note && o.status==="approved";
+    var ref = o.spec_ref || String(i+1);
+    var chip = verified ? el("span",{class:"obj-chip v"},["Verified"]) : el("span",{class:"obj-chip g"},[open?"AI":"Generate"]);
+    var head = el("button",{class:"obj-head",onclick:function(){ state.objOpen[tk][i]=!state.objOpen[tk][i]; renderMain(); }},[
+      el("span",{class:"obj-ref"},["["+ref+"]"]),
+      el("span",{class:"obj-text"},[o.objective||state.topic]),
+      chip
+    ]);
+    var block = el("div",{class:"obj-block"+(open?" open":"")},[head]);
+    if(open){ var body=el("div",{class:"obj-body"}); fillObjBody(body,o,i,verified,ref); block.appendChild(body); }
+    return block;
+  }
+  function fillObjBody(body,o,i,verified,ref){
+    if(verified){ body.appendChild(notesBadge({status:"verified"})); noteBody(body,o.note); return; }
+    var k=objKey(ref);
+    if(state.objNote[k]){
+      var obj=state.objNote[k];
+      body.appendChild(notesBadge(obj));
+      var c=obj.check;
+      if(c && c.verdict==="revise" && c.flags && c.flags.length){ var ul=el("ul"); c.flags.forEach(function(f){ ul.appendChild(el("li",null,[f])); }); body.appendChild(el("div",{class:"nflags"},[el("h4",null,["What to double-check"]),ul])); }
+      noteBody(body,obj.note);
+      body.appendChild(el("div",{class:"regen"},[el("button",{onclick:function(){ state.objNote[k]=null; state.objStatus[k]=""; state.objBusy[k]=false; sSet(objStoreKey(ref),""); renderMain(); }},["↻ Regenerate"])]));
+      return;
+    }
+    if(state.objStatus[k]==="error"){
+      body.appendChild(el("p",{class:"err"},["Couldn't generate this objective just now. "]));
+      body.appendChild(el("button",{class:"btn btn-ghost",onclick:function(){ state.objStatus[k]=""; renderMain(); }},["Try again"]));
+      return;
+    }
+    var box=el("div",{class:"state-box"}); for(var j=0;j<3;j++){ var sh=el("div",{class:"shimmer"}); sh.style.width=[80,68,74][j]+"%"; box.appendChild(sh); }
+    box.appendChild(el("div",{class:"gen-msg"},[el("span",{class:"spark"}),document.createTextNode("Writing notes for this objective…")]));
+    body.appendChild(box);
+    if(state.objBusy[k]) return;
+    state.objBusy[k]=true;
+    sGet(objStoreKey(ref)).then(function(cached){
+      if(cached){ try{ state.objNote[k]=JSON.parse(cached); state.objBusy[k]=false; if(state.tab==="notes")renderMain(); return Promise.reject("done"); }catch(e){} }
+      return GEN.notesObjective(ref, o.objective||state.topic);
+    }).then(function(note){
+      return GEN.critic(note).then(function(check){ return {note:note,check:check,status:"checked"}; }).catch(function(){ return {note:note,check:null,status:"checked"}; });
+    }).then(function(obj){
+      state.objNote[k]=obj; state.objBusy[k]=false; sSet(objStoreKey(ref), JSON.stringify(obj)); if(state.tab==="notes")renderMain();
+    }).catch(function(err){ if(err==="done")return; state.objStatus[k]="error"; state.objBusy[k]=false; if(state.tab==="notes")renderMain(); });
+  }
+
+  function notesBadge(obj){
+    if(obj.status==="verified") return el("span",{class:"nbadge verified"},["✓ Verified · reviewed & approved"]);
+    var c=obj.check;
+    if(c && c.verdict==="pass") return el("span",{class:"nbadge checked"},["✓ AI self-checked"]);
+    if(c && c.verdict==="revise") return el("span",{class:"nbadge flag"},["⚠ Flagged — verify before relying on this"]);
+    return el("span",{class:"nbadge flag"},["AI-generated"]);
+  }
+  function renderNotesContent(panel,obj){
+    panel.appendChild(notesBadge(obj));
+    var c=obj.check;
+    if(c && c.verdict==="revise" && c.flags && c.flags.length){
+      var ul=el("ul"); c.flags.forEach(function(f){ ul.appendChild(el("li",null,[f])); });
+      panel.appendChild(el("div",{class:"nflags"},[el("h4",null,["What to double-check"]),ul]));
+    }
+    noteBody(panel, obj.note);
+    if(obj.status==="verified"){
+      panel.appendChild(el("div",{class:"disclaimer"},["Part of a verified pack — reviewed and signed off."]));
+    } else {
+      panel.appendChild(el("div",{class:"regen"},[el("button",{onclick:function(){ var k=key("notes"); state.notesData[k]=null; state.status[k]=""; state.busy[k]=false; sSet(storeKey("notes"),""); renderMain(); }},["↻ Regenerate"])]));
+      panel.appendChild(disclaimer());
+    }
+  }
+  function noteBody(panel,d){
+    d=d||{};
+    if(d.summary) panel.appendChild(el("div",{class:"note-summary"},[d.summary]));
+    (d.sections||[]).forEach(function(sec){
+      var ul=el("ul"); (sec.points||[]).forEach(function(p){ ul.appendChild(el("li",null,[p])); });
+      panel.appendChild(el("div",{class:"note-sec"},[el("h3",null,[sec.heading||""]),ul]));
+    });
+    if(d.keyTerms&&d.keyTerms.length){
+      var grid=el("div",{class:"terms"});
+      d.keyTerms.forEach(function(t){ grid.appendChild(el("div",{class:"term"},[el("b",null,[t.term||""]),el("span",null,[t.definition||""])])); });
+      panel.appendChild(el("h3",{class:"note-sec",style:"font-family:var(--serif);font-size:21px;margin-bottom:6px"},["Key terms"]));
+      panel.appendChild(grid);
+    }
+    if(d.examTips&&d.examTips.length){
+      var ul2=el("ul"); d.examTips.forEach(function(t){ ul2.appendChild(el("li",null,[t])); });
+      panel.appendChild(el("div",{class:"tips"},[el("h3",null,["Exam tips"]),ul2]));
+    }
+  }
+
+  /* generic generate-or-show for notes/cards/quiz/papers */
+  function renderGenerated(panel, kind){
+    var k=key(kind);
+    if(state.data[k]){ renderContent(panel, kind, state.data[k]); return; }
+    if(state.status[k]==="error"){ renderError(panel,kind); return; }
+    // loading state
+    renderLoading(panel, kind);
+    if(state.busy[k]) return;
+    state.busy[k]=true;
+
+    // try cache first, else generate
+    sGet(storeKey(kind)).then(function(cached){
+      if(cached){ try{ state.data[k]=JSON.parse(cached); state.busy[k]=false; if(state.tab===kind)renderMain(); return Promise.reject("cached"); }catch(e){} }
+      return GEN[kind]();
+    }).then(function(obj){
+      state.data[k]=obj; state.busy[k]=false;
+      sSet(storeKey(kind), JSON.stringify(obj));
+      if(state.tab===kind) renderMain();
+    }).catch(function(err){
+      if(err==="cached") return;
+      state.status[k]="error"; state.busy[k]=false;
+      if(state.tab===kind) renderMain();
+    });
+  }
+
+  function renderLoading(panel, kind){
+    var label={notes:"Writing your notes",cards:"Building flashcards",quiz:"Setting your quiz",papers:"Drafting exam questions"}[kind];
+    var box=el("div",{class:"state-box"});
+    for(var i=0;i<4;i++){ var s=el("div",{class:"shimmer"}); s.style.width=[88,72,80,60][i]+"%"; box.appendChild(s); }
+    box.appendChild(el("div",{class:"gen-msg"},[el("span",{class:"spark"}),document.createTextNode(label+" with AI…")]));
+    panel.appendChild(box);
+  }
+  function renderError(panel, kind){
+    var box=el("div",{class:"state-box"});
+    box.appendChild(el("p",{class:"err"},["Couldn't reach the AI to generate this just now. Check the connection and try again — your other tabs still work."]));
+    box.appendChild(el("button",{class:"btn btn-ghost",onclick:function(){ var k=key(kind); state.status[k]=""; renderMain(); }},["Try again"]));
+    panel.appendChild(box);
+  }
+  function regenRow(kind){
+    return el("div",{class:"regen"},[el("button",{onclick:function(){ var k=key(kind); state.data[k]=null; state.status[k]=""; sSet(storeKey(kind),""); renderMain(); }},["↻ Regenerate"])]);
+  }
+  function disclaimer(){ return el("div",{class:"disclaimer"},["AI-generated · accurate for guidance, but check against your official "+state.cur+" syllabus."]); }
+
+  function renderContent(panel, kind, data){
+    if(kind==="notes") return renderNotes(panel,data);
+    if(kind==="cards") return renderCards(panel,data);
+    if(kind==="quiz")  return renderQuiz(panel,data);
+    if(kind==="papers")return renderPapers(panel,data);
+  }
+
+  /* ----- notes ----- */
+  function renderNotes(panel,d){
+    if(d.summary) panel.appendChild(el("div",{class:"note-summary"},[d.summary]));
+    (d.sections||[]).forEach(function(sec){
+      var ul=el("ul"); (sec.points||[]).forEach(function(p){ ul.appendChild(el("li",null,[p])); });
+      panel.appendChild(el("div",{class:"note-sec"},[el("h3",null,[sec.heading||""]),ul]));
+    });
+    if(d.keyTerms&&d.keyTerms.length){
+      var grid=el("div",{class:"terms"});
+      d.keyTerms.forEach(function(t){ grid.appendChild(el("div",{class:"term"},[el("b",null,[t.term||""]),el("span",null,[t.definition||""])])); });
+      panel.appendChild(el("h3",{class:"note-sec",style:"font-family:var(--serif);font-size:21px;margin-bottom:6px"},["Key terms"]));
+      panel.appendChild(grid);
+    }
+    if(d.examTips&&d.examTips.length){
+      var ul2=el("ul"); d.examTips.forEach(function(t){ ul2.appendChild(el("li",null,[t])); });
+      panel.appendChild(el("div",{class:"tips"},[el("h3",null,["Exam tips"]),ul2]));
+    }
+    panel.appendChild(regenRow("notes"));
+    panel.appendChild(disclaimer());
+  }
+
+  /* ----- flashcards ----- */
+  function renderCards(panel,d){
+    var cards=d.cards||[]; if(!cards.length){ panel.appendChild(el("p",{class:"err"},["No cards generated."])); return; }
+    var k=key("cards"); var st=state.cards[k]||(state.cards[k]={i:0,flip:false});
+    if(st.i>=cards.length)st.i=0;
+    var c=cards[st.i];
+    var wrap=el("div",{class:"fc-wrap"});
+    wrap.appendChild(el("div",{class:"fc-counter"},["Card "+(st.i+1)+" / "+cards.length]));
+
+    var inner=el("div",{class:"fc-inner"});
+    inner.appendChild(el("div",{class:"fc-face fc-front"},[el("div",{class:"fc-kicker"},["Prompt"]),el("div",{class:"q"},[c.front||""])]));
+    inner.appendChild(el("div",{class:"fc-face fc-back"},[el("div",{class:"fc-kicker"},["Answer"]),el("div",{class:"a"},[c.back||""])]));
+    var fc=el("div",{class:"fc"+(st.flip?" flipped":""),onclick:function(){st.flip=!st.flip;renderMain();}},[inner]);
+    if(!st.flip) inner.appendChild(el("div",{class:"fc-hint"},["click to flip"]));
+    wrap.appendChild(fc);
+
+    var prev=el("button",{class:"icon-btn",onclick:function(){st.i=(st.i-1+cards.length)%cards.length;st.flip=false;renderMain();}},[]);
+    prev.innerHTML='<svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>';
+    var flip=el("button",{class:"icon-btn flip-btn",onclick:function(){st.flip=!st.flip;renderMain();}},["Flip"]);
+    var next=el("button",{class:"icon-btn",onclick:function(){st.i=(st.i+1)%cards.length;st.flip=false;renderMain();}},[]);
+    next.innerHTML='<svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>';
+    wrap.appendChild(el("div",{class:"fc-controls"},[prev,flip,next]));
+    panel.appendChild(wrap);
+    panel.appendChild(regenRow("cards"));
+  }
+
+  /* ----- quiz ----- */
+  function renderQuiz(panel,d){
+    var qs=d.questions||[]; if(!qs.length){ panel.appendChild(el("p",{class:"err"},["No questions generated."])); return; }
+    var k=key("quiz"); var st=state.quiz[k]||(state.quiz[k]={i:0,score:0,chosen:null,done:false});
+
+    if(st.done){
+      panel.appendChild(el("div",{class:"score-big"},[st.score+" / "+qs.length]));
+      var msg = st.score===qs.length?"Perfect — that topic's lit up.":st.score>=Math.ceil(qs.length*0.6)?"Solid. A couple to firm up.":"Worth another pass through the notes.";
+      panel.appendChild(el("div",{class:"score-sub"},[msg]));
+      panel.appendChild(el("div",{style:"text-align:center"},[el("button",{class:"btn btn-primary",onclick:function(){state.quiz[k]={i:0,score:0,chosen:null,done:false};renderMain();}},["Try again"])]));
+      panel.appendChild(regenRow("quiz"));
+      return;
+    }
+
+    var q=qs[st.i];
+    panel.appendChild(el("div",{class:"quiz-prog"},["Question "+(st.i+1)+" of "+qs.length+"  ·  score "+st.score]));
+    panel.appendChild(el("div",{class:"quiz-q"},[q.q||""]));
+    var letters=["A","B","C","D","E"];
+    (q.options||[]).forEach(function(opt,oi){
+      var cls="opt";
+      if(st.chosen!=null){ if(oi===q.answer)cls+=" correct"; else if(oi===st.chosen)cls+=" wrong"; }
+      var b=el("button",{class:cls,disabled:st.chosen!=null?"true":null,onclick:function(){
+        if(st.chosen!=null)return; st.chosen=oi; if(oi===q.answer)st.score++; renderMain();
+      }},[el("span",{class:"letter"},[letters[oi]]),document.createTextNode(opt)]);
+      panel.appendChild(b);
+    });
+
+    if(st.chosen!=null){
+      panel.appendChild(el("div",{class:"explain"},[el("b",null,[st.chosen===q.answer?"Correct. ":"Not quite. "]),document.createTextNode(q.explanation||"")]));
+      var last=st.i===qs.length-1;
+      panel.appendChild(el("div",{class:"quiz-foot"},[el("span"),el("button",{class:"btn btn-primary",onclick:function(){
+        if(last){st.done=true;} else {st.i++;st.chosen=null;} renderMain();
+      }},[last?"See score":"Next question →"])]));
+    }
+    panel.appendChild(regenRow("quiz"));
+  }
+
+  /* ----- past papers ----- */
+  function renderPapers(panel,d){
+    var qs=d.questions||[];
+    qs.forEach(function(q,qi){
+      var card=el("div",{class:"pp"});
+      card.appendChild(el("div",{class:"pp-top"},[el("div",{class:"pp-q"},[q.question||""]),el("div",{class:"pp-marks"},[(q.marks||"")+" marks"])]));
+      var reveal=el("div",{class:"pp-reveal"});
+      var msBox=el("div",{class:"ms"},[el("h4",null,["Mark scheme"]),(function(){var ul=el("ul");(q.markScheme||[]).forEach(function(m){ul.appendChild(el("li",null,[m]));});return ul;})()]);
+      msBox.style.display="none";
+      var btn=el("button",{onclick:function(){ var open=msBox.style.display==="none"; msBox.style.display=open?"block":"none"; btn.textContent=open?"Hide mark scheme":"Show mark scheme"; }},["Show mark scheme"]);
+      reveal.appendChild(btn); reveal.appendChild(msBox);
+      card.appendChild(reveal);
+      panel.appendChild(card);
+    });
+    panel.appendChild(regenRow("papers"));
+    panel.appendChild(disclaimer());
+  }
+
+  /* ----- tutor ----- */
+  function renderTutor(panel){
+    var k=key("tutor"); var msgs=state.tutor[k]||(state.tutor[k]=[]);
+    var box=el("div",{class:"tutor"});
+    var chat=el("div",{class:"chat"});
+    if(!msgs.length){
+      chat.appendChild(el("div",{class:"msg bot"},["Ask me anything about "+state.topic+". I can explain a concept, walk through a question, or check your understanding."]));
+    }
+    msgs.forEach(function(m){ chat.appendChild(el("div",{class:"msg "+(m.role==="user"?"user":"bot")+(m.thinking?" thinking":"")},[m.text])); });
+    box.appendChild(chat);
+
+    if(!msgs.length){
+      var chips=el("div",{class:"chips"});
+      ["Explain this topic simply","Give me a worked example","What do examiners look for?"].forEach(function(p){
+        chips.appendChild(el("button",{onclick:function(){send(p);}},[p]));
+      });
+      box.appendChild(chips);
+    }
+
+    var input=el("input",{type:"text",placeholder:"Ask Lumen about "+state.topic+"…"});
+    input.value = state.tutorDraft||"";
+    input.oninput=function(){state.tutorDraft=input.value;};
+    input.onkeydown=function(e){ if(e.key==="Enter" && input.value.trim()){ send(input.value.trim()); } };
+    var sendBtn=el("button",{class:"send","aria-label":"Send",onclick:function(){ if(input.value.trim())send(input.value.trim()); }},[]);
+    sendBtn.innerHTML='<svg viewBox="0 0 24 24"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg>';
+    box.appendChild(el("div",{class:"composer"},[input,sendBtn]));
+    panel.appendChild(box);
+
+    requestAnimationFrame(function(){ chat.scrollTop=chat.scrollHeight; });
+
+    function send(text){
+      var k=key("tutor"); var msgs=state.tutor[k];
+      if(state.tutorBusy)return; 
+      msgs.push({role:"user",text:text});
+      msgs.push({role:"bot",text:"thinking…",thinking:true});
+      state.tutorDraft=""; state.tutorBusy=true; renderMain();
+
+      var history=msgs.filter(function(m){return !m.thinking}).map(function(m){return {role:m.role==="user"?"user":"assistant",content:m.text};});
+      var sys="You are Lumen, a friendly and accurate "+ctx()+" tutor helping a student with the topic \""+state.topic+"\". Keep answers concise, correct and exam-focused, using proper terminology for this level. Use short paragraphs.";
+      fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({model:"claude-sonnet-4-6",max_tokens:1000,system:sys,messages:history})})
+        .then(function(r){ if(!r.ok)throw 0; return r.json(); })
+        .then(function(data){
+          var reply=(data.content||[]).filter(function(b){return b.type==="text"}).map(function(b){return b.text}).join("\n").trim();
+          msgs.pop(); msgs.push({role:"bot",text:reply||"(no response)"}); state.tutorBusy=false; if(state.tab==="tutor")renderMain();
+        })
+        .catch(function(){ msgs.pop(); msgs.push({role:"bot",text:"I couldn't reach the tutor just now — check the connection and try again."}); state.tutorBusy=false; if(state.tab==="tutor")renderMain(); });
+    }
+  }
+
+  /* ---------------- boot ---------------- */
+  (function boot(){
+    updateStart();
+    sGet("lumen-account").then(function(v){
+      if(v){ try{ var a=JSON.parse(v); if(a&&a.cur&&CUR[a.cur]&&a.subjects&&a.subjects.length){ state.cur=a.cur; state.subjects=a.subjects.filter(function(s){return CUR[a.cur].indexOf(s)>-1;}); if(state.subjects.length){ enterApp(); return; } } }catch(e){} }
+    });
+  })();
+})();
+</script>
+</body>
+</html>
