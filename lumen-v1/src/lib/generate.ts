@@ -52,8 +52,18 @@ export async function getObjectiveNote(curriculum: string, subject: string, obje
   return { note, status: "checked", check };
 }
 
-// ---- notes (topic level): generate a whole-topic note + critic, cached ----
+// ---- notes (topic level): verified-from-DB, else generate a whole-topic note + critic, cached ----
 export async function getTopicNote(curriculum: string, subject: string, topic: string) {
+  // human-approved note seeded for this topic wins — instant, trusted, no generation
+  const approved = await prisma.note.findFirst({
+    where: {
+      status: "APPROVED",
+      objective: { topic: { name: topic, subject: { curriculum, name: subject } } },
+    },
+    orderBy: { objective: { order: "asc" } },
+  });
+  if (approved) return { note: approved.body, status: "verified", check: approved.check ?? null };
+
   const c = ctx(curriculum, subject);
   return getCached(`${curriculum}|${subject}|${topic}|notes`, "notes", async () => {
     const note = parseJson(

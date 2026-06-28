@@ -1,0 +1,458 @@
+{
+  "curriculum": "GCSE",
+  "board": "AQA",
+  "subjects": {
+    "Biology": {
+      "Cell structure and organisation": [
+        {
+          "spec_ref": "4.1.1",
+          "objective": "Describe the structures of eukaryotic and prokaryotic cells and the functions of their sub-cellular parts.",
+          "status": "approved",
+          "note": {
+            "summary": "Cells are the basic unit of life. Eukaryotic cells (animal and plant) have a nucleus; prokaryotic cells (bacteria) do not. Each sub-cellular structure carries out a specific function.",
+            "sections": [
+              {
+                "heading": "Eukaryotic and prokaryotic cells",
+                "points": [
+                  "Eukaryotic cells have a nucleus that encloses their DNA; plant and animal cells are eukaryotic.",
+                  "Prokaryotic cells (bacteria) have no nucleus — their DNA is a single loop, plus small rings called plasmids.",
+                  "Prokaryotes are much smaller (about 1–5 µm) than eukaryotic cells (often 10–100 µm)."
+                ]
+              },
+              {
+                "heading": "Structures in an animal cell",
+                "points": [
+                  "Nucleus — controls the cell and contains the genetic material.",
+                  "Cytoplasm — where most of the cell's chemical reactions happen.",
+                  "Cell membrane — controls what enters and leaves the cell.",
+                  "Mitochondria — the site of aerobic respiration, releasing energy.",
+                  "Ribosomes — where protein synthesis takes place."
+                ]
+              },
+              {
+                "heading": "Extra structures in a plant cell",
+                "points": [
+                  "Cell wall — made of cellulose; strengthens and supports the cell.",
+                  "Permanent vacuole — contains cell sap and keeps the cell firm (turgid).",
+                  "Chloroplasts — contain chlorophyll and absorb light for photosynthesis."
+                ]
+              },
+              {
+                "heading": "Specialisation and magnification",
+                "points": [
+                  "Cells differentiate into specialised types such as sperm, nerve and root hair cells.",
+                  "Magnification = image size ÷ real size (keep the units the same).",
+                  "Electron microscopes have far higher magnification and resolution than light microscopes, revealing sub-cellular detail."
+                ]
+              }
+            ],
+            "keyTerms": [
+              { "term": "Eukaryotic", "definition": "A cell that contains a membrane-bound nucleus, e.g. animal and plant cells." },
+              { "term": "Prokaryotic", "definition": "A cell with no nucleus; the genetic material floats free in the cytoplasm, e.g. bacteria." },
+              { "term": "Organelle", "definition": "A specialised structure inside a cell that carries out a particular function." },
+              { "term": "Differentiation", "definition": "The process by which a cell becomes specialised for a particular job." }
+            ],
+            "examTips": [
+              "Plant cells have everything an animal cell has PLUS a cell wall, vacuole and chloroplasts.",
+              "Be ready to rearrange magnification = image ÷ real size, and convert units (1 mm = 1000 µm).",
+              "State a structure AND its function — marks are usually for linking the two."
+            ]
+          }
+        }
+      ],
+      "Movement in and out of cells": [
+        {
+          "spec_ref": "4.1.3",
+          "objective": "Explain how substances move into and out of cells by diffusion, osmosis and active transport.",
+          "status": "approved",
+          "note": {
+            "summary": "Substances move into and out of cells by diffusion, osmosis and active transport. Diffusion and osmosis are passive; active transport needs energy from respiration.",
+            "sections": [
+              {
+                "heading": "Diffusion",
+                "points": [
+                  "The net movement of particles from a higher to a lower concentration, down a concentration gradient.",
+                  "It is passive — no energy is needed.",
+                  "Examples include oxygen and carbon dioxide moving during gas exchange.",
+                  "Rate increases with a steeper concentration gradient, higher temperature and larger surface area."
+                ]
+              },
+              {
+                "heading": "Osmosis",
+                "points": [
+                  "The diffusion of water molecules across a partially permeable membrane.",
+                  "Water moves from a dilute solution (high water concentration) to a more concentrated solution (low water concentration).",
+                  "It keeps plant cells turgid and affects animal cells if the surrounding concentration changes."
+                ]
+              },
+              {
+                "heading": "Active transport",
+                "points": [
+                  "The movement of substances against the concentration gradient, from low to high concentration.",
+                  "It requires energy released by respiration.",
+                  "Examples: mineral ions absorbed into root hair cells; glucose reabsorbed in the gut and kidneys."
+                ]
+              },
+              {
+                "heading": "Adaptations of exchange surfaces",
+                "points": [
+                  "A large surface area provides more room for exchange.",
+                  "Thin membranes give a short diffusion distance.",
+                  "A good blood supply or ventilation maintains a steep concentration gradient (e.g. alveoli, villi)."
+                ]
+              }
+            ],
+            "keyTerms": [
+              { "term": "Diffusion", "definition": "Net movement of particles from a high to a low concentration, down a gradient." },
+              { "term": "Osmosis", "definition": "The diffusion of water across a partially permeable membrane." },
+              { "term": "Active transport", "definition": "Movement of substances against the gradient, using energy from respiration." },
+              { "term": "Partially permeable", "definition": "A membrane that lets some molecules (such as water) through but not others." }
+            ],
+            "examTips": [
+              "When defining osmosis, always mention 'water' and a 'partially permeable membrane'.",
+              "Diffusion and osmosis are passive; only active transport needs energy — don't mix these up.",
+              "Explain rate using the concentration gradient, temperature and surface area."
+            ]
+          }
+        }
+      ],
+      "Enzymes": [
+        {
+          "spec_ref": "4.2.2",
+          "objective": "Describe enzymes as biological catalysts and explain the effect of temperature and pH on their activity.",
+          "status": "approved",
+          "note": {
+            "summary": "Enzymes are biological catalysts — proteins that speed up reactions without being used up. Each enzyme has a specific active site that fits its substrate.",
+            "sections": [
+              {
+                "heading": "What enzymes do",
+                "points": [
+                  "Enzymes are proteins that act as catalysts, speeding up reactions.",
+                  "They are not used up in the reaction and can be reused.",
+                  "They work by lowering the activation energy needed for the reaction."
+                ]
+              },
+              {
+                "heading": "The lock-and-key model",
+                "points": [
+                  "The substrate fits into the enzyme's active site like a key in a lock.",
+                  "The shape is specific — one enzyme usually works on only one type of substrate.",
+                  "The enzyme and substrate join to form an enzyme–substrate complex."
+                ]
+              },
+              {
+                "heading": "Effect of temperature",
+                "points": [
+                  "Raising the temperature increases the rate as particles collide more often and with more energy.",
+                  "Above the optimum the active site changes shape (denatures) and the substrate no longer fits, so the rate falls.",
+                  "Human enzymes typically work best at around 37 °C."
+                ]
+              },
+              {
+                "heading": "Effect of pH",
+                "points": [
+                  "Each enzyme has an optimum pH at which it works fastest.",
+                  "A pH that is too high or too low changes the active site's shape and denatures the enzyme.",
+                  "For example, stomach protease works best in acidic conditions, while amylase prefers a neutral pH."
+                ]
+              }
+            ],
+            "keyTerms": [
+              { "term": "Enzyme", "definition": "A protein that catalyses (speeds up) a specific reaction." },
+              { "term": "Substrate", "definition": "The molecule that an enzyme acts on." },
+              { "term": "Active site", "definition": "The region of an enzyme where the substrate binds." },
+              { "term": "Denatured", "definition": "When an enzyme's active site loses its shape so the substrate no longer fits, caused by high temperature or the wrong pH." }
+            ],
+            "examTips": [
+              "Never say an enzyme is 'killed' — say it is 'denatured'.",
+              "Explain rate changes in terms of the active site's shape and how well the substrate fits.",
+              "Denaturing is permanent — cooling a denatured enzyme down does not bring it back."
+            ]
+          }
+        }
+      ]
+    },
+    "Chemistry": {
+      "Atomic structure and the periodic table": [
+        {
+          "spec_ref": "4.1",
+          "objective": "Describe the structure of the atom and how elements are arranged in the periodic table.",
+          "status": "approved",
+          "note": {
+            "summary": "Atoms are made of protons, neutrons and electrons. The periodic table arranges elements by atomic (proton) number into groups and periods.",
+            "sections": [
+              {
+                "heading": "Sub-atomic particles",
+                "points": [
+                  "Protons: relative charge +1, relative mass 1, found in the nucleus.",
+                  "Neutrons: charge 0, relative mass 1, found in the nucleus.",
+                  "Electrons: charge −1, negligible mass, arranged in shells around the nucleus.",
+                  "Atoms have no overall charge because the number of protons equals the number of electrons."
+                ]
+              },
+              {
+                "heading": "Atomic number, mass number and isotopes",
+                "points": [
+                  "Atomic number = the number of protons, which defines the element.",
+                  "Mass number = the number of protons + neutrons.",
+                  "Number of neutrons = mass number − atomic number.",
+                  "Isotopes are atoms of the same element with the same protons but different numbers of neutrons."
+                ]
+              },
+              {
+                "heading": "Electronic structure",
+                "points": [
+                  "Electrons occupy shells (energy levels) around the nucleus.",
+                  "The first shell holds up to 2 electrons; the second and third up to 8.",
+                  "For example, sodium has the electron configuration 2,8,1."
+                ]
+              },
+              {
+                "heading": "The periodic table",
+                "points": [
+                  "Elements are arranged in order of increasing atomic number.",
+                  "Groups (columns) contain elements with the same number of outer electrons and similar properties.",
+                  "Periods (rows) each add one more electron shell.",
+                  "Metals are on the left, non-metals on the right."
+                ]
+              }
+            ],
+            "keyTerms": [
+              { "term": "Atomic number", "definition": "The number of protons in an atom." },
+              { "term": "Mass number", "definition": "The total number of protons and neutrons in an atom." },
+              { "term": "Isotope", "definition": "Atoms of the same element with different numbers of neutrons." },
+              { "term": "Group", "definition": "A column in the periodic table; its elements share the same number of outer-shell electrons." }
+            ],
+            "examTips": [
+              "Neutrons = mass number − atomic number.",
+              "The group number (1–7) tells you the number of outer electrons, which controls reactivity.",
+              "Isotopes react identically because they have the same electron arrangement."
+            ]
+          }
+        }
+      ],
+      "Ionic, covalent and metallic bonding": [
+        {
+          "spec_ref": "4.2",
+          "objective": "Describe ionic, covalent and metallic bonding and relate the structures to properties.",
+          "status": "approved",
+          "note": {
+            "summary": "Chemical bonds form when atoms transfer or share electrons to gain full outer shells. The three main types are ionic, covalent and metallic.",
+            "sections": [
+              {
+                "heading": "Ionic bonding",
+                "points": [
+                  "Happens between metals and non-metals.",
+                  "Metal atoms lose electrons to form positive ions; non-metal atoms gain electrons to form negative ions.",
+                  "Oppositely charged ions are held together by strong electrostatic forces in a giant lattice."
+                ]
+              },
+              {
+                "heading": "Covalent bonding",
+                "points": [
+                  "Happens between non-metal atoms.",
+                  "Atoms share one or more pairs of electrons.",
+                  "Can form small molecules (e.g. H₂O, CO₂) or giant covalent structures (e.g. diamond, graphite)."
+                ]
+              },
+              {
+                "heading": "Metallic bonding",
+                "points": [
+                  "Metals consist of a lattice of positive ions in a 'sea' of delocalised electrons.",
+                  "There is a strong attraction between the positive ions and the delocalised electrons."
+                ]
+              },
+              {
+                "heading": "Linking structure to properties",
+                "points": [
+                  "Ionic compounds have high melting points and conduct electricity when molten or dissolved, because ions are then free to move.",
+                  "Small covalent molecules have low melting points and do not conduct electricity.",
+                  "Metals conduct electricity and heat (delocalised electrons) and are malleable."
+                ]
+              }
+            ],
+            "keyTerms": [
+              { "term": "Ion", "definition": "A charged particle formed when an atom loses or gains electrons." },
+              { "term": "Ionic bond", "definition": "A strong electrostatic attraction between oppositely charged ions." },
+              { "term": "Covalent bond", "definition": "A shared pair of electrons between two non-metal atoms." },
+              { "term": "Delocalised electrons", "definition": "Outer electrons in a metal that are free to move through the structure." }
+            ],
+            "examTips": [
+              "Always link properties to structure and bonding, e.g. 'conducts when molten because the ions are free to move'.",
+              "Ionic = transfer (metal + non-metal); covalent = share (non-metals); metallic = sea of electrons.",
+              "Giant structures (ionic, metallic, giant covalent) have high melting points because of many strong bonds."
+            ]
+          }
+        }
+      ]
+    },
+    "Physics": {
+      "Forces and motion": [
+        {
+          "spec_ref": "5.5",
+          "objective": "Describe forces as vectors and use Newton's laws to explain motion, including F = ma.",
+          "status": "approved",
+          "note": {
+            "summary": "Forces can be balanced or unbalanced. A resultant force changes an object's motion according to Newton's laws, where F = ma.",
+            "sections": [
+              {
+                "heading": "Scalars and vectors",
+                "points": [
+                  "Scalars have magnitude only, e.g. speed, distance and mass.",
+                  "Vectors have magnitude and direction, e.g. velocity, force and acceleration.",
+                  "Forces are vectors and are drawn as arrows showing size and direction."
+                ]
+              },
+              {
+                "heading": "Resultant force and Newton's first law",
+                "points": [
+                  "The resultant force is the single force that has the same effect as all the forces combined.",
+                  "If the resultant force is zero, a stationary object stays still and a moving object keeps a constant velocity.",
+                  "This is Newton's first law."
+                ]
+              },
+              {
+                "heading": "Newton's second law",
+                "points": [
+                  "A resultant force makes an object accelerate: force = mass × acceleration (F = ma).",
+                  "Force is in newtons (N), mass in kilograms (kg), acceleration in m/s².",
+                  "A bigger force gives a bigger acceleration; a bigger mass gives a smaller acceleration."
+                ]
+              },
+              {
+                "heading": "Weight and terminal velocity",
+                "points": [
+                  "Weight = mass × gravitational field strength (W = mg; g ≈ 9.8 N/kg on Earth).",
+                  "A falling object speeds up until air resistance equals its weight.",
+                  "The resultant force is then zero and it falls at a constant terminal velocity."
+                ]
+              }
+            ],
+            "keyTerms": [
+              { "term": "Resultant force", "definition": "The single force equivalent to all the forces acting on an object." },
+              { "term": "Newton's first law", "definition": "An object's velocity stays constant unless a resultant force acts on it." },
+              { "term": "Acceleration", "definition": "The rate of change of velocity, measured in m/s²." },
+              { "term": "Terminal velocity", "definition": "The constant maximum velocity reached when weight and air resistance balance." }
+            ],
+            "examTips": [
+              "Learn F = ma and W = mg, and always include units in your answer.",
+              "'Constant velocity' or 'stationary' means the forces are balanced (resultant force = 0).",
+              "Weight (a force, in N) and mass (in kg) are different — don't use them interchangeably."
+            ]
+          }
+        }
+      ],
+      "Energy, work and power": [
+        {
+          "spec_ref": "5.1",
+          "objective": "Describe energy stores and transfers, and calculate work done, power and efficiency.",
+          "status": "approved",
+          "note": {
+            "summary": "Energy is held in different stores and transferred between them. Work done = force × distance, and power is the rate of energy transfer.",
+            "sections": [
+              {
+                "heading": "Energy stores and conservation",
+                "points": [
+                  "Energy can be stored as kinetic, gravitational potential, elastic, thermal and chemical, among others.",
+                  "Energy is conserved — it cannot be created or destroyed, only transferred between stores.",
+                  "Some energy is always dissipated to the surroundings, usually as heat."
+                ]
+              },
+              {
+                "heading": "Work done",
+                "points": [
+                  "Work is done when a force moves an object.",
+                  "Work done (J) = force (N) × distance moved in the direction of the force (m).",
+                  "One joule equals one newton-metre; doing work transfers energy."
+                ]
+              },
+              {
+                "heading": "Kinetic and potential energy",
+                "points": [
+                  "Kinetic energy = ½ × mass × speed² (Ek = ½mv²).",
+                  "Gravitational potential energy = mass × gravitational field strength × height (Ep = mgh)."
+                ]
+              },
+              {
+                "heading": "Power and efficiency",
+                "points": [
+                  "Power = energy transferred ÷ time taken (P = E/t), measured in watts (1 W = 1 J/s).",
+                  "Efficiency = useful output energy ÷ total input energy (× 100%).",
+                  "No device is 100% efficient because some energy is always dissipated."
+                ]
+              }
+            ],
+            "keyTerms": [
+              { "term": "Work done", "definition": "The energy transferred when a force moves an object (W = Fd)." },
+              { "term": "Power", "definition": "The rate of energy transfer (P = E/t), measured in watts." },
+              { "term": "Conservation of energy", "definition": "Energy cannot be created or destroyed, only transferred between stores." },
+              { "term": "Efficiency", "definition": "The fraction of input energy that is transferred usefully." }
+            ],
+            "examTips": [
+              "Work done and energy transferred are equal and both measured in joules.",
+              "Watch the units: power in watts means joules per second.",
+              "In any real device, remember to account for 'wasted' energy (usually heat) when explaining efficiency."
+            ]
+          }
+        }
+      ]
+    },
+    "Mathematics": {
+      "Algebraic manipulation": [
+        {
+          "spec_ref": "A4",
+          "objective": "Simplify expressions, expand brackets, factorise and substitute values.",
+          "status": "approved",
+          "note": {
+            "summary": "Algebra uses letters to represent numbers. The core skills are simplifying, expanding brackets, factorising and substituting values.",
+            "sections": [
+              {
+                "heading": "Simplifying expressions",
+                "points": [
+                  "Collect like terms, e.g. 3a + 2a = 5a.",
+                  "Multiply terms, e.g. a × a = a² and 2x × 3y = 6xy.",
+                  "Use the index laws: aᵐ × aⁿ = aᵐ⁺ⁿ, aᵐ ÷ aⁿ = aᵐ⁻ⁿ, (aᵐ)ⁿ = aᵐⁿ."
+                ]
+              },
+              {
+                "heading": "Expanding brackets",
+                "points": [
+                  "Multiply every term inside the bracket by the term outside, e.g. 3(x + 2) = 3x + 6.",
+                  "For two brackets, multiply each term in the first by each term in the second (FOIL).",
+                  "For example, (x + 2)(x + 3) = x² + 5x + 6."
+                ]
+              },
+              {
+                "heading": "Factorising",
+                "points": [
+                  "Factorising is the reverse of expanding.",
+                  "Take out the highest common factor, e.g. 6x + 9 = 3(2x + 3).",
+                  "Factorise a quadratic into two brackets, e.g. x² + 5x + 6 = (x + 2)(x + 3)."
+                ]
+              },
+              {
+                "heading": "Substitution",
+                "points": [
+                  "Replace each letter with its given value and work out the result.",
+                  "Follow the order of operations (BIDMAS).",
+                  "For example, if x = 4 then 3x² = 3 × 16 = 48."
+                ]
+              }
+            ],
+            "keyTerms": [
+              { "term": "Term", "definition": "A single number, letter, or their product in an expression, e.g. 3x." },
+              { "term": "Like terms", "definition": "Terms with exactly the same letters and powers, which can be added or subtracted." },
+              { "term": "Factorise", "definition": "To write an expression as a product of its factors (brackets)." },
+              { "term": "Coefficient", "definition": "The number multiplying a variable, e.g. the 3 in 3x." }
+            ],
+            "examTips": [
+              "Expanding and factorising are opposites — check a factorised answer by expanding it back.",
+              "Keep the sign with its term when collecting like terms.",
+              "For x² + bx + c, find two numbers that multiply to c and add to b."
+            ]
+          }
+        }
+      ]
+    }
+  }
+}
