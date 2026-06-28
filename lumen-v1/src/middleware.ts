@@ -1,9 +1,13 @@
+import { NextResponse } from "next/server";
+import { clerkEnabled } from "@/lib/clerk";
 import { clerkMiddleware } from "@clerk/nextjs/server";
 
-// Enables Clerk auth on every request so `auth()`/`currentUser()` work in
-// route handlers and server components. Routes stay public by default; the
-// API routes do their own getUser() check and return 401 when not signed in.
-export default clerkMiddleware();
+// When real Clerk keys are present, run Clerk's middleware so `auth()` /
+// `currentUser()` work in route handlers and server components. With NO Clerk
+// keys (dev), we just pass every request through — clerkMiddleware() is only
+// CALLED when clerkEnabled, so it never throws in dev.
+const handler: any = clerkEnabled ? clerkMiddleware() : () => NextResponse.next();
+export default handler;
 
 export const config = {
   matcher: [

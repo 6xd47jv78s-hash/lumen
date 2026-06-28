@@ -1,0 +1,570 @@
+/* ============================================================================
+   LUMEN — DESIGN SYSTEM
+   Dark, premium, editorial. Deep near-black ground, soft glass panels, a warm
+   white-gold accent (the "lumen"), Fraunces serif for display + Inter for body.
+   Ported and consolidated from the lumen-study.html / lumen-website.html
+   prototypes. Imported once, in app/layout.tsx.
+   ============================================================================ */
+
+/* ---------------------------------------------------------------- tokens --- */
+:root {
+  /* ground + surfaces */
+  --void: #060611;            /* page background, deep near-black */
+  --ink: #0b0b18;             /* solid panel ground */
+  --bg: #060611;              /* alias */
+  --panel: rgba(255, 255, 255, 0.04);
+  --surface: rgba(255, 255, 255, 0.04);
+  --surface-2: rgba(255, 255, 255, 0.07);
+
+  /* lines + borders */
+  --line: rgba(255, 255, 255, 0.09);
+  --border: rgba(255, 255, 255, 0.09);
+  --border-bright: rgba(255, 255, 255, 0.16);
+
+  /* ink (text) */
+  --ink-text: #ecedf5;
+  --text: #ecedf5;
+  --muted: #9498b0;
+  --faint: #5b5f78;
+
+  /* the lumen — warm white-gold light source */
+  --core: #ffe6ae;
+  --gold: #ffc368;
+  --gold-deep: #ffb347;
+
+  /* status */
+  --ok: #43e0a6;
+  --bad: #ff7a85;
+
+  /* per-subject accents (referenced by curriculum.subjColor) */
+  --bio: #43e0a6;
+  --chem: #b69cff;
+  --phys: #45d6e6;
+  --math: #ffc368;
+  --econ: #6e8bff;
+  --cs: #5ee0c0;
+  --eng: #ff9fb2;
+  --psy: #c9a6ff;
+  --hum: #ffb347;
+
+  /* radii */
+  --r-sm: 8px;
+  --r: 13px;
+  --r-lg: 18px;
+  --r-pill: 999px;
+
+  /* shadows */
+  --shadow-sm: 0 6px 18px -12px rgba(0, 0, 0, 0.7);
+  --shadow: 0 24px 60px -36px rgba(0, 0, 0, 0.75);
+  --shadow-lg: 0 40px 90px -50px rgba(0, 0, 0, 0.85);
+  --glow-gold: 0 0 24px rgba(255, 196, 104, 0.42);
+
+  /* layout + motion + type */
+  --maxw: 1180px;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --serif: "Fraunces", Georgia, "Times New Roman", serif;
+  --sans: "Inter", system-ui, -apple-system, sans-serif;
+  --mono: ui-monospace, "SFMono-Regular", "JetBrains Mono", Menlo, Consolas,
+    monospace;
+}
+
+/* ------------------------------------------------------------------ reset --- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+* {
+  margin: 0;
+  padding: 0;
+}
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  background: var(--void);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* a faint ambient wash so the near-black ground never reads as flat */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(50vw 50vw at -8% -6%, rgba(110, 139, 255, 0.12), transparent 70%),
+    radial-gradient(46vw 46vw at 108% 8%, rgba(255, 179, 71, 0.1), transparent 68%),
+    radial-gradient(42vw 42vw at 50% 116%, rgba(67, 224, 166, 0.07), transparent 70%);
+}
+body > * {
+  position: relative;
+  z-index: 1;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* ----------------------------------------------------------- typography --- */
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--serif);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  color: var(--text);
+}
+h1 {
+  font-weight: 400;
+  font-size: clamp(34px, 6vw, 56px);
+  line-height: 1.05;
+}
+h2 {
+  font-weight: 400;
+  font-size: clamp(26px, 4vw, 40px);
+  line-height: 1.08;
+}
+h3 {
+  font-size: 21px;
+}
+em {
+  font-style: italic;
+  color: var(--core);
+  text-shadow: 0 0 26px rgba(255, 221, 150, 0.5);
+}
+p {
+  color: var(--muted);
+}
+
+a {
+  color: var(--text);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+a:hover {
+  color: var(--core);
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.mono {
+  font-family: var(--mono);
+}
+.serif {
+  font-family: var(--serif);
+}
+
+/* a small uppercase mono eyebrow, used above section titles */
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+}
+.eyebrow::before {
+  content: "";
+  width: 22px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--gold), transparent);
+}
+
+/* --------------------------------------------------------------- brand --- */
+.monogram {
+  width: 30px;
+  height: 30px;
+  border-radius: var(--r-sm);
+  display: grid;
+  place-items: center;
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 17px;
+  color: #2a1e05;
+  background: radial-gradient(circle at 35% 30%, var(--core), var(--gold-deep));
+  box-shadow: 0 0 16px rgba(255, 196, 104, 0.55), 0 0 38px rgba(255, 196, 104, 0.22);
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+.brand-name {
+  font-family: var(--serif);
+  font-size: 21px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+.brand-sub {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: var(--faint);
+  text-transform: uppercase;
+  align-self: center;
+  padding-left: 8px;
+  margin-left: 4px;
+  border-left: 1px solid var(--border);
+}
+
+/* -------------------------------------------------------------- buttons --- */
+.btn {
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: var(--r-pill);
+  padding: 13px 26px;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  color: var(--text);
+  background: transparent;
+  transition: transform 0.25s var(--ease), box-shadow 0.3s ease,
+    background 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+}
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+.btn-primary {
+  color: #2a1e05;
+  background: linear-gradient(180deg, var(--core), var(--gold-deep));
+  box-shadow: var(--glow-gold);
+}
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 34px rgba(255, 196, 104, 0.6);
+}
+.btn-ghost {
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border-bright);
+}
+.btn-ghost:hover:not(:disabled) {
+  background: var(--surface-2);
+  transform: translateY(-2px);
+}
+.btn-sm {
+  font-size: 13px;
+  padding: 9px 18px;
+}
+
+/* a quiet underlined text button */
+.link-btn {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 13.5px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.2s;
+}
+.link-btn:hover {
+  color: var(--text);
+}
+
+/* round icon button (flashcard nav, etc.) */
+.icon-btn {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  display: grid;
+  place-items: center;
+  transition: all 0.2s;
+}
+.icon-btn:hover {
+  background: var(--surface-2);
+  border-color: var(--border-bright);
+  transform: translateY(-2px);
+}
+.icon-btn svg {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ----------------------------------------------------------------- card --- */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 22px;
+  box-shadow: var(--shadow);
+  transition: border-color 0.25s var(--ease), transform 0.25s var(--ease),
+    background 0.25s var(--ease);
+}
+.card-hover:hover {
+  border-color: var(--border-bright);
+  background: var(--surface-2);
+  transform: translateY(-3px);
+}
+
+/* a soft accent-tinted panel (note summaries, callouts) */
+.panel-soft {
+  border-radius: var(--r);
+  background: linear-gradient(
+    165deg,
+    color-mix(in srgb, var(--sc, var(--gold)) 8%, transparent),
+    var(--surface)
+  );
+  border: 1px solid color-mix(in srgb, var(--sc, var(--gold)) 24%, var(--border));
+  padding: 18px 20px;
+}
+
+/* --------------------------------------------------------- pills + chips --- */
+.pill {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  padding: 6px 12px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.chip {
+  padding: 11px 18px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 14.5px;
+  font-weight: 500;
+  transition: all 0.25s var(--ease);
+}
+.chip:hover {
+  border-color: var(--border-bright);
+  color: var(--text);
+}
+.chip.sel {
+  color: #2a1e05;
+  background: linear-gradient(180deg, var(--core), var(--gold-deep));
+  border-color: transparent;
+  box-shadow: 0 0 22px rgba(255, 196, 104, 0.45);
+}
+
+/* ----------------------------------------------------------- note badges --- */
+.nbadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 6px 13px;
+  border-radius: var(--r-pill);
+}
+.nbadge.verified {
+  color: #2a1e05;
+  background: linear-gradient(180deg, var(--core), var(--gold-deep));
+  box-shadow: 0 0 18px rgba(255, 196, 104, 0.4);
+}
+.nbadge.checked {
+  color: var(--ok);
+  border: 1px solid rgba(67, 224, 166, 0.4);
+  background: rgba(67, 224, 166, 0.06);
+}
+.nbadge.flag {
+  color: var(--gold);
+  border: 1px solid rgba(255, 196, 104, 0.4);
+  background: rgba(255, 196, 104, 0.06);
+}
+
+/* --------------------------------------------------- loading / shimmer --- */
+.shimmer {
+  height: 14px;
+  border-radius: 7px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.04),
+    rgba(255, 221, 150, 0.14),
+    rgba(255, 255, 255, 0.04)
+  );
+  background-size: 200% 100%;
+  animation: sh 1.4s linear infinite;
+  margin: 10px 0;
+}
+@keyframes sh {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+.gen-msg {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--gold);
+  letter-spacing: 0.05em;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.spark {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 12px var(--gold);
+  animation: pulse 1.1s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+/* the "lumen" orb — empty states / hero light source */
+.orb {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 50% 45%,
+    #fff,
+    var(--core) 26%,
+    var(--gold) 52%,
+    rgba(255, 179, 71, 0) 72%
+  );
+  box-shadow: 0 0 60px 8px rgba(255, 221, 150, 0.4),
+    0 0 120px 30px rgba(255, 196, 104, 0.22);
+}
+
+/* panel entrance */
+.panel-in {
+  animation: fadein 0.4s var(--ease);
+}
+@keyframes fadein {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---------------------------------------------------------- inputs / a11y --- */
+input,
+textarea,
+select {
+  font-family: inherit;
+  color: var(--text);
+}
+.input {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  padding: 13px 18px;
+  color: var(--text);
+  font-size: 14.5px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.input:focus {
+  border-color: var(--gold);
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--core);
+  outline-offset: 2px;
+  border-radius: var(--r-sm);
+}
+
+/* ----------------------------------------------------------- scrollbars --- */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--r-pill);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+/* -------------------------------------------------------------- utility --- */
+.container {
+  width: 100%;
+  max-width: var(--maxw);
+  margin-inline: auto;
+  padding-inline: clamp(20px, 5vw, 48px);
+}
+.muted {
+  color: var(--muted);
+}
+.faint {
+  color: var(--faint);
+}
+.center {
+  text-align: center;
+}
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ------------------------------------------------------- reduced motion --- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

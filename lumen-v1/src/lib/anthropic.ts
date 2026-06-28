@@ -22,6 +22,25 @@ export async function callModel(model: string, system: string, user: string, max
     .join("\n");
 }
 
+/** Multi-turn chat (e.g. the AI Tutor). Same text-extraction as callModel. */
+export async function callMessages(
+  model: string,
+  system: string,
+  messages: { role: "user" | "assistant"; content: string }[],
+  maxTokens = 1000
+): Promise<string> {
+  const msg = await client.messages.create({
+    model,
+    max_tokens: maxTokens,
+    system,
+    messages,
+  });
+  return msg.content
+    .filter((b): b is Anthropic.TextBlock => b.type === "text")
+    .map((b) => b.text)
+    .join("\n");
+}
+
 /** Strip code fences and parse the first JSON object/array in the text. */
 export function parseJson<T = unknown>(text: string): T {
   let t = text.replace(/```json/gi, "").replace(/```/g, "").trim();

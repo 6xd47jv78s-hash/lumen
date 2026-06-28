@@ -29,6 +29,25 @@ export const prompts = {
     `List the main syllabus topics for ${ctx}. Respond with ONLY valid JSON: ` +
     `{"topics":["Topic name"]}. 10-16 concise topic titles covering the whole course. No numbering.`,
 
+  // ---- whole-topic notes (no manifest objective; topic-scoped) ----
+  topicNoteSystem: (ctx: string) =>
+    `You are Lumen, an expert ${ctx} tutor. Write accurate, exam-board-appropriate revision notes. Be precise and concise.`,
+
+  topicNoteUser: (ctx: string, topic: string) =>
+    `Create revision notes for the topic "${topic}" in ${ctx}. Respond with ONLY valid JSON, no markdown: ${NOTE_SCHEMA}. ` +
+    `3-4 sections, 3-5 points each, 3-4 key terms, 2-3 exam tips. Plain text only.`,
+
+  criticUserTopic: (topic: string, noteJson: string) =>
+    `Topic: ${topic}\n\nNotes under review (JSON): ${noteJson}\n\n` +
+    `Check factual accuracy, scope (stays on the topic, no drift), and completeness. Respond with ONLY valid JSON: ` +
+    `{"verdict":"pass" or "revise","flags":["a specific wrong/out-of-scope/missing point"]}. ` +
+    `Use "pass" only if accurate, on-topic and adequately complete.`,
+
+  // ---- AI tutor (multi-turn chat) ----
+  tutorSystem: (ctx: string, topic: string) =>
+    `You are Lumen, a friendly and accurate ${ctx} tutor helping a student with the topic "${topic}". ` +
+    `Keep answers concise, correct and exam-focused, using proper terminology for this level. Use short paragraphs.`,
+
   auxSystem: (ctx: string, kind: string) => `You are an expert ${ctx} tutor producing ${kind}.`,
   auxUser: (ctx: string, topic: string, kind: string) => {
     switch (kind) {

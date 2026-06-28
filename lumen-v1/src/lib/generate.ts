@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { callModel, parseJson, MODELS } from "./anthropic";
+import { callModel, callMessages, parseJson, MODELS } from "./anthropic";
 import { prompts } from "./prompts";
 
 const prisma = new PrismaClient();
@@ -18,21 +18,21 @@ export async function getObjectiveNote(curriculum: string, subject: string, obje
 
   // human-approved note wins — instant, trusted, no generation
   if (objective.note?.status === "APPROVED") {
-    return { body: objective.note.body, status: "verified", check: objective.note.check };
+    return { note: objective.note.body, status: "verified", check: objective.note.check };
   }
   // reuse an existing draft instead of regenerating
   if (objective.note) {
-    return { body: objective.note.body, status: "checked", check: objective.note.check };
+    return { note: objective.note.body, status: "checked", check: objective.note.check };
   }
 
   const c = ctx(curriculum, subject);
   const raw = await callModel(MODELS.gen, prompts.noteSystem(c), prompts.noteUser(objective.specRef, objective.text));
-  const body = parseJson(raw);
+  const note = parseJson(raw);
 
   // live self-critique with a different model
   let check: unknown = null;
   try {
-    const cr = await callModel(MODELS.critic, prompts.criticSystem(c), prompts.criticUser(objective.text, JSON.stringify(body)));
+    const cr = await callModel(MODELS.critic, prompts.criticSystem(c), prompts.criticUser(objective.text, JSON.stringify(note)));
     check = parseJson(cr);
   } catch {
     /* critic best-effort */
@@ -42,14 +42,49 @@ export async function getObjectiveNote(curriculum: string, subject: string, obje
   await prisma.note.create({
     data: {
       objectiveId,
-      body: body as any,
+      body: note as any,
       status: status as any,
       generatedBy: MODELS.gen,
       verifiedBy: MODELS.critic,
       check: check as any,
     },
   });
-  return { body, status: "checked", check };
+  return { note, status: "checked", check };
+}
+
+// ---- notes (topic level): generate a whole-topic note + critic, cached ----
+export async function getTopicNote(curriculum: string, subject: string, topic: string) {
+  const c = ctx(curriculum, subject);
+  return getCached(`${curriculum}|${subject}|${topic}|notes`, "notes", async () => {
+    const note = parseJson(
+      await callModel(MODELS.gen, prompts.topicNoteSystem(c), prompts.topicNoteUser(c, topic))
+    );
+
+    // best-effort self-critique with a different model
+    let check: any = null;
+    try {
+      check = parseJson(
+        await callModel(MODELS.critic, prompts.criticSystem(c), prompts.criticUserTopic(topic, JSON.stringify(note)))
+      );
+    } catch {
+      /* critic best-effort */
+    }
+
+    const status = check?.verdict === "revise" ? "flagged" : "checked";
+    return { note, status, check };
+  });
+}
+
+// ---- AI tutor (multi-turn chat) ------------------------------------------
+export async function getTutorReply(
+  curriculum: string,
+  subject: string,
+  topic: string,
+  messages: { role: "user" | "assistant"; content: string }[]
+) {
+  const c = ctx(curriculum, subject);
+  const reply = await callMessages(MODELS.gen, prompts.tutorSystem(c, topic), messages);
+  return { reply };
 }
 
 // ---- aux tabs + topic lists: cache by scope key --------------------------

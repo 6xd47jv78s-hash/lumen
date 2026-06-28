@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { getUser, withinQuota } from "@/lib/auth";
-import { getObjectiveNote, getTopicNote, getAux } from "@/lib/generate";
+import { getTutorReply } from "@/lib/generate";
+import type { TutorMessage } from "@/lib/types";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -9,9 +10,13 @@ export const maxDuration = 60;
 const Body = z.object({
   curriculum: z.string(),
   subject: z.string(),
-  kind: z.enum(["notes", "cards", "quiz", "papers"]),
-  topic: z.string().optional(),
-  objectiveId: z.string().optional(),
+  topic: z.string(),
+  messages: z.array(
+    z.object({
+      role: z.enum(["user", "assistant"]),
+      content: z.string(),
+    })
+  ),
 });
 
 export async function POST(req: NextRequest) {
@@ -21,16 +26,14 @@ export async function POST(req: NextRequest) {
 
   const parsed = Body.safeParse(await req.json());
   if (!parsed.success) return NextResponse.json({ error: "bad_request" }, { status: 400 });
-  const { curriculum, subject, kind, topic, objectiveId } = parsed.data;
+  const { curriculum, subject, topic } = parsed.data;
+  const messages: TutorMessage[] = parsed.data.messages.map((m) => ({
+    role: m.role,
+    content: m.content,
+  }));
 
   try {
-    if (kind === "notes") {
-      if (objectiveId) return NextResponse.json(await getObjectiveNote(curriculum, subject, objectiveId));
-      if (topic) return NextResponse.json(await getTopicNote(curriculum, subject, topic));
-      return NextResponse.json({ error: "topic or objectiveId required" }, { status: 400 });
-    }
-    if (!topic) return NextResponse.json({ error: "topic required" }, { status: 400 });
-    return NextResponse.json(await getAux(curriculum, subject, topic, kind));
+    return NextResponse.json(await getTutorReply(curriculum, subject, topic, messages));
   } catch (e) {
     console.error(e);
     return NextResponse.json({ error: "generation_failed" }, { status: 502 });
