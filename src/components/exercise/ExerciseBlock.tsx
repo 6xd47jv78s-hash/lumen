@@ -172,7 +172,10 @@ function LevelsRunner({
       if (bestIdx >= 0) {
         used.add(marked[bestIdx].id);
         marked[bestIdx].correct = true;
-        marked[bestIdx].label = target.label;
+        // The model answer is revealed on the same chart, so distinguish the
+        // student's line from it — otherwise two identical labels stack.
+        marked[bestIdx].label = "yours ✓";
+        marked[bestIdx].matched = target.label;
         hits++;
       }
     }
@@ -250,7 +253,7 @@ function LevelsRunner({
               }`}
             >
               {lvl.price}
-              {lvl.correct === true && ` ✓ ${lvl.label}`}
+              {lvl.correct === true && ` ✓ ${lvl.matched}`}
               {lvl.correct === false && " ✕"}
               {lvl.correct == null && " ×"}
             </button>

@@ -21,7 +21,10 @@ export interface UserLevel {
   price: number;
   /** null = not yet graded. */
   correct?: boolean | null;
+  /** Axis label drawn on the chart. */
   label?: string;
+  /** Which model target this line matched, for the chip beneath the chart. */
+  matched?: string;
 }
 
 export interface BarHighlight {
