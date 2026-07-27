@@ -103,6 +103,57 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ------------------------------------------------- by asset class */}
+      <section className="mx-auto max-w-[86rem] px-4 pb-14 sm:px-6">
+        <div className="rounded-lg border border-line bg-surface p-6 md:p-7">
+          <div className="flex flex-wrap items-baseline justify-between gap-3">
+            <div>
+              <p className="eyebrow">Or start from what you&rsquo;re curious about</p>
+              <h2 className="mt-1.5 text-lg font-semibold tracking-tight text-ink">
+                The three markets, side by side
+              </h2>
+            </div>
+            <p className="max-w-md text-sm leading-relaxed text-muted">
+              Chart reading and risk management are the same skills in all three. What differs is
+              the structure underneath — and that&rsquo;s what these lessons cover.
+            </p>
+          </div>
+
+          <div className="mt-5 grid gap-3 sm:grid-cols-3">
+            {[
+              {
+                href: "/learn/foundations/stocks-explained",
+                name: "Stocks",
+                blurb: "Ownership, dividends, market cap, and the two forces behind every share price.",
+                note: "Best place to learn — mistakes cost you slowly.",
+              },
+              {
+                href: "/learn/foundations/crypto-structure",
+                name: "Crypto",
+                blurb: "24/7 markets, volatility regimes, custody risk, and where the leverage hides.",
+                note: "Same charts, four dials turned up.",
+              },
+              {
+                href: "/learn/foundations/futures-and-forex",
+                name: "Futures & forex",
+                blurb: "Contracts, expiry, margin — and why leverage decides how long you can be wrong.",
+                note: "The instruments professionals use.",
+              },
+            ].map((a) => (
+              <Link
+                key={a.name}
+                href={a.href}
+                className="group rounded-md border border-line bg-raised/50 p-4 transition-colors hover:border-accent/50 hover:bg-raised"
+              >
+                <p className="text-sm font-semibold text-ink">{a.name}</p>
+                <p className="mt-1.5 text-sm leading-relaxed text-muted">{a.blurb}</p>
+                <p className="mt-2.5 text-xs text-faint">{a.note}</p>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ------------------------------------------------------ principles */}
       <section className="border-y border-line bg-surface">
         <div className="mx-auto max-w-[86rem] px-4 py-14 sm:px-6">

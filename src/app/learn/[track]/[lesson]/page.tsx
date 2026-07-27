@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Blocks } from "@/components/content/Blocks";
 import { LessonSidebar } from "@/components/learn/LessonSidebar";
+import { MobileContents } from "@/components/learn/MobileContents";
 import { Quiz } from "@/components/learn/Quiz";
 import { ALL_LESSONS, getLessonRef, neighbours } from "@/lib/content/registry";
 
@@ -60,9 +61,11 @@ export default function LessonPage({ params }: Params) {
           <p className="mt-2.5 text-base leading-relaxed text-muted">{lesson.subtitle}</p>
         )}
 
-        <hr className="mt-7 border-line" />
+        <hr className="my-7 border-line" />
 
-        <div className="mt-2">
+        <MobileContents track={track} current={lesson.slug} />
+
+        <div className="-mt-4">
           <Blocks blocks={lesson.blocks} />
         </div>
 
