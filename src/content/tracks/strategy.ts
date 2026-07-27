@@ -1,0 +1,960 @@
+import type { Track } from "@/lib/content/types";
+
+export const strategy: Track = {
+  slug: "strategy",
+  title: "Strategy",
+  tagline: "The main approaches compared honestly, and how to build one yourself.",
+  description:
+    "A strategy is a set of rules specific enough that two people applying it to the same chart would do the same thing. This track compares the major archetypes with their real costs, then walks through building one — entry, exit, size, invalidation — and testing it before it ever sees money.",
+  icon: "strategy",
+  order: 3,
+  level: "Core",
+  modules: [
+    {
+      slug: "choosing-an-approach",
+      title: "Choosing an approach",
+      summary: "What the main strategy families require, and what each costs you.",
+      lessons: [
+        /* ------------------------------------------------------------ 3.1 */
+        {
+          slug: "strategy-archetypes",
+          title: "The strategy archetypes, compared honestly",
+          subtitle: "Trend following, breakout trading and mean reversion — what each really demands",
+          minutes: 9,
+          blocks: [
+            {
+              type: "p",
+              text: "Almost every strategy you'll meet is a variation on one of three ideas: **moves in progress tend to continue**, **levels once broken tend to keep going**, or **prices stretched from their average tend to snap back**. They contradict each other, and all three make money for somebody. Understanding why is the point of this lesson.",
+            },
+            {
+              type: "p",
+              text: "The reason they can all work is that each is a bet on a different market condition. Trend following pays in trending markets and bleeds in ranges. Mean reversion does the exact opposite. Neither is right; they're tools for different weather.",
+            },
+            { type: "h", level: 2, text: "Trend following" },
+            {
+              type: "p",
+              text: "**The premise:** an asset moving up is more likely to keep moving up than to reverse, because trends are driven by slow, persistent flows — funds accumulating positions over weeks, sentiment shifting gradually.",
+            },
+            {
+              type: "p",
+              text: "**How it actually feels:** you lose small amounts repeatedly, for months, and then one trade pays for all of them. [[Trend following]] systems often have win rates in the 30–40% range. The entire profit comes from a handful of trades a year, and the discipline it demands is holding those winners long after they feel overextended.",
+            },
+            {
+              type: "callout",
+              variant: "warn",
+              body: [
+                "The psychological load here is the reason most people can't run it. You will sit through a losing streak of eight or ten trades. Every instinct will tell you the system is broken. Abandoning it two trades before the big winner is the classic, well-documented failure — and it's not a knowledge problem, it's an endurance problem.",
+              ],
+            },
+            { type: "h", level: 2, text: "Breakout trading" },
+            {
+              type: "p",
+              text: "**The premise:** when price leaves a range, the resting orders that held it in have been consumed, so it can move quickly. [[Breakout trading]] is trend following's faster cousin — you're trying to catch the trend at its start rather than in its middle.",
+            },
+            {
+              type: "p",
+              text: "**The central problem is one you've already met:** most breakouts fail. Every breakout trader's real work is filtering. Volume expansion, higher-timeframe alignment, range maturity, waiting for the retest — these are all attempts to answer 'is this one real?'",
+            },
+            {
+              type: "p",
+              text: "The compensation is that entries are precise. Your [[invalidation]] is right there — back inside the range — so stops are tight and [[risk/reward ratio|risk/reward]] can be excellent even with a low win rate.",
+            },
+            { type: "h", level: 2, text: "Mean reversion" },
+            {
+              type: "p",
+              text: "**The premise:** prices oscillate around a value. Stretch too far, too fast, and buyers or sellers step in. [[Mean reversion]] means buying weakness and selling strength — the exact opposite instinct to trend following.",
+            },
+            {
+              type: "chart",
+              spec: {
+                scenario: "mean-reversion",
+                seed: 621,
+                bars: 100,
+                symbol: "SPXE",
+                timeframe: "1D",
+                height: 300,
+                levels: [
+                  { anchor: "price.upper", label: "stretched", kind: "resistance" },
+                  { anchor: "price.mean", label: "mean", kind: "neutral" },
+                  { anchor: "price.lower", label: "stretched", kind: "support" },
+                ],
+              },
+              caption:
+                "Mean reversion's ideal habitat: a stable central value with predictable oscillation. The strategy's fate is decided by what happens when this regime ends.",
+            },
+            {
+              type: "p",
+              text: "**How it feels:** wonderful. Win rates of 65–80% are normal. You're right most of the time, often quickly. This is exactly what makes it dangerous — the feedback is so positive that traders scale up right before the trade that doesn't revert.",
+            },
+            {
+              type: "callout",
+              variant: "warn",
+              title: "The failure mode is asymmetric",
+              body: [
+                "Mean reversion makes many small wins and occasional very large losses. A price 'stretched too far' can keep stretching — that's precisely what a crash is. Without a hard stop, one trade can erase a year of wins, and the strategy's high win rate is what convinces people they don't need one.",
+              ],
+            },
+            { type: "h", level: 2, text: "Side by side" },
+            {
+              type: "table",
+              caption: "Typical characteristics. Individual systems vary, but the shape of each holds.",
+              headers: ["", "Trend following", "Breakout", "Mean reversion"],
+              rows: [
+                ["Wins when", "Markets trend", "Ranges resolve", "Markets range"],
+                ["Bleeds when", "Markets chop", "Breakouts fail", "Markets trend"],
+                ["Win rate", "30–40%", "35–50%", "65–80%"],
+                ["Risk/reward", "High (3:1+)", "Good (2:1+)", "Low (often <1:1)"],
+                ["Profit shape", "A few huge winners", "Several good winners", "Many small winners"],
+                ["Biggest danger", "Quitting during a drawdown", "Death by false signals", "One unhedged catastrophe"],
+                ["Hardest part", "Patience", "Filtering", "Discipline on the stop"],
+              ],
+            },
+            {
+              type: "callout",
+              variant: "desk",
+              title: "The uncomfortable connection",
+              body: [
+                "Notice the pattern. High win rate almost always comes packaged with poor risk/reward, and vice versa. This isn't coincidence — it's close to a law. If a strategy claims a high win rate *and* large winners, either it hasn't been tested through a regime change, or it has a hidden tail risk that hasn't shown up yet.",
+                "You'll do the arithmetic behind this in the Risk track. For now: **be suspicious of any strategy that looks like it beats the trade-off.**",
+              ],
+            },
+            { type: "h", level: 2, text: "Which should you learn first?" },
+            {
+              type: "p",
+              text: "An honest recommendation rather than a diplomatic one: **learn trend and structure-based approaches first**, on a daily timeframe, on liquid instruments.",
+            },
+            {
+              type: "list",
+              items: [
+                "The signals are visible without indicators, so you're learning to read markets rather than to read a line someone else calculated.",
+                "The failure mode is slow — a losing streak, not a blowup — which leaves you enough capital and confidence to learn from it.",
+                "Its main demand, patience, is a skill that transfers to every other approach. Mean reversion's main demand — cutting a losing trade that has been reliably profitable eighty times before — is much harder to build from scratch.",
+              ],
+            },
+            {
+              type: "p",
+              text: "That's a starting point, not a verdict. Plenty of excellent traders run mean reversion exclusively. But learning it first tends to teach the wrong lesson: that being right often is what matters.",
+            },
+            {
+              type: "callout",
+              variant: "key",
+              body: [
+                "The three archetypes are bets on different market conditions, which is why they can all work and why each has a market it bleeds in. Win rate and risk/reward trade off against each other almost universally — trend following is right rarely and big, mean reversion is right often and small. Pick based on which failure mode you can actually live with.",
+              ],
+            },
+          ],
+          quiz: [
+            {
+              id: "q1",
+              prompt: "A strategy has a 35% win rate. Its average winner is 4× its average loser. Is it profitable?",
+              options: [
+                "No — you need to win more than half your trades",
+                "Yes — 0.35 × 4 = 1.4 versus 0.65 × 1 = 0.65, so it makes 0.75R per trade on average",
+                "Impossible to say without knowing the market",
+                "Only if the win rate rises above 50%",
+              ],
+              answer: 1,
+              explain:
+                "This is [[expectancy]], and it's why win rate alone is close to meaningless. A 35% win rate with 4:1 winners is a strong system that will still feel awful to trade.",
+            },
+            {
+              id: "q2",
+              prompt: "Why is mean reversion's high win rate a danger rather than a comfort?",
+              options: [
+                "Because high win rates are usually faked in backtests",
+                "Because it produces many small wins and rare very large losses, and the constant positive feedback encourages traders to drop their stops",
+                "Because it only works on crypto",
+                "Because brokers charge more for it",
+              ],
+              answer: 1,
+              explain:
+                "Being right 75% of the time trains you to trust the setup. The trade that doesn't revert is the one that matters, and by then many traders have stopped protecting against it.",
+            },
+            {
+              id: "q3",
+              prompt: "Which market condition destroys a trend-following system?",
+              options: [
+                "A strong, sustained uptrend",
+                "A sharp crash",
+                "A choppy, directionless range",
+                "High volume",
+              ],
+              answer: 2,
+              explain:
+                "Chop generates repeated false entries and [[whipsaw]] exits. Trend systems accept that bleed as the cost of being positioned when a real trend starts.",
+            },
+            {
+              id: "q4",
+              prompt: "A strategy claims a 75% win rate AND an average 3:1 risk/reward. What's the appropriate reaction?",
+              options: [
+                "Adopt it immediately",
+                "Scepticism — the two almost always trade off, so it likely hasn't been tested through a regime change or has hidden tail risk",
+                "Increase position size to exploit it",
+                "It's normal for a good system",
+              ],
+              answer: 1,
+              explain:
+                "The trade-off between win rate and reward size is close to universal. A system that appears to beat it usually has an unrealised risk hiding somewhere.",
+            },
+          ],
+        },
+
+        /* ------------------------------------------------------------ 3.2 */
+        {
+          slug: "trading-styles",
+          title: "Scalping, day, swing, position: matching a style to your life",
+          subtitle: "Time commitment, temperament and capital — the three constraints nobody mentions",
+          minutes: 7,
+          blocks: [
+            {
+              type: "p",
+              text: "The archetype tells you *what* you're betting on. Your style tells you *how long you hold it* — and that choice is dictated by three constraints that have nothing to do with charts.",
+            },
+            {
+              type: "cards",
+              columns: 3,
+              items: [
+                {
+                  title: "Time",
+                  body: "Not how much you'd like to give it. How much uninterrupted, screen-facing attention you can reliably provide, on a normal week.",
+                },
+                {
+                  title: "Temperament",
+                  body: "Whether making 30 decisions a day sharpens you or exhausts you. Whether holding a position for six weeks feels calm or unbearable.",
+                },
+                {
+                  title: "Capital",
+                  body: "Fixed costs per trade have to be small relative to your position, or the arithmetic never works regardless of skill.",
+                },
+              ],
+            },
+            { type: "h", level: 2, text: "The four styles" },
+            {
+              type: "table",
+              headers: ["", "Scalping", "Day trading", "Swing trading", "Position trading"],
+              rows: [
+                ["Hold time", "Seconds–minutes", "Hours", "Days–weeks", "Months–years"],
+                ["Chart", "1m–5m", "5m–1h", "4h–1D", "1D–1W"],
+                ["Trades/week", "50–300+", "5–25", "1–5", "A few a year"],
+                ["Screen time", "Constant", "3–6h focused", "15–30 min/day", "An hour a week"],
+                ["Cost sensitivity", "Extreme", "High", "Low", "Negligible"],
+                ["Overnight risk", "None", "None", "Yes", "Yes"],
+                ["Realistic for a student?", "No", "No", "Yes", "Yes"],
+              ],
+            },
+            { type: "h", level: 2, text: "Why scalping isn't a beginner strategy" },
+            {
+              type: "p",
+              text: "It's marketed as one because it looks like fast learning — hundreds of trades means hundreds of lessons. The arithmetic disagrees.",
+            },
+            {
+              type: "worked",
+              title: "Scalping cost drag, 100 trades a week",
+              rows: [
+                { label: "Typical target per trade", value: "0.15%" },
+                { label: "Spread + commission, round trip", value: "0.06%" },
+                { label: "Costs as a share of your target", value: "40%", emphasis: true },
+                { label: "Trades per year", value: "~5,000" },
+                { label: "Total cost drag on capital", value: "300%+ / yr" },
+              ],
+              note: "You need a genuinely large edge just to cover costs before you make anything. Professional scalpers solve this with rebates, colocated infrastructure and institutional fee tiers. Retail traders don't have those, which is why the arithmetic is different for them — not because they're less skilled.",
+            },
+            {
+              type: "callout",
+              variant: "note",
+              body: [
+                "There's a second reason: **decision fatigue is real and measurable**. Thirty decisions before lunch degrades judgement in ways you can't feel happening. Swing trading's one-decision-per-day cadence isn't just convenient — it protects the quality of each decision.",
+              ],
+            },
+            { type: "h", level: 2, text: "The honest recommendation" },
+            {
+              type: "p",
+              text: "For anyone in school, with a job, or learning: **[[swing trading]] on the daily chart**. It's not a compromise, it's the strongest starting position.",
+            },
+            {
+              type: "list",
+              items: [
+                "One decision a day, made calmly, without a live position screaming at you.",
+                "Costs are a rounding error, so your results reflect your analysis rather than your fee tier.",
+                "Daily-chart structure is cleaner — more participants, less noise, fewer random spikes.",
+                "It's compatible with a life. A strategy you abandon because it doesn't fit your week has an expectancy of exactly zero.",
+              ],
+            },
+            {
+              type: "p",
+              text: "The trade-off you accept is [[overnight risk]]: you hold through the close, so gaps can move price past your stop. You manage that by sizing for it and by not holding through known events like [[earnings]].",
+            },
+            {
+              type: "callout",
+              variant: "desk",
+              title: "The mismatch that ends most beginner accounts",
+              body: [
+                "It's rarely bad analysis. It's a style/life mismatch: someone picks day trading because it looks exciting, can only watch charts sporadically, and ends up entering on 5-minute signals they can't manage. The position is then held by accident rather than by plan.",
+                "**Pick the style your calendar supports, then find a strategy that fits it.** Doing it in the other order is how people end up trading a timeframe they can't see.",
+              ],
+            },
+            {
+              type: "callout",
+              variant: "key",
+              body: [
+                "Your style is decided by time available, temperament and capital — not by which charts look most exciting. Faster styles multiply costs and decisions without multiplying edge. For anyone learning around school or work, swing trading on the daily chart is the strongest available option, with overnight gap risk as the trade-off to manage.",
+              ],
+            },
+          ],
+          quiz: [
+            {
+              id: "q1",
+              prompt: "Why do trading costs make scalping structurally hard for a retail trader?",
+              options: [
+                "Brokers deliberately overcharge short-term traders",
+                "Each trade targets a very small move, so fixed costs consume a large share of the profit, multiplied across thousands of trades",
+                "Scalping requires more capital to start",
+                "Short-term price moves are more random",
+              ],
+              answer: 1,
+              explain:
+                "It's proportion, not size. Professionals offset it with rebates and institutional fee tiers that retail accounts don't have access to.",
+            },
+            {
+              id: "q2",
+              prompt: "You can look at charts for 20 focused minutes each evening. Which is the honest choice?",
+              options: [
+                "Day trading — you can set alerts",
+                "Scalping — short trades need less time",
+                "Swing trading on the daily chart",
+                "Any style, if you're disciplined enough",
+              ],
+              answer: 2,
+              explain:
+                "Style follows availability. Discipline can't create screen time, and a strategy that needs attention you can't give will be managed by accident.",
+            },
+            {
+              id: "q3",
+              prompt: "What is the main trade-off a swing trader accepts?",
+              options: [
+                "Higher commissions",
+                "Overnight and weekend gap risk, since stops don't protect you when markets are shut",
+                "Less accurate charts",
+                "Lower liquidity",
+              ],
+              answer: 1,
+              explain:
+                "[[Overnight risk]] is the cost of the longer holding period. It's managed with position size and by avoiding known scheduled events, not with a cleverer stop.",
+            },
+            {
+              id: "q4",
+              prompt: "Beyond costs, why does a high trade frequency degrade results?",
+              options: [
+                "Exchanges throttle frequent traders",
+                "Decision fatigue measurably reduces judgement quality, and you can't feel it happening",
+                "More trades attract more tax",
+                "It doesn't — more practice is always better",
+              ],
+              answer: 1,
+              explain:
+                "Judgement degrades with volume of decisions. Slower cadences aren't only more convenient — they protect the quality of each individual decision.",
+            },
+          ],
+        },
+      ],
+    },
+
+    {
+      slug: "building-and-testing",
+      title: "Building and testing",
+      summary: "Turning an idea into rules, and finding out whether the rules have an edge.",
+      lessons: [
+        /* ------------------------------------------------------------ 3.3 */
+        {
+          slug: "building-a-strategy",
+          title: "How a real strategy is actually built",
+          subtitle: "Entry, invalidation, size, exit — the four decisions, in the right order",
+          minutes: 9,
+          blocks: [
+            {
+              type: "p",
+              text: "Most people build a strategy by starting with the entry, because entries are the exciting part. That order is backwards, and the reason is arithmetic: **your position size depends on your stop, and your stop depends on your invalidation.** Decide the entry first and everything downstream is guesswork.",
+            },
+            {
+              type: "p",
+              text: "Here's the correct order, and then we'll build one.",
+            },
+            {
+              type: "steps",
+              items: [
+                {
+                  title: "1. Define the setup",
+                  body: "The market condition you're looking for, specific enough that two people would agree it's present. Not 'a bullish chart' — a checkable list.",
+                },
+                {
+                  title: "2. Define invalidation",
+                  body: "The price at which your reason is no longer true. This comes **before** you decide anything about size, because it determines your risk per share.",
+                },
+                {
+                  title: "3. Calculate position size",
+                  body: "From your fixed risk per trade and the distance to invalidation. Size is an output of the maths, never an input you choose.",
+                },
+                {
+                  title: "4. Define the exit",
+                  body: "Where you take profit, or the rule that trails you out. Decided before entry, while you're still capable of thinking clearly.",
+                },
+              ],
+            },
+            { type: "h", level: 2, text: "Building one: a daily-chart breakout retest" },
+            {
+              type: "p",
+              text: "Let's make this concrete. We'll build a swing strategy from what you already know, and write it precisely enough to be tested.",
+            },
+            {
+              type: "h",
+              level: 3,
+              text: "Setup criteria",
+            },
+            {
+              type: "checklist",
+              title: "All must be true",
+              items: [
+                "Instrument is liquid — a large-cap stock or major index future. No thin small-caps.",
+                "Daily chart shows a [[range]] of at least 15 bars with a clearly identifiable ceiling that price has tested at least twice.",
+                "Price closes above the ceiling on a bar whose range is larger than the average of the previous 10.",
+                "[[Volume]] on the breakout bar is at least 1.5× the 20-day average.",
+                "The 50-day [[moving average]] is flat or rising — we're not fighting a higher-timeframe downtrend.",
+                "No [[earnings]] report scheduled within the intended holding period.",
+              ],
+            },
+            {
+              type: "p",
+              text: "Six criteria, each objectively checkable. That specificity is what makes the difference between a strategy and a preference.",
+            },
+            { type: "h", level: 3, text: "Entry" },
+            {
+              type: "p",
+              text: "We're not buying the breakout bar — we're waiting for the [[retest]]. A [[limit order]] to buy placed at the broken ceiling, valid for 10 trading days. If price never comes back, we don't get the trade, and that's fine.",
+            },
+            {
+              type: "p",
+              text: "This is an explicit choice on the trade-off from the false-signals lesson: we accept missing runaway moves in exchange for a much lower false-signal rate and a tighter stop.",
+            },
+            { type: "h", level: 3, text: "Invalidation" },
+            {
+              type: "p",
+              text: "Our thesis is 'the broken ceiling has flipped to support'. That's proven wrong if price closes back **below** the range ceiling by a meaningful margin. So: a stop 1× [[ATR]] below the level — far enough that ordinary noise and a [[stop hunt]] don't take us out, close enough that we're out if we're genuinely wrong.",
+            },
+            { type: "h", level: 3, text: "Position size" },
+            {
+              type: "worked",
+              title: "Sizing the trade",
+              rows: [
+                { label: "Account", value: "£5,000" },
+                { label: "Risk per trade (1%)", value: "£50" },
+                { label: "Entry (the retest level)", value: "£42.00" },
+                { label: "ATR", value: "£1.20" },
+                { label: "Stop (1 ATR below)", value: "£40.80" },
+                { label: "Risk per share", value: "£1.20" },
+                { label: "Position size = £50 ÷ £1.20", value: "41 shares", emphasis: true },
+                { label: "Position value", value: "£1,722" },
+              ],
+              note: "Notice that nobody chose '41 shares'. It fell out of the risk budget and the stop distance. If the stop had been £2.40 away, the answer would be 20 shares — same risk, half the position.",
+            },
+            { type: "h", level: 3, text: "Exit" },
+            {
+              type: "p",
+              text: "Two rules, because a single target throws away the big winners that pay for everything:",
+            },
+            {
+              type: "list",
+              items: [
+                "**Sell half** at the measured-move target (range height projected up from the ceiling), and move the stop to break-even on the remainder.",
+                "**Trail the rest** using a close below the 20-day moving average. Crude, but it's the mechanism that lets one trade run into a multi-R winner.",
+              ],
+            },
+            {
+              type: "chart",
+              spec: {
+                scenario: "breakout",
+                seed: 88,
+                bars: 115,
+                symbol: "VRDN",
+                timeframe: "1D",
+                height: 340,
+                showVolume: true,
+                ma: [20],
+                levels: [
+                  { anchor: "price.resistance", label: "entry (retest)", kind: "neutral" },
+                  { anchor: "price.support", label: "range floor", kind: "support" },
+                  { anchor: "price.target", label: "measured target", kind: "target" },
+                ],
+                markers: [
+                  { anchor: "bar.breakout", text: "criteria met", position: "below", kind: "up" },
+                  { anchor: "bar.retest", text: "entry fills", position: "below", kind: "neutral" },
+                ],
+              },
+              caption:
+                "The whole strategy on one chart: criteria met at the break, entry on the retest, invalidation an ATR below the level, target from the range height, trail on the 20-day.",
+            },
+            { type: "h", level: 2, text: "Now write your own" },
+            {
+              type: "p",
+              text: "Do this on paper, for a setup you actually understand. It takes fifteen minutes and it is genuinely the highest-value exercise on this site.",
+            },
+            {
+              type: "checklist",
+              title: "Your strategy — answer all seven",
+              items: [
+                "**Market and timeframe.** Which instruments, which chart?",
+                "**Setup criteria.** List them. Would a stranger reach the same verdict on the same chart?",
+                "**Entry trigger.** The specific event that puts you in, and the order type you'd use.",
+                "**Invalidation.** The exact price that proves you wrong, and *why* that price.",
+                "**Risk per trade.** A fixed percentage. Write the number.",
+                "**Exit rules.** Target, trail, or both — decided before entry.",
+                "**Trade filters.** What would make you skip an otherwise valid setup? (Earnings, thin volume, a major data release.)",
+              ],
+            },
+            {
+              type: "callout",
+              variant: "desk",
+              body: [
+                "The test of whether you've written a strategy or a mood: **could someone else follow it without asking you a question?** If any step needs your judgement in the moment, that step is where your discipline will fail under pressure — because in-the-moment judgement is exactly what stress destroys.",
+              ],
+            },
+            {
+              type: "callout",
+              variant: "key",
+              body: [
+                "Build in this order: setup criteria, invalidation, position size, exit. Size is calculated from the stop, never chosen. Every rule must be specific enough that another person applying it to the same chart would take the same action — anything vaguer is a preference that will bend under pressure.",
+              ],
+            },
+          ],
+          quiz: [
+            {
+              id: "q1",
+              prompt: "Why must invalidation be decided before position size?",
+              options: [
+                "It doesn't matter which order you decide them",
+                "Because position size is calculated from the distance between entry and stop — without a stop there's nothing to calculate from",
+                "Because brokers require a stop before an order",
+                "Because it reduces commission",
+              ],
+              answer: 1,
+              explain:
+                "Size = risk budget ÷ risk per share. Choosing size first means your loss is whatever the market decides, which is the definition of uncontrolled risk.",
+            },
+            {
+              id: "q2",
+              prompt: "A £4,000 account risks 1% per trade. Entry £25.00, stop £23.50. What's the position size?",
+              options: ["160 shares", "26 shares", "40 shares", "27 shares"],
+              answer: 1,
+              explain:
+                "Risk budget £40; risk per share £1.50; 40 ÷ 1.50 = 26.7, so 26 shares. Always round down — rounding up quietly increases your risk above plan.",
+            },
+            {
+              id: "q3",
+              prompt: "What makes a setup criterion good?",
+              options: [
+                "It uses at least three indicators",
+                "It's specific enough that two people would reach the same verdict on the same chart",
+                "It's flexible enough to adapt to conditions",
+                "It has worked in the last five trades",
+              ],
+              answer: 1,
+              explain:
+                "Objectivity is the whole point. A criterion that needs your interpretation is the point where discipline fails under stress.",
+            },
+            {
+              id: "q4",
+              prompt: "Why does the example strategy sell half at target and trail the rest?",
+              options: [
+                "To reduce commission",
+                "Because a single fixed target caps every winner, and trend profits come from the rare trade that runs far beyond it",
+                "Because half positions are less risky",
+                "It's an arbitrary convention",
+              ],
+              answer: 1,
+              explain:
+                "Fixed targets guarantee you never catch the outlier. The half-out-and-trail structure banks a result while leaving something on for the trade that pays for the year.",
+            },
+            {
+              id: "q5",
+              prompt: "The example enters on the retest rather than the breakout. What is being traded away?",
+              options: [
+                "Nothing — retests are strictly better",
+                "Every breakout that runs without ever retesting is missed",
+                "The ability to use a stop-loss",
+                "The measured-move target becomes invalid",
+              ],
+              answer: 1,
+              explain:
+                "It's the [[confirmation]] trade-off made explicit: fewer false signals and a tighter stop, paid for with missed moves. Neither choice is universally correct.",
+            },
+          ],
+        },
+
+        /* ------------------------------------------------------------ 3.4 */
+        {
+          slug: "backtesting",
+          title: "Backtesting: testing an idea before it costs you",
+          subtitle: "What a backtest can tell you, what it can't, and how to avoid fooling yourself",
+          minutes: 8,
+          blocks: [
+            {
+              type: "p",
+              text: "[[Backtesting]] means applying your rules to historical data and recording what would have happened. It's the cheapest possible way to find out an idea doesn't work.",
+            },
+            {
+              type: "p",
+              text: "That framing matters. A backtest's primary job is **killing ideas**, not validating them. Most strategies that feel brilliant fall apart the moment you test them across two years of data — and finding that out on a spreadsheet costs nothing.",
+            },
+            { type: "h", level: 2, text: "What you're measuring" },
+            {
+              type: "table",
+              headers: ["Metric", "What it tells you", "The trap"],
+              rows: [
+                ["Total return", "How much it made", "Says nothing about the risk taken to make it"],
+                ["[[Win rate]]", "How often it was right", "Meaningless without average win vs average loss"],
+                ["[[Expectancy]]", "Average profit per trade in R", "The number that actually matters"],
+                ["Max [[drawdown]]", "Worst peak-to-trough decline", "The number that decides whether you could have stuck with it"],
+                ["Number of trades", "Sample size", "Under ~30 trades, results are mostly noise"],
+                ["Longest losing streak", "How bad it felt", "Almost always longer than people expect"],
+              ],
+            },
+            {
+              type: "callout",
+              variant: "desk",
+              body: [
+                "If you record only two numbers, record **expectancy** and **max drawdown**. The first tells you whether there's an edge. The second tells you whether you'd still have been trading it when the edge showed up.",
+              ],
+            },
+            { type: "h", level: 2, text: "The ways backtests lie" },
+            {
+              type: "p",
+              text: "Every one of these produces a beautiful backtest and a losing strategy. They're worth knowing by name.",
+            },
+            {
+              type: "cards",
+              items: [
+                {
+                  title: "Overfitting",
+                  subtitle: "The most common",
+                  body: "You tune until the results look great. What you've actually done is describe the noise in that specific data. [[Overfitting]] shows up as fragility — change one parameter slightly and the whole thing collapses.",
+                },
+                {
+                  title: "Hindsight bias",
+                  subtitle: "The most seductive",
+                  body: "Scrolling a chart you've already seen, you 'would have' taken the good trades. On the right edge, in real time, that clarity does not exist.",
+                },
+                {
+                  title: "Survivorship bias",
+                  subtitle: "The most invisible",
+                  body: "Testing on today's index constituents excludes every company that went bankrupt or got delisted. Your test only saw the survivors.",
+                },
+                {
+                  title: "Ignoring costs",
+                  subtitle: "The most fatal",
+                  body: "Spread, commission and slippage on every trade. A strategy with a small edge and 300 trades a year can be profitable on paper and reliably negative live.",
+                },
+              ],
+            },
+            { type: "h", level: 2, text: "How to test honestly" },
+            {
+              type: "steps",
+              items: [
+                {
+                  title: "Write the rules down first",
+                  body: "Completely, before you look at any data. Any rule invented mid-test is a rule fitted to the data you just saw.",
+                },
+                {
+                  title: "Bar-by-bar, not scrolling",
+                  body: "Reveal one bar at a time and make the decision with the right side of the chart hidden. This is the single biggest difference between an honest test and a fantasy — and it's why hindsight bias is so hard to avoid casually.",
+                },
+                {
+                  title: "Log every trade",
+                  body: "Date, entry, stop, size, exit, result in R. Every trade the rules produced, including the ones you'd rather forget.",
+                },
+                {
+                  title: "Hold data back",
+                  body: "Develop on 2018–2021, then test untouched on 2022–2024. If it works on data it's never seen, you have something. If it doesn't, you had a curve fit.",
+                },
+                {
+                  title: "Subtract realistic costs",
+                  body: "Include spread and commission on every trade, and assume the worse fill on stops. Optimism here invalidates everything above it.",
+                },
+              ],
+            },
+            {
+              type: "callout",
+              variant: "warn",
+              title: "What a backtest can never tell you",
+              body: [
+                "It cannot tell you whether **you** can trade the strategy. A backtest doesn't reproduce the feeling of your eighth consecutive loss, or the temptation to skip the next signal because the last three failed.",
+                "Traders routinely abandon profitable systems during ordinary drawdowns the backtest showed them in advance. The numbers were known; the experience wasn't.",
+              ],
+            },
+            { type: "h", level: 2, text: "The realistic ceiling" },
+            {
+              type: "p",
+              text: "Live performance is essentially always worse than the backtest. Costs are higher, fills are worse, and you will not execute perfectly. A sensible working assumption is that **live results land meaningfully below backtested ones** — so a strategy that only just breaks even in testing is not a marginal strategy, it's a losing one.",
+            },
+            {
+              type: "p",
+              text: "The practical follow-up is [[forward testing]]: run the rules on live prices, in real time, without money. It removes hindsight bias entirely and tests the thing a backtest can't — whether you'll actually follow the rules when the chart is moving.",
+            },
+            {
+              type: "callout",
+              variant: "key",
+              body: [
+                "A backtest's job is to kill bad ideas cheaply. Measure expectancy and max drawdown above all else. Test bar-by-bar with the future hidden, hold data back for an honest out-of-sample check, and always subtract realistic costs. Then treat the result as an optimistic upper bound, not a forecast.",
+              ],
+            },
+          ],
+          quiz: [
+            {
+              id: "q1",
+              prompt: "What is the primary purpose of a backtest?",
+              options: [
+                "To prove a strategy will be profitable",
+                "To cheaply eliminate ideas that don't work before risking money",
+                "To calculate exact future returns",
+                "To satisfy a broker's requirements",
+              ],
+              answer: 1,
+              explain:
+                "Elimination is the reliable use. A backtest can demonstrate an idea failed historically; it can't demonstrate one will succeed in future.",
+            },
+            {
+              id: "q2",
+              prompt: "You adjust your moving average from 20 to 23 periods and returns jump 40%. What does that suggest?",
+              options: [
+                "23 is the optimal setting — use it",
+                "The strategy is fragile and likely overfitted to noise in this specific data",
+                "Moving averages work better at prime numbers",
+                "You should test 24 next",
+              ],
+              answer: 1,
+              explain:
+                "A robust edge degrades gracefully as parameters change. Sharp sensitivity to a small tweak is the classic signature of [[overfitting]].",
+            },
+            {
+              id: "q3",
+              prompt: "Why is scrolling through a chart you've already seen a poor way to backtest?",
+              options: [
+                "It's too slow",
+                "Hindsight bias — knowing what happened next makes the correct entries look obvious in a way they never are in real time",
+                "Charts render differently when scrolled",
+                "It uses too much data",
+              ],
+              answer: 1,
+              explain:
+                "The right edge of a live chart is genuinely ambiguous. Testing bar-by-bar with the future hidden is the only way to reproduce that.",
+            },
+            {
+              id: "q4",
+              prompt: "Which pair of metrics is most informative about a strategy?",
+              options: [
+                "Total return and win rate",
+                "Expectancy and maximum drawdown",
+                "Number of trades and average hold time",
+                "Best trade and worst trade",
+              ],
+              answer: 1,
+              explain:
+                "[[Expectancy]] says whether there's an edge; max [[drawdown]] says whether you'd have survived long enough to collect it. Total return alone hides the risk that produced it.",
+            },
+            {
+              id: "q5",
+              prompt: "A strategy tested on today's S&P 500 constituents shows strong returns. What bias is present?",
+              options: [
+                "Overfitting",
+                "Survivorship bias — companies that went bankrupt or were delisted aren't in the list",
+                "Hindsight bias",
+                "None; the index is a fair sample",
+              ],
+              answer: 1,
+              explain:
+                "Testing on the winners' list guarantees flattering results. The failures were removed from the sample before you started.",
+            },
+          ],
+        },
+
+        /* ------------------------------------------------------------ 3.5 */
+        {
+          slug: "trading-plan",
+          title: "The trading plan: rules written while you're calm",
+          subtitle: "A template you fill in now, so the decisions aren't made under pressure later",
+          minutes: 7,
+          blocks: [
+            {
+              type: "p",
+              text: "A [[trading plan]] is a document you write when nothing is at stake and follow when everything is. That's its entire function: **moving decisions from the moment of maximum emotion to a moment of calm.**",
+            },
+            {
+              type: "p",
+              text: "This is not paperwork. Under pressure, the part of your judgement that weighs probabilities gets noticeably worse — which is exactly when a live position demands a decision. A written plan means the decision was already made by a better-functioning version of you.",
+            },
+            { type: "h", level: 2, text: "The template" },
+            {
+              type: "p",
+              text: "Write this out properly — on paper or in a document you'll actually reopen. Every section below is one you'll be tempted to skip and shouldn't.",
+            },
+            { type: "h", level: 3, text: "1. Scope" },
+            {
+              type: "checklist",
+              items: [
+                "Which markets will I trade? (Be specific: 'FTSE 100 stocks over £1bn market cap', not 'stocks'.)",
+                "Which timeframe is my decision chart?",
+                "How many positions can I hold at once?",
+                "What am I explicitly not trading? (Penny stocks, anything I heard about on social media, anything I can't explain in two sentences.)",
+              ],
+            },
+            { type: "h", level: 3, text: "2. Risk limits" },
+            {
+              type: "checklist",
+              items: [
+                "[[Risk per trade]], as a fixed percentage. Write the number.",
+                "Maximum total risk if every open position hits its stop at once.",
+                "Daily loss limit — the point at which I stop trading for the day, no exceptions.",
+                "Weekly or monthly [[drawdown]] limit — the point at which I halve my size until I'm back on track.",
+                "Maximum [[correlation|correlated]] exposure. (Five tech stocks is one bet, not five.)",
+              ],
+            },
+            {
+              type: "callout",
+              variant: "desk",
+              title: "The daily loss limit is the most valuable line in the document",
+              body: [
+                "It exists specifically to stop [[revenge trading]]. After two losses, the urge to make it back immediately is strong, predictable, and the direct cause of most catastrophic single-day losses.",
+                "A pre-committed limit turns that into a decision you already made. Set it at 2–3× your per-trade risk: two or three losses, and you're done for the day.",
+              ],
+            },
+            { type: "h", level: 3, text: "3. Setups" },
+            {
+              type: "checklist",
+              items: [
+                "My setups, listed. Two or three, not ten.",
+                "Entry criteria for each, specific enough for a stranger to apply.",
+                "Where invalidation sits, and why that price.",
+                "Exit rules — target, trail, or both.",
+                "Filters: what makes me skip an otherwise valid setup?",
+              ],
+            },
+            { type: "h", level: 3, text: "4. Routine" },
+            {
+              type: "checklist",
+              items: [
+                "When do I review charts? (A specific time — 'when I feel like it' isn't a routine.)",
+                "What's on my pre-market checklist? ([[Economic calendar]], earnings dates, open positions.)",
+                "When do I journal? (Same day, always.)",
+                "When do I review the whole plan? (Monthly, and never mid-drawdown.)",
+              ],
+            },
+            { type: "h", level: 3, text: "5. Circuit breakers" },
+            {
+              type: "checklist",
+              items: [
+                "I stop trading for the day if… (loss limit hit; I'm angry; I took a trade not in the plan.)",
+                "I halve my size if… (weekly drawdown limit hit; three plan violations in a week.)",
+                "I stop entirely and review if… (monthly limit hit; I've stopped journaling; I'm trading to recover money rather than to follow the plan.)",
+              ],
+            },
+            { type: "h", level: 2, text: "Practise it now — a worked scenario" },
+            {
+              type: "story",
+              title: "Scenario: write the plan entry for this trade",
+              beats: [
+                {
+                  label: "The chart",
+                  text: "A £3.2bn logistics company has ranged between £11.80 and £13.20 for four months. Yesterday it closed at £13.45 on volume 2.1× its 20-day average. The 50-day moving average is rising. ATR is £0.38.",
+                },
+                {
+                  label: "Your account",
+                  text: "£2,000. Your plan says 1% risk per trade.",
+                },
+                {
+                  label: "Work it out",
+                  text: "Before reading on: what's your entry, your stop, your size, and your target? Write them down. Don't estimate — calculate.",
+                },
+              ],
+              verdict:
+                "**Entry** £13.20 on a retest of the broken ceiling. **Stop** 1 ATR below, £12.82. **Risk per share** £0.38. **Risk budget** £20. **Size** £20 ÷ £0.38 = 52 shares (£686 position). **Target** the measured move: range height £1.40 projected from £13.20 gives £14.60 — a reward of £1.40 against £0.38 risked, roughly 3.7:1. And one filter to check: **when does this company report earnings?** If it's inside the next month, the plan says skip it.",
+            },
+            {
+              type: "callout",
+              variant: "warn",
+              body: [
+                "If your instinct was 'buy about £700 worth' rather than calculating 52 shares from the stop distance, that's the habit this whole track exists to replace. It feels like the same thing. It isn't — one controls your loss, the other leaves it to the market.",
+              ],
+            },
+            {
+              type: "callout",
+              variant: "key",
+              body: [
+                "A trading plan moves decisions from the moment of maximum emotion to a moment of calm. It needs scope, risk limits, specific setups, a routine and circuit breakers. The daily loss limit does more work than anything else in it, because it's the only structural defence against revenge trading.",
+              ],
+            },
+          ],
+          quiz: [
+            {
+              id: "q1",
+              prompt: "What is the fundamental purpose of a written trading plan?",
+              options: [
+                "To satisfy regulatory requirements",
+                "To move decisions from moments of high emotion to a moment of calm",
+                "To guarantee profitability",
+                "To track tax obligations",
+              ],
+              answer: 1,
+              explain:
+                "Judgement degrades under pressure in ways you can't feel. A plan means the decision was already made by a clearer-thinking version of you.",
+            },
+            {
+              id: "q2",
+              prompt: "Why is a daily loss limit considered the highest-value rule in a plan?",
+              options: [
+                "It caps the total amount you can lose in a year",
+                "It's the structural defence against revenge trading, which is the direct cause of most catastrophic single-day losses",
+                "Brokers require one",
+                "It improves your win rate",
+              ],
+              answer: 1,
+              explain:
+                "The urge to recover a loss immediately is strong and predictable. Pre-committing removes the decision from the moment you're least able to make it well.",
+            },
+            {
+              id: "q3",
+              prompt: "£2,000 account, 1% risk, entry £13.20, stop £12.82. Position size?",
+              options: ["152 shares", "52 shares", "20 shares", "152 shares if you round up"],
+              answer: 1,
+              explain:
+                "Risk budget £20; risk per share £0.38; 20 ÷ 0.38 = 52.6 → 52 shares. Round down, always — rounding up quietly pushes you above your stated risk.",
+            },
+            {
+              id: "q4",
+              prompt: "Your plan allows 1% risk per trade. You hold five different technology stocks. What's the flaw?",
+              options: [
+                "Nothing — each is separately sized",
+                "Correlated positions behave as one larger bet, so your true risk is far above 1%",
+                "Five positions is too few to diversify",
+                "Technology stocks can't be swing traded",
+              ],
+              answer: 1,
+              explain:
+                "[[Correlation]] collapses toward 1 exactly when it hurts. Five tech positions in a sector selloff is one 5% bet wearing five hats — which is why a correlated-exposure limit belongs in the plan.",
+            },
+            {
+              id: "q5",
+              prompt: "When should you revise your trading plan?",
+              options: [
+                "Immediately after a big loss, while the lesson is fresh",
+                "On a scheduled review — monthly, and never in the middle of a drawdown",
+                "Whenever a trade doesn't work",
+                "Never — plans should be permanent",
+              ],
+              answer: 1,
+              explain:
+                "Revising mid-drawdown means rewriting the rules to accommodate the emotion you're currently feeling. Plans should evolve from reviewed evidence, on a schedule, not from the last bad trade.",
+            },
+          ],
+        },
+      ],
+    },
+  ],
+};
