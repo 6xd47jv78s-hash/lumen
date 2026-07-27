@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { AlertRunner } from "@/components/alerts/AlertRunner";
 import { Nav } from "@/components/layout/Nav";
 import { THEME_BOOT_SCRIPT } from "@/store/theme";
 import "./globals.css";
@@ -31,6 +32,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {children}
         </main>
         <Footer />
+        <AlertRunner />
       </body>
     </html>
   );
@@ -53,6 +55,7 @@ function Footer() {
             {[
               ["/learn", "All courses"],
               ["/practice", "Chart practice"],
+              ["/watch", "Market Watch"],
               ["/news", "Market news"],
               ["/glossary", "Glossary"],
             ].map(([href, label]) => (

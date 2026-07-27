@@ -904,6 +904,26 @@ export const GLOSSARY: GlossaryEntry[] = [
     related: ["Gap", "Earnings", "Day trading"],
   },
   {
+    term: "13F filing",
+    aliases: ["13F", "13Fs", "13F filings"],
+    category: "Risk & psychology",
+    definition:
+      "A quarterly disclosure US institutional managers running over $100m in equities must file, listing their long US equity positions.",
+    detail:
+      "Due 45 days after quarter end, and it excludes shorts, cash, bonds, non-US holdings and most derivatives. Useful for understanding how institutions think; useless as a trade list.",
+    related: ["Copy trading", "Position sizing"],
+  },
+  {
+    term: "Copy trading",
+    aliases: ["signal service", "signal services", "mirror trading"],
+    category: "Risk & psychology",
+    definition:
+      "Automatically or manually replicating another trader's positions, usually through a platform or a paid signal group.",
+    detail:
+      "The structural problem is that a position isn't a trade: you receive a direction and an entry, but not the invalidation, the position size relative to their account, the portfolio context or the exit — which is everything that decides the outcome.",
+    related: ["13F filing", "Invalidation", "Trading plan"],
+  },
+  {
     term: "Passive investing",
     aliases: ["buy and hold", "index investing"],
     category: "Risk & psychology",

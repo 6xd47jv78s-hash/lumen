@@ -103,10 +103,30 @@ for (const file of trackFiles) {
 
 /* -------------------------------------------------- cross-file references --- */
 
-const newsSrc = read(join(ROOT, "src/content/news.ts"));
-for (const m of newsSrc.matchAll(/lesson:\s*\{\s*slug:\s*"([^"]+)"/g)) {
-  if (!lessonSlugs.has(m[1])) {
-    problems.push(`news.ts: links to lesson "${m[1]}", which does not exist.`);
+// Anything that deep-links into a lesson must point at one that exists.
+for (const file of ["src/content/news.ts", "src/content/events.ts"]) {
+  const src = read(join(ROOT, file));
+  for (const m of src.matchAll(/lesson:\s*\{\s*slug:\s*"([^"]+)"/g)) {
+    if (!lessonSlugs.has(m[1])) {
+      problems.push(`${file}: links to lesson "${m[1]}", which does not exist.`);
+    }
+  }
+}
+
+// Pages can link into lessons too — catch a renamed slug before it 404s.
+const APP_DIR = join(ROOT, "src/app");
+function walk(dir) {
+  return readdirSync(dir, { withFileTypes: true }).flatMap((e) =>
+    e.isDirectory() ? walk(join(dir, e.name)) : [join(dir, e.name)],
+  );
+}
+for (const file of walk(APP_DIR).filter((f) => f.endsWith(".tsx"))) {
+  for (const m of read(file).matchAll(/href="\/learn\/[a-z-]+\/([a-z0-9-]+)"/g)) {
+    if (!lessonSlugs.has(m[1])) {
+      problems.push(
+        `${file.replace(ROOT, "")}: links to /learn/.../${m[1]}, which is not a lesson.`,
+      );
+    }
   }
 }
 

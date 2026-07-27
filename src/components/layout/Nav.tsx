@@ -5,10 +5,12 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useProgress } from "@/store/progress";
 import { useTheme } from "@/store/theme";
+import { NextEvent } from "./NextEvent";
 
 const LINKS = [
   { href: "/learn", label: "Courses" },
   { href: "/practice", label: "Practice" },
+  { href: "/watch", label: "Watch" },
   { href: "/news", label: "News" },
   { href: "/glossary", label: "Glossary" },
   { href: "/dashboard", label: "Progress" },
@@ -49,6 +51,7 @@ export function Nav() {
         </nav>
 
         <div className="ml-auto flex items-center gap-1.5">
+          <NextEvent />
           <Streak />
           <ThemeToggle />
           <button

@@ -20,11 +20,12 @@ npm run check      # typecheck + content audit + production build
 
 | | |
 |---|---|
-| **31 lessons** across 6 tracks | Market Foundations, Chart Reading, Strategy, Risk & Psychology, Macro & News Literacy, Your Path Forward |
-| **140 quiz questions** | 3–5 per lesson, gating progress to the next one at a 70% pass mark |
+| **32 lessons** across 6 tracks | Market Foundations, Chart Reading, Strategy, Risk & Psychology, Macro & News Literacy, Your Path Forward |
+| **145 quiz questions** | 3–5 per lesson, gating progress to the next one at a 70% pass mark |
 | **11 interactive chart exercises** | Mark support/resistance, spot the trend, find the breakout, find the false signal — scored against model answers |
-| **128 glossary terms** | Linked contextually from inside every lesson, with hover definitions |
+| **130 glossary terms** | Linked contextually from inside every lesson, with hover definitions |
 | **16 news stories** | Each paired with a plain-English "why this moves markets" explainer |
+| **Market Watch** | Live countdowns to scheduled market-moving events, with opt-in browser alerts |
 
 ## Stack
 
@@ -90,16 +91,41 @@ module that knows how progress is stored, so moving to Prisma/SQLite later means
 reimplementing those actions against an API and leaving every consumer
 untouched.
 
+### The line Market Watch does not cross
+
+`/watch` is live and timed: countdowns to scheduled events, a nav chip tracking
+the next high-impact release, opt-in browser alerts, and a market snapshot bar.
+
+It deliberately answers **when markets are likely to move and why**, and never
+**what to buy**. That constraint is architectural, not cosmetic:
+
+- Every event carries `whyWatched` and `watchFor` — mechanisms and things to
+  observe. There is no field in `MarketEvent` capable of holding a direction or
+  an instrument recommendation.
+- Alert notification bodies name a scheduled event or a study habit. Nothing
+  else can reach them.
+- The snapshot bar is framed as regime context, and sample values are badged
+  `SAMPLE DATA` in the bar itself — a number reads as authoritative in a way a
+  headline doesn't, so an unbadged placeholder price would mislead.
+
+The reasoning is taught, not just enforced: `risk/following-others` covers why
+signal services, copied positions and 13F filings fail, and `/watch` links to it
+from the top of the page.
+
 ### Integration points left open
 
-- **Live market data** — implement against the `Series` shape in
+- **Live market data (charts)** — implement against the `Series` shape in
   `src/lib/market/types.ts`.
-- **Live news** — implement the `NewsSource` interface in
-  `src/lib/news/source.ts` and swap the export. The one field a raw feed won't
-  give you is `whyItMoves`, which is what makes the section educational rather
-  than a headline dump; it should be written or reviewed by a human.
+- **Live news** — implement `NewsSource` in `src/lib/news/source.ts`. The field
+  a raw feed won't give you is `whyItMoves`, which is what makes the section
+  educational rather than a headline dump; write or review it by hand.
+- **Live economic calendar** — implement `EventSource` in
+  `src/lib/events/source.ts`. Same caveat: `whyWatched` and `watchFor` are
+  editorial. Until then the board is generated from recurrence rules so it is
+  always current, and placeholder dates are badged `est. date` in the UI.
+- **Live quotes** — implement `QuoteSource` in `src/lib/market/quotes.ts`.
 
-Neither is required to run the site.
+None are required to run the site.
 
 ## Content standards
 
@@ -117,35 +143,41 @@ The bar the lessons are written to:
   on at the end.
 
 `npm run audit` enforces the structural half of this: every glossary link
-resolves, every exercise id exists, lesson slugs are globally unique, news deep
-links point at real lessons, and every lesson lands a key takeaway.
+resolves, every exercise id exists, lesson slugs are globally unique, every deep
+link from news, events and pages points at a real lesson, and every lesson lands
+a key takeaway.
 
 ## Project layout
 
 ```
 src/
-  app/                routes: /, /learn/[track]/[lesson], /practice, /news,
-                      /glossary, /dashboard
+  app/                routes: /, /learn/[track]/[lesson], /practice, /watch,
+                      /news, /glossary, /dashboard
   components/
     chart/            lightweight-charts wrapper + overlays
     content/          block renderer, inline markup, hand-built SVG figures
     exercise/         exercise runners and the standalone practice tool
+    watch/            event board, countdowns, alert settings, snapshot bar
+    alerts/           notification runner, mounted once in the root layout
     dashboard/ news/ glossary/ learn/ layout/
   content/
-    tracks/           the 31 lessons
-    glossary.ts       128 terms — the single source for [[term]] links
+    tracks/           the 32 lessons
+    glossary.ts       130 terms — the single source for [[term]] links
     exercises.ts      11 exercises with anchored model answers
     news.ts           sample feed
+    events.ts         event templates + recurrence rules
   lib/
-    market/           deterministic OHLC generation
+    market/           deterministic OHLC generation, quote source
     content/          registry, ordering, navigation
-    exercise/ news/
-  store/              progress + theme (localStorage)
+    events/ exercise/ news/
+  store/              progress + theme + alert prefs (localStorage)
 scripts/audit-content.mjs
 ```
 
 ## Disclaimer
 
-MarketLab is educational material, not financial advice. All charts are
-generated for teaching and do not represent real historical prices. The news
-feed is illustrative and is labelled as such in the UI.
+MarketLab is educational material, not financial advice, and it never issues
+buy or sell recommendations. All charts are generated for teaching and do not
+represent real historical prices. The news feed, the market snapshot and any
+event date badged `est. date` are illustrative and are labelled as such in the
+UI. Confirm event timings against an official source before relying on them.

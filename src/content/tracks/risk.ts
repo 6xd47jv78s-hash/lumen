@@ -989,6 +989,239 @@ export const risk: Track = {
 
         /* ------------------------------------------------------------ 4.6 */
         {
+          slug: "following-others",
+          title: "Signals, finfluencers and copying top traders",
+          subtitle: "Why 'just do what the good traders do' doesn't work, and what does transfer",
+          minutes: 9,
+          blocks: [
+            {
+              type: "p",
+              text: "If most people lose money trading, an obvious idea presents itself: **skip the learning and copy someone who wins.** Signal groups, [[copy trading]] platforms and social media accounts all sell exactly that. It's the single most common way beginners lose money, and the reasons are worth understanding precisely rather than being told to avoid it.",
+            },
+            { type: "h", level: 2, text: "The business model comes first" },
+            {
+              type: "p",
+              text: "Start with the question from the headline-literacy lesson: **does this person profit if I believe them?**",
+            },
+            {
+              type: "p",
+              text: "A signal service charges a subscription. A social account sells a course, or is paid by a broker for referrals. A trader promoting a position benefits if you buy it and push the price up. In every case the revenue comes from your belief, not from their trading — which means their incentive is to look right, not to be right.",
+            },
+            {
+              type: "callout",
+              variant: "desk",
+              body: [
+                "This is the tell that costs nothing to check. **If someone's edge were real and scalable, selling access to it would be the least profitable thing they could do with it.** Capital compounds; subscriptions don't. Anyone genuinely running a profitable system is usually trying to keep it quiet, not to build an audience.",
+              ],
+            },
+            { type: "h", level: 2, text: "Why the track record proves nothing" },
+            {
+              type: "p",
+              text: "The screenshots look convincing. Here is the arithmetic behind them.",
+            },
+            {
+              type: "worked",
+              title: "The forked-prediction trick",
+              rows: [
+                { label: "Start with 1,024 people" },
+                { label: "Tell half \"it goes up\", half \"it goes down\"", value: "512 saw a hit" },
+                { label: "Repeat with the 512 who saw a correct call", value: "256" },
+                { label: "Again", value: "128 → 64 → 32 → 16 → 8" },
+                { label: "After ten rounds", value: "1 person", emphasis: true },
+                { label: "Their experience of you", value: "10 correct calls in a row" },
+              ],
+              note: "That person will pay anything you ask. You needed no skill whatsoever — only a list and the discipline to delete the people you were wrong to. Whether any given account does this deliberately or is simply the survivor of thousands who tried and quit, the evidence you can see looks identical.",
+            },
+            {
+              type: "p",
+              text: "Even without deliberate deception, three things make a public track record close to worthless:",
+            },
+            {
+              type: "list",
+              items: [
+                "**Losses are deletable.** A post announcing a trade can be removed if it fails. What you see is a filtered sample by construction.",
+                "**Screenshots are trivially faked.** Editing a number in a browser takes ten seconds, and demo accounts look identical to funded ones.",
+                "**Returns without risk are meaningless.** \"+340% this year\" tells you nothing without the [[drawdown]] and the position sizes. Someone risking 50% per trade will occasionally post an enormous year — right before the year that ends them.",
+              ],
+            },
+            { type: "h", level: 2, text: "The signal that's real still doesn't help you" },
+            {
+              type: "p",
+              text: "Suppose the signal is genuine — a skilled trader, telling you the truth, in real time. It still fails, because **a position is not a trade.**",
+            },
+            {
+              type: "table",
+              caption:
+                "Everything the signal leaves out is the part that determines whether you make money.",
+              headers: ["What you get", "What decides the outcome"],
+              rows: [
+                ["\"Long EUR/USD at 1.0850\"", "Where their [[invalidation]] sits, and why"],
+                ["An entry price", "What fraction of *their* account is at risk"],
+                ["A direction", "How this fits the other nine positions they hold"],
+                ["A moment in time", "When and how they'll exit — which you'll learn after they've done it"],
+                ["Their conviction", "Their time horizon, which may be six months and yours six days"],
+              ],
+            },
+            {
+              type: "p",
+              text: "You will also always be later than them, at a worse price, with a wider stop or no stop at all. And when the position moves against you, you have no thesis of your own — so you have no basis for deciding whether to hold or fold. That's the moment copied trades turn into large losses: **you cannot manage a position whose reasoning you never had.**",
+            },
+            { type: "h", level: 2, text: "13F filings and the copy-the-professionals idea" },
+            {
+              type: "p",
+              text: "A more sophisticated version: institutional managers running over $100m in US equities must submit a [[13F filing]] disclosing their holdings. It's public, free, and genuinely real. Why not just copy it?",
+            },
+            {
+              type: "list",
+              items: [
+                "**It's 45 days stale.** Filings are due 45 days after quarter end, so a position shown might have been opened four months ago — and closed since.",
+                "**It shows long US equity positions only.** No short positions, no cash, no bonds, no non-US holdings, and most derivatives are excluded. A fund that looks aggressively long may be fully hedged in ways the filing never shows.",
+                "**There's no sizing context.** A 2% position in a fund with a mandate and a risk committee is not the same trade as a 2% position in your account.",
+                "**No exit information.** You find out they sold in the *next* filing, 45 days after that quarter ended.",
+              ],
+            },
+            {
+              type: "callout",
+              variant: "note",
+              body: [
+                "13Fs are genuinely interesting for understanding how institutions think and what themes they're building exposure to. They are not a trade list, and reading them that way is a good demonstration of the general principle: **information about someone else's position is not the same as a plan for yours.**",
+              ],
+            },
+            { type: "h", level: 2, text: "What actually transfers from good traders" },
+            {
+              type: "p",
+              text: "Here's the part worth taking seriously. Studying excellent traders is genuinely valuable — you just have to copy the right layer.",
+            },
+            {
+              type: "cards",
+              items: [
+                {
+                  title: "Don't copy",
+                  subtitle: "The positions",
+                  bullets: [
+                    "What they bought",
+                    "When they bought it",
+                    "Their price targets",
+                    "Their conviction",
+                  ],
+                },
+                {
+                  title: "Do copy",
+                  subtitle: "The process",
+                  bullets: [
+                    "How they size relative to a defined stop",
+                    "That they define invalidation before entry",
+                    "How they behave in a [[drawdown]]",
+                    "That they keep records and review them",
+                    "What makes them pass on a trade",
+                  ],
+                },
+              ],
+            },
+            {
+              type: "p",
+              text: "Read enough interviews with successful traders — *Market Wizards* is the standard collection — and the striking thing is how little their strategies have in common. Trend followers, arbitrageurs, discretionary macro traders, quants. What they share is the process column: strict risk control, defined invalidation, and a written record. **The thing that generalises is the risk management, not the trades.**",
+            },
+            { type: "h", level: 2, text: "A test for any claim" },
+            {
+              type: "checklist",
+              title: "Five questions, thirty seconds",
+              items: [
+                "**Incentive.** Do they profit if I believe them? A subscription, a course, a broker referral, or a position they want me to push?",
+                "**Verifiability.** Is the record independently auditable, or is it screenshots and memory?",
+                "**Sample size.** Thirty-plus trades logged in advance, or five highlights?",
+                "**Risk-adjusted.** Is the [[drawdown]] published alongside the return? If not, the return is a number without units.",
+                "**Falsifiability.** Are losses posted with the same prominence as wins? An account that only posts winners is telling you its filter, not its results.",
+              ],
+            },
+            {
+              type: "callout",
+              variant: "warn",
+              title: "One legal note worth knowing",
+              body: [
+                "Giving personalised investment advice is a regulated activity in the UK, the EU and the US, and regulators have brought enforcement actions against social-media promoters of trading products. Someone posting \"buy this now\" to strangers is generally either operating outside those rules or relying on a disclaimer buried in their bio.",
+                "For you the practical point is simpler: **an anonymous account that knows nothing about your money, your timeframe or your risk tolerance is not in a position to tell you what to do with any of them.**",
+              ],
+            },
+            {
+              type: "callout",
+              variant: "key",
+              body: [
+                "Signal sellers profit from your belief, not their trading — and a real edge would be worth more compounded quietly than sold. Track records are filtered by construction and easy to fake. Even a genuine real-time signal omits invalidation, sizing, portfolio context and exit, which is everything that decides the outcome. Copy the process — risk control, defined invalidation, record-keeping — never the positions.",
+              ],
+            },
+          ],
+          quiz: [
+            {
+              id: "q1",
+              prompt: "Why is it suspicious when someone sells access to a profitable trading system?",
+              options: [
+                "Selling systems is illegal everywhere",
+                "Because a genuinely profitable, scalable edge compounds far more capital than subscriptions ever could — so selling it is the least profitable use of it",
+                "Because profitable traders are always secretive people",
+                "It isn't suspicious; sharing is normal",
+              ],
+              answer: 1,
+              explain:
+                "The incentive test from the headline-literacy lesson applies directly. Revenue that comes from your belief rather than from their trading rewards looking right, not being right.",
+            },
+            {
+              id: "q2",
+              prompt: "Someone shows you ten correct market calls in a row. What's the most important thing you don't know?",
+              options: [
+                "Which broker they use",
+                "How many people were told the opposite, and how many other calls were deleted",
+                "Their exact entry prices",
+                "Whether they trade full-time",
+              ],
+              answer: 1,
+              explain:
+                "Fork predictions across a large enough list and someone receives ten straight hits with no skill involved. The sample you can see is filtered by construction — deliberately or by survivorship.",
+            },
+            {
+              id: "q3",
+              prompt: "A skilled trader tells you honestly and in real time: 'Long EUR/USD at 1.0850.' Why is that still not enough?",
+              options: [
+                "Forex is too risky for signals",
+                "It omits invalidation, position size, portfolio context and exit plan — everything that decides the outcome",
+                "The price will have changed by a pip",
+                "Because they might be wrong",
+              ],
+              answer: 1,
+              explain:
+                "A position is not a trade. And without a thesis of your own you have no basis for deciding whether to hold or fold when it moves against you — which is exactly when the decision matters.",
+            },
+            {
+              id: "q4",
+              prompt: "What is the biggest practical limitation of copying a fund's 13F filing?",
+              options: [
+                "The filings are expensive to access",
+                "They're published up to 45 days after quarter end and show only long US equity positions — no shorts, no hedges, no exits",
+                "They only cover funds under $100m",
+                "They're written in a language most people can't read",
+              ],
+              answer: 1,
+              explain:
+                "A position shown might be four months old and already closed, and a fund that looks aggressively long may be fully hedged in ways the form never reveals.",
+            },
+            {
+              id: "q5",
+              prompt: "What actually transfers when you study successful traders?",
+              options: [
+                "Their specific entry signals",
+                "Their preferred instruments",
+                "Their process — sizing against a defined stop, invalidation set before entry, behaviour in drawdown, record-keeping",
+                "Their price targets",
+              ],
+              answer: 2,
+              explain:
+                "Read enough of them and the strategies have almost nothing in common. The risk management does — which is the part that generalises across every style and market.",
+            },
+          ],
+        },
+
+        /* ------------------------------------------------------------ 4.7 */
+        {
           slug: "trade-journaling",
           title: "Trade journaling: the highest-leverage habit",
           subtitle: "What to log, why it works, and the review that turns records into improvement",
