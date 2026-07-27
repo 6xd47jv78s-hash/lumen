@@ -63,14 +63,6 @@ export interface MarkerOverlay {
   kind?: "up" | "down" | "neutral" | "warn";
 }
 
-export interface ZoneOverlay {
-  /** Shaded horizontal band between two price anchors. */
-  fromAnchor: string;
-  toAnchor: string;
-  label?: string;
-  kind: "resistance" | "support" | "neutral";
-}
-
 export interface ChartSpec {
   scenario: ScenarioId;
   /** Deterministic — the same seed always renders the same chart. */
@@ -82,7 +74,6 @@ export interface ChartSpec {
   /** Aggregate generated bars N-to-1 before rendering (timeframe lessons). */
   aggregate?: number;
   levels?: LevelOverlay[];
-  zones?: ZoneOverlay[];
   markers?: MarkerOverlay[];
   /** Simple moving average periods to overlay. */
   ma?: number[];

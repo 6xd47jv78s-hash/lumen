@@ -272,7 +272,13 @@ function Stat({
   );
 }
 
-/** Bucket the recorded study days into the last 12 calendar weeks. */
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+/**
+ * Bucket the recorded study days into the last 12 calendar weeks. Only every
+ * third week is labelled — twelve dated ticks don't fit and Recharts would
+ * rather overlap them than drop them.
+ */
 function buildWeeks(activeDays: string[]): WeekPoint[] {
   const set = new Set(activeDays);
   const today = new Date();
@@ -283,18 +289,21 @@ function buildWeeks(activeDays: string[]): WeekPoint[] {
     const end = new Date(today);
     end.setDate(end.getDate() - w * 7);
     let days = 0;
-    let first = "";
+    const start = new Date(end);
+    start.setDate(start.getDate() - 6);
+
     for (let d = 6; d >= 0; d--) {
       const day = new Date(end);
       day.setDate(day.getDate() - d);
-      const key = dayKey(day);
-      if (d === 6) first = day.toLocaleDateString(undefined, { day: "numeric", month: "short" });
-      if (set.has(key)) days++;
+      if (set.has(dayKey(day))) days++;
     }
+
+    const index = 11 - w;
+    const stamp = `${start.getDate()} ${MONTHS[start.getMonth()]}`;
     out.push({
-      label: w === 0 ? "now" : first.split(" ")[0],
+      label: w === 0 ? "now" : index % 3 === 0 ? stamp : "",
       days,
-      range: `Week of ${first}`,
+      range: `Week of ${stamp}`,
     });
   }
   return out;

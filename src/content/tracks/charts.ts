@@ -208,6 +208,36 @@ export const charts: Track = {
               caption:
                 "Twelve hourly candles become three 4-hour candles become one daily candle. The daily candle's open is the first hour's open, its close is the last hour's close, and its high and low are the extremes of the whole set. Nothing is added; detail is discarded.",
             },
+            {
+              type: "p",
+              text: "That's the diagram. Here it is with real bars — the same generated series, drawn twice, with the second chart aggregating every four candles of the first into one.",
+            },
+            {
+              type: "chart",
+              spec: {
+                scenario: "intraday-noise",
+                seed: 512,
+                bars: 96,
+                symbol: "AXLN",
+                timeframe: "5m",
+                height: 210,
+              },
+              caption: "96 five-minute candles.",
+            },
+            {
+              type: "chart",
+              spec: {
+                scenario: "intraday-noise",
+                seed: 512,
+                bars: 96,
+                aggregate: 4,
+                symbol: "AXLN",
+                timeframe: "20m",
+                height: 210,
+              },
+              caption:
+                "The identical data, four bars combined into one. Every price in the second chart came from the first — no information was added, and a great deal of wobble was removed.",
+            },
             { type: "h", level: 2, text: "The same data, two stories" },
             {
               type: "p",

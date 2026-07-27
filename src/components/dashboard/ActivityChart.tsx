@@ -50,14 +50,14 @@ export function ActivityChart({ data }: { data: WeekPoint[] }) {
     <div key={theme}>
       <div className="h-44 w-full">
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data} margin={{ top: 6, right: 4, bottom: 0, left: -22 }}>
+          <BarChart data={data} margin={{ top: 6, right: 4, bottom: 0, left: 0 }}>
             <CartesianGrid stroke={line} vertical={false} />
             <XAxis
               dataKey="label"
               tickLine={false}
               axisLine={{ stroke: line }}
               tick={{ fill: faint, fontSize: 10 }}
-              interval="preserveStartEnd"
+              interval={0}
             />
             <YAxis
               domain={[0, 7]}
@@ -65,7 +65,7 @@ export function ActivityChart({ data }: { data: WeekPoint[] }) {
               tickLine={false}
               axisLine={false}
               tick={{ fill: faint, fontSize: 10 }}
-              width={34}
+              width={22}
             />
             <Tooltip
               cursor={{ fill: line, opacity: 0.5 }}

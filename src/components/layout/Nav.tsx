@@ -21,7 +21,7 @@ export function Nav() {
   useEffect(() => setOpen(false), [pathname]);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-line bg-base/85 backdrop-blur-md">
+    <header className="sticky top-0 z-40 border-b border-line bg-base/95 backdrop-blur-md">
       <div className="mx-auto flex h-14 max-w-[86rem] items-center gap-3 px-4 sm:px-6">
         <Link href="/" className="flex shrink-0 items-center gap-2.5" aria-label="MarketLab home">
           <Mark />

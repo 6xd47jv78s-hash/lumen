@@ -8,9 +8,9 @@ export const ALL_LESSONS: LessonRef[] = (() => {
   const out: LessonRef[] = [];
   let i = 0;
   for (const track of [...TRACKS].sort((a, b) => a.order - b.order)) {
-    for (const module of track.modules) {
-      for (const lesson of module.lessons) {
-        out.push({ track, module, lesson, index: i++ });
+    for (const mod of track.modules) {
+      for (const lesson of mod.lessons) {
+        out.push({ track, module: mod, lesson, index: i++ });
       }
     }
   }

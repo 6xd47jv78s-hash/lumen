@@ -363,7 +363,9 @@ const scenarios: Record<ScenarioId, ScenarioFn> = {
     const candles = toCandles(rng, path, {
       bars,
       start,
-      noise: 0.008,
+      // Tighter than the other range scenarios: the point of this chart is that
+      // the ceiling reads as a ceiling, so the trap bar is unmistakable.
+      noise: 0.0055,
       volProfile: (i) => (i >= brk && i <= brk + 2 ? 1.5 : 0.95),
     });
     [0.13, 0.44].forEach((f) => touch(candles[Math.round(bars * f)], res, "high"));
