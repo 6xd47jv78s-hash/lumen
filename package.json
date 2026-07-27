@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "audit": "node scripts/audit-content.mjs",
+    "check": "npm run typecheck && npm run audit && npm run build"
   },
   "dependencies": {
     "lightweight-charts": "4.2.3",
