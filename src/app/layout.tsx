@@ -74,8 +74,20 @@ function Footer() {
           </p>
         </div>
       </div>
-      <div className="border-t border-line px-4 py-4 text-center text-2xs text-faint sm:px-6">
+      <div className="border-t border-line px-4 py-4 text-center text-2xs leading-relaxed text-faint sm:px-6">
         Progress is stored locally in your browser. Nothing is uploaded anywhere.
+        <br className="sm:hidden" />
+        <span className="hidden sm:inline"> · </span>
+        Charts powered by{" "}
+        <a
+          href="https://www.tradingview.com/lightweight-charts/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline decoration-line-strong underline-offset-2 hover:text-muted"
+        >
+          Lightweight Charts™ by TradingView
+        </a>
+        .
       </div>
     </footer>
   );

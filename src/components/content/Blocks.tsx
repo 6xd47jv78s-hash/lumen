@@ -1,6 +1,7 @@
 import type { Block } from "@/lib/content/types";
 import { ChartBlock } from "@/components/chart/ChartBlock";
 import { ExerciseBlock } from "@/components/exercise/ExerciseBlock";
+import { Figure } from "./Figures";
 import { renderInline } from "./RichText";
 
 const CALLOUT: Record<
@@ -86,10 +87,10 @@ function BlockView({ block, index }: { block: Block; index: number }) {
             <li key={i} className="relative pl-6">
               <span
                 aria-hidden
-                className={`absolute left-0 top-0 font-mono text-xs ${
+                className={`absolute left-0 font-mono text-xs ${
                   block.ordered ? "text-accent tnum" : "text-line-strong"
                 }`}
-                style={block.ordered ? undefined : { top: "0.55em", lineHeight: 0 }}
+                style={block.ordered ? { top: "0.28em" } : { top: "0.55em", lineHeight: 0 }}
               >
                 {block.ordered ? `${i + 1}.` : "—"}
               </span>
@@ -177,6 +178,18 @@ function BlockView({ block, index }: { block: Block; index: number }) {
         </ChartBlock>
       );
 
+    case "figure":
+      return (
+        <figure className="my-7 rounded-lg border border-line bg-surface p-5">
+          <Figure id={block.figure} />
+          {block.caption && (
+            <figcaption className="mt-4 border-t border-line pt-3 text-sm leading-relaxed text-muted">
+              {renderInline(block.caption, `fg${index}`)}
+            </figcaption>
+          )}
+        </figure>
+      );
+
     case "cards":
       return (
         <div
@@ -249,7 +262,7 @@ function BlockView({ block, index }: { block: Block; index: number }) {
                     row.emphasis ? "font-semibold text-accent" : "text-ink"
                   }`}
                 >
-                  {renderInline(row.value, `wv${index}-${i}`)}
+                  {row.value ? renderInline(row.value, `wv${index}-${i}`) : null}
                 </dd>
               </div>
             ))}

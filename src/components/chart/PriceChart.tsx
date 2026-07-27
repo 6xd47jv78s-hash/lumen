@@ -54,6 +54,14 @@ function readVar(name: string, fallback: string): string {
   return `rgb(${v.split(/\s+/).join(",")})`;
 }
 
+/** `rgb(r,g,b)` → `rgba(r,g,b,a)`. Hex-style alpha suffixes are not valid CSS
+ *  on an rgb() string, and lightweight-charts rejects them outright. */
+function withAlpha(color: string, alpha: number): string {
+  return color.startsWith("rgb(")
+    ? color.replace("rgb(", "rgba(").replace(")", `,${alpha})`)
+    : color;
+}
+
 function palette() {
   return {
     up: readVar("--c-up", "rgb(38,166,154)"),
@@ -124,6 +132,9 @@ export function PriceChart({
         textColor: c.muted,
         fontFamily: "var(--font-sans)",
         fontSize: 11,
+        // Attribution is given properly in the site footer instead of as a
+        // watermark over every teaching chart.
+        attributionLogo: false,
       },
       grid: {
         vertLines: { color: c.line, style: LineStyle.Solid },
@@ -183,7 +194,7 @@ export function PriceChart({
         series.volumes.map((v) => ({
           time: v.time as UTCTimestamp,
           value: v.value,
-          color: v.up ? `${c.up}66` : `${c.down}66`,
+          color: withAlpha(v.up ? c.up : c.down, 0.4),
         })),
       );
     }

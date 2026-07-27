@@ -12,6 +12,7 @@
  *      instead of shipping a dead lesson.
  */
 
+import type { FigureId } from "@/components/content/Figures";
 import type { ChartSpec } from "@/lib/market/types";
 
 /** Inline text supports: **bold**, *italic*, `code`, [[glossary-term]],
@@ -38,6 +39,7 @@ export type Block =
       numericFrom?: number;
     }
   | { type: "chart"; spec: ChartSpec; caption?: RichText }
+  | { type: "figure"; figure: FigureId; caption?: RichText }
   | {
       type: "cards";
       columns?: 2 | 3;
@@ -48,7 +50,7 @@ export type Block =
       type: "worked";
       title: string;
       /** Label / value rows — used for position sizing maths and similar. */
-      rows: { label: RichText; value: RichText; emphasis?: boolean }[];
+      rows: { label: RichText; value?: RichText; emphasis?: boolean }[];
       note?: RichText;
     }
   | { type: "formula"; expr: string; note?: RichText }

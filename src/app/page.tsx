@@ -29,11 +29,14 @@ export default function HomePage() {
         <div className="mx-auto grid max-w-[86rem] gap-10 px-4 py-14 sm:px-6 lg:grid-cols-[1.05fr_1fr] lg:items-center lg:py-20">
           <div>
             <p className="eyebrow">Markets, taught properly</p>
-            <h1 className="mt-3 text-[2.1rem] font-semibold leading-[1.1] tracking-tight text-ink sm:text-[2.75rem]">
-              Learn how markets actually work
-              <span className="block text-muted">— so when you&rsquo;re ready to trade,</span>
-              <span className="block">you&rsquo;re not starting from zero.</span>
+            <h1 className="mt-3 text-[2.15rem] font-semibold leading-[1.08] tracking-tight text-ink sm:text-[2.9rem]">
+              Learn how markets
+              <br />
+              actually work.
             </h1>
+            <p className="mt-4 max-w-xl text-lg leading-snug text-ink/80">
+              So when you&rsquo;re ready to trade, you&rsquo;re not starting from zero.
+            </p>
             <p className="mt-5 max-w-xl text-[1.02rem] leading-relaxed text-muted">
               A full course in chart reading, strategy, risk management and market psychology,
               written the way traders actually think about it. Not a simulator, not a hype channel —
