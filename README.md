@@ -10,16 +10,32 @@ finishes with the real foundation — chart reading, strategy, risk management,
 market psychology — and can go straight to an external paper-trading platform
 with a genuine head start.
 
+## Running it
+
+Needs Node 18.18 or newer (`node -v` to check).
+
 ```bash
+git clone https://github.com/6xd47jv78s-hash/lumen.git
+cd lumen
+git checkout claude/marketlab-education-platform-oan1lz
 npm install
-npm run dev        # http://localhost:3000
+npm run dev        # then open http://localhost:3000
+```
+
+The first page you open takes a few seconds to compile in dev; after that it's
+instant. Nothing else is required — no API keys, no database, no account. To
+serve the optimised build instead, `npm run build && npm start`.
+
+```bash
 npm test           # 266 assertions, no test framework dependency
 npm run check      # typecheck + lint + tests + content audit + build + site audit
 ```
 
-Set `NEXT_PUBLIC_SITE_URL` when deploying — it feeds canonical metadata, the
-social card, `sitemap.xml` and `robots.txt`. Everything else runs without
-configuration.
+**Deploying.** It's a standard Next.js app with no backend, so any Node host or
+static-friendly platform works — Vercel, Netlify, Cloudflare Pages, or your own
+box behind `npm run build && npm start`. Set `NEXT_PUBLIC_SITE_URL` to the real
+origin so canonical metadata, the social card, `sitemap.xml` and `robots.txt`
+point at the right place.
 
 ## What's in it
 
