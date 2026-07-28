@@ -13,7 +13,8 @@ with a genuine head start.
 ```bash
 npm install
 npm run dev        # http://localhost:3000
-npm run check      # typecheck + content audit + production build
+npm test           # 266 assertions, no test framework dependency
+npm run check      # typecheck + lint + tests + content audit + build + site audit
 ```
 
 Set `NEXT_PUBLIC_SITE_URL` when deploying — it feeds canonical metadata, the
@@ -153,11 +154,49 @@ a key takeaway.
 
 ## Verification
 
-Beyond typecheck, lint and the content audit, the site has been crawled
-end-to-end at desktop (1280px) and mobile (390px) widths — all 45 reachable
-pages, checking for broken internal links, console errors, heading-order jumps,
-unnamed controls, unlabelled form fields, undecorated icon SVGs, and horizontal
-overflow. Current state: zero findings on all counts.
+`npm run check` runs the whole chain: typecheck → lint → tests → content audit →
+build → rendered-site audit. Each layer catches something the others can't.
+
+**`npm test`** (266 assertions, `node --test` via tsx — no test framework
+dependency). The parts worth testing here aren't the components, they're the
+things that can go silently wrong:
+
+- **The chart generator.** OHLC invariants on every bar of every scenario,
+  determinism per seed, and scenario-specific structural claims — that the
+  fakeout's trap bar really does close back below resistance, that the
+  breakout bar really does close above it on expanded volume, that the uptrend's
+  swings really do make higher highs and higher lows. This caught a real bug:
+  `touch()` shifted a candle's body to land on a level without re-deriving its
+  wicks, producing candles whose body escaped its own wick in five scenarios.
+- **Exercise model answers.** Every levels target is verified to be a price the
+  chart actually reacts at more than once, and targets are checked to sit
+  further apart than twice the grading tolerance so one line can't match two.
+  Bar-exercise traps are checked not to overlap the answer window, which would
+  otherwise score the same click as both correct and a near-miss depending on
+  evaluation order. Without this, a generator tweak can silently start marking
+  correct answers wrong.
+- **Course structure.** Quiz answer indices in range (an out-of-range index
+  renders a check that can never be passed, silently locking the rest of a
+  track), unique slugs and question ids, exactly one key takeaway per lesson and
+  it closes the lesson, no stub prose, table rows matching their headers.
+- **Event recurrence**, across 26 different start dates so month lengths and
+  week alignments are actually exercised: payrolls always land on the first
+  Friday, crypto expiry on the last, and the `ruleBased` flag agrees with
+  whether a schedule is a real convention. One test greps every event's copy for
+  directional language, which makes the "never what to buy" promise
+  machine-checkable rather than a matter of care.
+
+**`npm run audit:site`** starts the production server and crawls every
+internally-linked page, checking delivered HTML for broken links, missing page
+metadata, skipped heading levels, unnamed controls, unlabelled inputs,
+undecorated icon SVGs and `target="_blank"` without `rel="noopener"`. It's
+regex-over-HTML rather than a headless browser, so it needs no browser download
+in CI — the trade-off being that layout and client-only behaviour still want a
+real browser pass. It refuses to run if something is already on its port, since
+silently auditing a stale build is worse than not auditing at all.
+
+Current state: zero findings across all layers. A browser pass at 1280px and
+390px (heading order, focus visibility, horizontal overflow) is also clean.
 
 ## Project layout
 
@@ -183,7 +222,10 @@ src/
     content/          registry, ordering, navigation
     events/ exercise/ news/
   store/              progress + theme + alert prefs (localStorage)
-scripts/audit-content.mjs
+scripts/
+  audit-content.mjs   source-level content checks
+  audit-site.mjs      crawls the built site over HTTP
+src/**/*.test.ts      node:test suites, run via tsx
 ```
 
 ## Disclaimer

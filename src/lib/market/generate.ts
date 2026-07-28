@@ -155,27 +155,40 @@ function makeVolumes(
   });
 }
 
-/** Force a bar's extreme to touch a level precisely — makes S/R tests clean. */
+/**
+ * Force a bar's extreme to touch a level precisely — this is what makes an S/R
+ * test land exactly on the line a lesson then annotates.
+ *
+ * If the body sits beyond the level it gets shifted back inside, which can move
+ * it past the *other* extreme, so both wicks are re-derived afterwards. Skipping
+ * that produces candles whose body escapes its own wick: subtle enough to miss
+ * by eye, and wrong.
+ */
 function touch(c: Candle, level: number, side: "high" | "low", slip = 0) {
   if (side === "high") {
-    const top = level + slip;
-    c.high = r(Math.max(c.high, top));
-    if (Math.max(c.open, c.close) > top) {
-      const shrink = top - Math.max(c.open, c.close);
-      c.open = r(c.open + shrink);
-      c.close = r(c.close + shrink);
+    const target = level + slip;
+    const bodyTop = Math.max(c.open, c.close);
+    if (bodyTop > target) {
+      const shift = target - bodyTop;
+      c.open += shift;
+      c.close += shift;
     }
-    c.high = r(top);
+    c.high = target;
   } else {
-    const bot = level - slip;
-    c.low = r(Math.min(c.low, bot));
-    if (Math.min(c.open, c.close) < bot) {
-      const lift = bot - Math.min(c.open, c.close);
-      c.open = r(c.open + lift);
-      c.close = r(c.close + lift);
+    const target = level - slip;
+    const bodyBottom = Math.min(c.open, c.close);
+    if (bodyBottom < target) {
+      const shift = target - bodyBottom;
+      c.open += shift;
+      c.close += shift;
     }
-    c.low = r(bot);
+    c.low = target;
   }
+
+  c.open = r(c.open);
+  c.close = r(c.close);
+  c.high = r(Math.max(c.high, c.open, c.close));
+  c.low = r(Math.min(c.low, c.open, c.close));
 }
 
 function priceAt(candles: Candle[], i: number) {
@@ -375,6 +388,7 @@ const scenarios: Record<ScenarioId, ScenarioFn> = {
     trap.high = r(res * 1.017);
     trap.close = r(res * 0.995);
     trap.open = r(res * 1.006);
+    trap.low = r(Math.min(trap.low, trap.close));
     return {
       candles,
       // Note the volume: the break bar is only mildly above average. Real
