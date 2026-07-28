@@ -1,0 +1,69 @@
+name: Deploy to GitHub Pages
+
+# Deploys the site as a fully static export. The app has no backend, so nothing
+# is lost by hosting it as plain files.
+#
+# One-time setup: Settings → Pages → Build and deployment → Source →
+# "GitHub Actions". Until that's set, this workflow builds fine and the deploy
+# step fails with a permissions error.
+
+on:
+  push:
+    branches:
+      - main
+      - claude/marketlab-education-platform-oan1lz
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Never let two deploys race; always finish the most recent one.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # Deploy only what passes. These are the same checks `npm run check` runs
+      # locally, minus the site audit, which needs the server build rather than
+      # the export.
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm test
+      - run: npm run audit
+
+      - name: Build static export
+        env:
+          NEXT_OUTPUT: export
+          # Project pages live under /<repo>, not at the domain root.
+          NEXT_BASE_PATH: /${{ github.event.repository.name }}
+          NEXT_PUBLIC_SITE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
+        run: npm run build
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

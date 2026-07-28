@@ -42,7 +42,7 @@ export function AlertRunner() {
             new Notification(`${e.title} in ${mins} min`, {
               body: `${e.region} · ${e.impact} impact · affects ${e.assets.join(", ")}. Open MarketLab for what to watch for.`,
               tag: e.id,
-              icon: "/icon.svg",
+              icon: `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/icon.svg`,
             });
             state.markFired(e.id);
           }

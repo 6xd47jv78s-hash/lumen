@@ -31,11 +31,35 @@ npm test           # 266 assertions, no test framework dependency
 npm run check      # typecheck + lint + tests + content audit + build + site audit
 ```
 
-**Deploying.** It's a standard Next.js app with no backend, so any Node host or
-static-friendly platform works — Vercel, Netlify, Cloudflare Pages, or your own
-box behind `npm run build && npm start`. Set `NEXT_PUBLIC_SITE_URL` to the real
-origin so canonical metadata, the social card, `sitemap.xml` and `robots.txt`
-point at the right place.
+## Deploying
+
+The app has no backend, so it can ship either as a Node server build or as a
+pile of static files.
+
+**GitHub Pages** is wired up already. `.github/workflows/deploy.yml` runs the
+checks, builds a static export and publishes it. It needs one manual step, once:
+
+> **Settings → Pages → Build and deployment → Source → “GitHub Actions”**
+
+After that, every push to `main` (or the feature branch) deploys to
+`https://<owner>.github.io/<repo>/`. The workflow derives the base path and site
+URL from the repository name, so nothing is hardcoded.
+
+**Anywhere else.** Vercel, Netlify, Cloudflare Pages or your own box all work
+with no configuration beyond `NEXT_PUBLIC_SITE_URL`, which feeds canonical
+metadata, the social card, `sitemap.xml` and `robots.txt`.
+
+### Build modes
+
+| | Command | Output |
+|---|---|---|
+| Server build (default) | `npm run build && npm start` | `.next/`, served by Node |
+| Static export | `npm run export` | `out/`, plain files |
+
+`NEXT_BASE_PATH` handles hosting under a subdirectory (`github.io/<repo>`)
+rather than at a domain root. Export mode is opt-in rather than the default
+because `next start` — which `npm run audit:site` drives — can't serve an
+export.
 
 ## What's in it
 

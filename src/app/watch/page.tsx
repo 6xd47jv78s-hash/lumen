@@ -11,9 +11,11 @@ export const metadata: Metadata = {
     "Live countdowns to the scheduled events that move markets — central bank decisions, inflation and jobs data, earnings — with what to watch for in each.",
 };
 
-/** Regenerate hourly; the board also recomputes on the client. */
-export const revalidate = 3600;
-
+/**
+ * The server list is only a first paint — `EventBoard` recomputes the schedule
+ * on mount, so the board is correct however long ago the page was built. That's
+ * what lets this work as a fully static export with no revalidation.
+ */
 export default async function WatchPage() {
   const [events, quotes] = await Promise.all([getEvents(45), getQuotes()]);
 
