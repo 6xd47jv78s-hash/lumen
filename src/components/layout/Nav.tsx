@@ -10,6 +10,7 @@ import { NextEvent } from "./NextEvent";
 const LINKS = [
   { href: "/learn", label: "Courses" },
   { href: "/practice", label: "Practice" },
+  { href: "/live", label: "Live" },
   { href: "/watch", label: "Watch" },
   { href: "/news", label: "News" },
   { href: "/glossary", label: "Glossary" },

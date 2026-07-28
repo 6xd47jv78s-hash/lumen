@@ -27,7 +27,7 @@ instant. Nothing else is required — no API keys, no database, no account. To
 serve the optimised build instead, `npm run build && npm start`.
 
 ```bash
-npm test           # 266 assertions, no test framework dependency
+npm test           # 288 assertions, no test framework dependency
 npm run check      # typecheck + lint + tests + content audit + build + site audit
 ```
 
@@ -76,6 +76,7 @@ export.
 | **130 glossary terms** | Linked contextually from inside every lesson, with hover definitions |
 | **16 news stories** | Each paired with a plain-English "why this moves markets" explainer |
 | **Market Watch** | Live countdowns to scheduled market-moving events, with opt-in browser alerts |
+| **Live markets** | Real crypto candles, real ECB FX rates and a live headline wire — keyless, no signup |
 
 ## Stack
 
@@ -83,8 +84,10 @@ Next.js 14 (App Router) · TypeScript · Tailwind · Zustand ·
 [lightweight-charts](https://www.tradingview.com/lightweight-charts/) for price
 charts · Recharts for progress visualisation.
 
-Everything is statically generated. There is no backend, no account, and no
-network dependency at runtime.
+Everything is statically generated and there is no backend or account. Live
+market data is fetched client-side from free keyless providers, and every
+surface that uses it falls back to generated data if a provider is unreachable —
+so the site works offline too.
 
 ## Architecture notes
 
@@ -162,20 +165,37 @@ The reasoning is taught, not just enforced: `risk/following-others` covers why
 signal services, copied positions and 13F filings fail, and `/watch` links to it
 from the top of the page.
 
-### Integration points left open
+### Live data, and why some of it isn't
 
-- **Live market data (charts)** — implement against the `Series` shape in
-  `src/lib/market/types.ts`.
-- **Live news** — implement `NewsSource` in `src/lib/news/source.ts`. The field
-  a raw feed won't give you is `whyItMoves`, which is what makes the section
-  educational rather than a headline dump; write or review it by hand.
-- **Live economic calendar** — implement `EventSource` in
-  `src/lib/events/source.ts`. Same caveat: `whyWatched` and `watchFor` are
-  editorial. Until then the board is generated from recurrence rules so it is
-  always current, and placeholder dates are badged `est. date` in the UI.
-- **Live quotes** — implement `QuoteSource` in `src/lib/market/quotes.ts`.
+`/live` serves **real market data** from free keyless providers: crypto candles
+from Binance with CoinGecko as fallback, FX from the European Central Bank's
+published rates via Frankfurter, and a headline wire from GDELT. The snapshot
+bar on `/watch` uses the same sources. No key, no account, no signup.
 
-None are required to run the site.
+The constraint that shapes all of it: this is a static site, so every call runs
+in the browser and **any API key would be publicly readable**. That's why the
+defaults are keyless, and why live *stock* and *index* data isn't here — the
+providers that offer it all require a key. `src/lib/live/README.md` covers the
+trade-offs, the optional `NEXT_PUBLIC_MARKETAUX_KEY` slot, and what moving to a
+server would unlock.
+
+Every live surface names its provider and the age of its data, and falls back to
+generated data — clearly labelled as such — rather than showing a stale number
+as though it were current.
+
+Still editorial, still sample-backed by design:
+
+- **`/news` explainers.** A raw feed gives headlines, not the `whyItMoves`
+  mechanism that makes the section teach something. Generating that
+  automatically would be inventing analysis, so the curated feed stays written.
+  Swap `NewsSource` in `src/lib/news/source.ts` if you have an editor.
+- **`/watch` event dates.** Generated from recurrence rules so the board is
+  always current; placeholders are badged `est. date`. `EventSource` in
+  `src/lib/events/source.ts` takes a real calendar feed — but `whyWatched` and
+  `watchFor` remain editorial for the same reason.
+- **Teaching charts stay generated on purpose.** Lessons need charts where the
+  structure is unambiguous; that's a pedagogical choice, not a missing feature.
+  `/live` is where students apply the same reading to messy real data.
 
 ## Content standards
 
@@ -202,7 +222,7 @@ a key takeaway.
 `npm run check` runs the whole chain: typecheck → lint → tests → content audit →
 build → rendered-site audit. Each layer catches something the others can't.
 
-**`npm test`** (266 assertions, `node --test` via tsx — no test framework
+**`npm test`** (288 assertions, `node --test` via tsx — no test framework
 dependency). The parts worth testing here aren't the components, they're the
 things that can go silently wrong:
 

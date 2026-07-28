@@ -42,6 +42,12 @@ export interface PriceChartProps {
   userLevels?: UserLevel[];
   /** Markers for graded bar-picking exercises. */
   highlights?: BarHighlight[];
+  /**
+   * Render this series instead of generating one from `spec`. Used for live
+   * market data; `spec` still supplies presentation (symbol, timeframe, height,
+   * overlays), so nothing downstream needs to know where the bars came from.
+   */
+  series?: Series;
   onPriceClick?: (price: number) => void;
   onBarClick?: (index: number, candle: Candle) => void;
   /** Allow pan/zoom. Off for teaching charts so structure stays framed. */
@@ -95,6 +101,7 @@ export function PriceChart({
   showOverlays = true,
   userLevels,
   highlights,
+  series: seriesOverride,
   onPriceClick,
   onBarClick,
   interactive = false,
@@ -109,8 +116,8 @@ export function PriceChart({
   const [hover, setHover] = useState<Candle | null>(null);
 
   const series: Series = useMemo(
-    () => getSeries(spec.scenario, spec.seed, spec.bars, spec.aggregate),
-    [spec.scenario, spec.seed, spec.bars, spec.aggregate],
+    () => seriesOverride ?? getSeries(spec.scenario, spec.seed, spec.bars, spec.aggregate),
+    [seriesOverride, spec.scenario, spec.seed, spec.bars, spec.aggregate],
   );
 
   // Callbacks are read through refs so changing them doesn't rebuild the chart.
@@ -185,7 +192,7 @@ export function PriceChart({
       candleRef.current = candles;
     }
 
-    if (spec.showVolume) {
+    if (spec.showVolume && series.volumes.length > 0) {
       const vol = chart.addHistogramSeries({
         priceFormat: { type: "volume" },
         priceScaleId: "vol",

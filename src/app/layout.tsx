@@ -86,6 +86,7 @@ function Footer() {
             {[
               ["/learn", "All courses"],
               ["/practice", "Chart practice"],
+              ["/live", "Live markets"],
               ["/watch", "Market Watch"],
               ["/news", "Market news"],
               ["/glossary", "Glossary"],
