@@ -186,7 +186,28 @@ export default function HomePage() {
 
       {/* ----------------------------------------------------- stay current */}
       <section className="mx-auto max-w-[86rem] px-4 pt-14 sm:px-6">
-        <div className="grid gap-6 md:grid-cols-2">
+        <div className="grid gap-6 md:grid-cols-3">
+          <Link
+            href="/live"
+            className="group flex flex-col rounded-lg border border-line bg-surface p-6 transition-colors hover:border-accent/50"
+          >
+            <div className="flex items-center gap-2">
+              <span aria-hidden className="h-1.5 w-1.5 animate-pulse rounded-full bg-up" />
+              <p className="eyebrow">Live markets</p>
+            </div>
+            <h2 className="mt-2 text-lg font-semibold tracking-tight text-ink">
+              Practise on charts nobody tidied up
+            </h2>
+            <p className="mt-2 flex-1 text-sm leading-relaxed text-muted">
+              Real crypto candles, real central-bank FX rates and a live headline wire. The
+              lessons use generated charts so the structure is unambiguous; this is where you
+              find out whether you can read one that isn&rsquo;t.
+            </p>
+            <p className="mt-3 text-xs leading-relaxed text-faint">
+              No order ticket, no account — reading practice, not trading.
+            </p>
+          </Link>
+
           <Link
             href="/watch"
             className="group flex flex-col rounded-lg border border-line bg-surface p-6 transition-colors hover:border-accent/50"

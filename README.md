@@ -27,7 +27,7 @@ instant. Nothing else is required — no API keys, no database, no account. To
 serve the optimised build instead, `npm run build && npm start`.
 
 ```bash
-npm test           # 293 assertions, no test framework dependency
+npm test           # 297 assertions, no test framework dependency
 npm run check      # typecheck + lint + tests + content audit + build + site audit
 ```
 
@@ -241,7 +241,7 @@ a key takeaway.
 `npm run check` runs the whole chain: typecheck → lint → tests → content audit →
 build → rendered-site audit. Each layer catches something the others can't.
 
-**`npm test`** (293 assertions, `node --test` via tsx — no test framework
+**`npm test`** (297 assertions, `node --test` via tsx — no test framework
 dependency). The parts worth testing here aren't the components, they're the
 things that can go silently wrong:
 
