@@ -54,6 +54,11 @@ jobs:
         run: npm run build
 
       - uses: actions/configure-pages@v5
+        with:
+          # Turn Pages on via the API rather than requiring someone to flip the
+          # setting by hand. Falls back to a clear error if the token can't.
+          enablement: true
+
       - uses: actions/upload-pages-artifact@v3
         with:
           path: out
