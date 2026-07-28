@@ -41,6 +41,11 @@ checks, builds a static export and publishes it. It needs one manual step, once:
 
 > **Settings → Pages → Build and deployment → Source → “GitHub Actions”**
 
+That step can't be automated: creating a Pages site requires repo-admin
+credentials, and a workflow's automatic `GITHUB_TOKEN` doesn't have them
+(`Resource not accessible by integration`). The workflow checks for it up front
+and fails with those instructions rather than a bare `Not Found`.
+
 After that, every push to `main` (or the feature branch) deploys to
 `https://<owner>.github.io/<repo>/`. The workflow derives the base path and site
 URL from the repository name, so nothing is hardcoded.

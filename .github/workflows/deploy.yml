@@ -3,9 +3,11 @@ name: Deploy to GitHub Pages
 # Deploys the site as a fully static export. The app has no backend, so nothing
 # is lost by hosting it as plain files.
 #
-# One-time setup: Settings → Pages → Build and deployment → Source →
-# "GitHub Actions". Until that's set, this workflow builds fine and the deploy
-# step fails with a permissions error.
+# One-time setup, which has to be done by a human: Settings → Pages → Build and
+# deployment → Source → "GitHub Actions". The workflow token deliberately can't
+# do this — creating a Pages site requires repo-admin credentials. Until it's
+# set, everything builds and the "Check GitHub Pages is enabled" step explains
+# what to do.
 
 on:
   push:
@@ -53,12 +55,25 @@ jobs:
           NEXT_PUBLIC_SITE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
         run: npm run build
 
-      - uses: actions/configure-pages@v5
-        with:
-          # Turn Pages on via the API rather than requiring someone to flip the
-          # setting by hand. Falls back to a clear error if the token can't.
-          enablement: true
+      # configure-pages reports a bare "Not Found" when Pages has never been
+      # enabled, which gives no clue what to do. The workflow token can't enable
+      # it either — creating a Pages site needs repo-admin credentials, not the
+      # automatic GITHUB_TOKEN — so check first and say exactly what's needed.
+      - name: Check GitHub Pages is enabled
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if ! gh api "repos/${{ github.repository }}/pages" >/dev/null 2>&1; then
+            echo "::error title=GitHub Pages is not enabled::Open \
+          https://github.com/${{ github.repository }}/settings/pages and set \
+          'Build and deployment' → Source → 'GitHub Actions'. Then re-run this workflow. \
+          The workflow token cannot do this itself: creating a Pages site requires \
+          repo-admin credentials."
+            exit 1
+          fi
+          echo "Pages is enabled."
 
+      - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
           path: out
