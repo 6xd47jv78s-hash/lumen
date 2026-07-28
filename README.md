@@ -36,19 +36,19 @@ npm run check      # typecheck + lint + tests + content audit + build + site aud
 The app has no backend, so it can ship either as a Node server build or as a
 pile of static files.
 
-**GitHub Pages** is wired up already. `.github/workflows/deploy.yml` runs the
-checks, builds a static export and publishes it. It needs one manual step, once:
+**GitHub Pages** is live at
+[6xd47jv78s-hash.github.io/lumen](https://6xd47jv78s-hash.github.io/lumen/), and
+needs no setup at all. `.github/workflows/deploy.yml` runs the checks, builds a
+static export and force-pushes it to the `gh-pages` branch on every push to
+`main` or the feature branch. Base path and site URL are derived from the
+repository name, so nothing is hardcoded.
 
-> **Settings → Pages → Build and deployment → Source → “GitHub Actions”**
-
-That step can't be automated: creating a Pages site requires repo-admin
-credentials, and a workflow's automatic `GITHUB_TOKEN` doesn't have them
-(`Resource not accessible by integration`). The workflow checks for it up front
-and fails with those instructions rather than a bare `Not Found`.
-
-After that, every push to `main` (or the feature branch) deploys to
-`https://<owner>.github.io/<repo>/`. The workflow derives the base path and site
-URL from the repository name, so nothing is hardcoded.
+It publishes via the branch rather than the Pages deployment API on purpose.
+Creating a Pages site through the API requires repo-admin credentials, which a
+workflow's automatic `GITHUB_TOKEN` does not have — `actions/configure-pages`
+fails with `Resource not accessible by integration`, and the alternative is
+asking a human to flip **Settings → Pages → Source → “GitHub Actions”**. Pushing
+a `gh-pages` branch enables Pages by itself, so the whole thing is automatic.
 
 **Anywhere else.** Vercel, Netlify, Cloudflare Pages or your own box all work
 with no configuration beyond `NEXT_PUBLIC_SITE_URL`, which feeds canonical

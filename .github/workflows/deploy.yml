@@ -1,13 +1,14 @@
 name: Deploy to GitHub Pages
 
-# Deploys the site as a fully static export. The app has no backend, so nothing
-# is lost by hosting it as plain files.
+# Publishes the site as a static export to the `gh-pages` branch.
 #
-# One-time setup, which has to be done by a human: Settings → Pages → Build and
-# deployment → Source → "GitHub Actions". The workflow token deliberately can't
-# do this — creating a Pages site requires repo-admin credentials. Until it's
-# set, everything builds and the "Check GitHub Pages is enabled" step explains
-# what to do.
+# Why the branch rather than the Pages deployment API: creating a Pages site
+# through the API needs repo-admin credentials, which a workflow's automatic
+# GITHUB_TOKEN doesn't have — `actions/configure-pages` fails with "Resource not
+# accessible by integration". Pushing a `gh-pages` branch enables Pages on its
+# own, so this route needs no manual setup at all.
+#
+# Live at https://<owner>.github.io/<repo>/
 
 on:
   push:
@@ -17,17 +18,15 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
-# Never let two deploys race; always finish the most recent one.
+# Never let two publishes race.
 concurrency:
   group: pages
   cancel-in-progress: true
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -39,9 +38,9 @@ jobs:
 
       - run: npm ci
 
-      # Deploy only what passes. These are the same checks `npm run check` runs
-      # locally, minus the site audit, which needs the server build rather than
-      # the export.
+      # Publish only what passes. Same checks as `npm run check` locally, minus
+      # the site audit, which drives `next start` and so needs the server build
+      # rather than the export.
       - run: npm run typecheck
       - run: npm run lint
       - run: npm test
@@ -55,35 +54,16 @@ jobs:
           NEXT_PUBLIC_SITE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
         run: npm run build
 
-      # configure-pages reports a bare "Not Found" when Pages has never been
-      # enabled, which gives no clue what to do. The workflow token can't enable
-      # it either — creating a Pages site needs repo-admin credentials, not the
-      # automatic GITHUB_TOKEN — so check first and say exactly what's needed.
-      - name: Check GitHub Pages is enabled
-        env:
-          GH_TOKEN: ${{ github.token }}
+      - name: Publish to gh-pages
         run: |
-          if ! gh api "repos/${{ github.repository }}/pages" >/dev/null 2>&1; then
-            echo "::error title=GitHub Pages is not enabled::Open \
-          https://github.com/${{ github.repository }}/settings/pages and set \
-          'Build and deployment' → Source → 'GitHub Actions'. Then re-run this workflow. \
-          The workflow token cannot do this itself: creating a Pages site requires \
-          repo-admin credentials."
-            exit 1
-          fi
-          echo "Pages is enabled."
-
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: out
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+          cd out
+          git init -q -b gh-pages
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Publish site from ${{ github.sha }}"
+          git push -f \
+            "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" \
+            gh-pages
+          echo "Published to https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/" \
+            >> "$GITHUB_STEP_SUMMARY"
