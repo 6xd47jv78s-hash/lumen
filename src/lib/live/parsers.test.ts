@@ -8,6 +8,7 @@ import {
 } from "./crypto";
 import { parseFrankfurterSeries, toFxQuote } from "./fx";
 import { matchLesson, parseGdelt, parseGdeltDate, parseMarketaux } from "./news";
+import { parseTwelveDataQuote, parseTwelveDataSeries } from "./stocks";
 
 /**
  * The network calls themselves can't be tested here — and honestly shouldn't
@@ -217,5 +218,52 @@ describe("live data parsers", () => {
         });
       }
     });
+  });
+});
+
+describe("Twelve Data (stocks, server-side)", () => {
+  it("reverses newest-first rows and converts strings", () => {
+    const series = parseTwelveDataSeries({
+      status: "ok",
+      values: [
+        { datetime: "2026-06-03", open: "191.0", high: "193.5", low: "190.2", close: "192.8", volume: "51000000" },
+        { datetime: "2026-06-02", open: "188.0", high: "191.4", low: "187.5", close: "190.9", volume: "48000000" },
+      ],
+    });
+    assert.equal(series.candles.length, 2);
+    assert.ok(
+      series.candles[0].time < series.candles[1].time,
+      "the API returns newest-first; charts need oldest-first",
+    );
+    assert.equal(series.candles[0].close, 190.9);
+    assert.equal(series.volumes[0].value, 48000000);
+  });
+
+  it("throws on the provider's HTTP-200 error envelope", () => {
+    // Twelve Data reports failures with status 200 and status:"error", so a
+    // naive parse would silently produce an empty chart.
+    assert.throws(
+      () => parseTwelveDataSeries({ status: "error", message: "You have run out of API credits" }),
+      /run out of API credits/,
+    );
+  });
+
+  it("hides the volume pane when the plan returns no volume", () => {
+    const series = parseTwelveDataSeries({
+      status: "ok",
+      values: [{ datetime: "2026-06-03", open: "1", high: "2", low: "0.5", close: "1.5" }],
+    });
+    assert.equal(series.volumes.length, 0, "all-zero volume would be a lie, not data");
+  });
+
+  it("parses a quote and names known symbols", () => {
+    const quote = parseTwelveDataQuote({ symbol: "SPY", close: "584.21", percent_change: "0.42" });
+    assert.equal(quote.name, "S&P 500 ETF");
+    assert.equal(quote.last, 584.21);
+    assert.equal(quote.changePct, 0.42);
+  });
+
+  it("throws rather than reporting a NaN price", () => {
+    assert.throws(() => parseTwelveDataQuote({ symbol: "SPY", close: "n/a" }), /no price/);
   });
 });

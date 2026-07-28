@@ -12,7 +12,7 @@
     "check": "npm run typecheck && npm run lint && npm run test && npm run audit && npm run build && npm run audit:site",
     "test": "node --import tsx --test \"src/**/*.test.ts\"",
     "audit:site": "node scripts/audit-site.mjs",
-    "export": "NEXT_OUTPUT=export next build"
+    "export": "node scripts/build-export.mjs"
   },
   "dependencies": {
     "lightweight-charts": "4.2.3",

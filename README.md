@@ -27,7 +27,7 @@ instant. Nothing else is required — no API keys, no database, no account. To
 serve the optimised build instead, `npm run build && npm start`.
 
 ```bash
-npm test           # 288 assertions, no test framework dependency
+npm test           # 293 assertions, no test framework dependency
 npm run check      # typecheck + lint + tests + content audit + build + site audit
 ```
 
@@ -50,21 +50,40 @@ fails with `Resource not accessible by integration`, and the alternative is
 asking a human to flip **Settings → Pages → Source → “GitHub Actions”**. Pushing
 a `gh-pages` branch enables Pages by itself, so the whole thing is automatic.
 
-**Anywhere else.** Vercel, Netlify, Cloudflare Pages or your own box all work
-with no configuration beyond `NEXT_PUBLIC_SITE_URL`, which feeds canonical
-metadata, the social card, `sitemap.xml` and `robots.txt`.
+**Vercel** is the other supported target, and it unlocks what a static host
+can't do: API routes run server-side, so keys stay private and live **stock and
+index** data becomes possible.
+
+1. [vercel.com/new](https://vercel.com/new) → sign in with GitHub → import this
+   repo. Next.js is auto-detected; no build settings to change.
+2. Deploy. Everything works immediately — crypto, FX and the headline wire all
+   use keyless providers.
+3. Optional, for stocks: get a free key at
+   [twelvedata.com](https://twelvedata.com/), then Settings → Environment
+   Variables → add `TWELVE_DATA_KEY` → redeploy.
+
+Without that key the stock endpoints return 501 and the UI explains what's
+missing, rather than erroring. See `.env.example` for every variable.
+
+**Netlify, Cloudflare Pages or your own box** also work, with no configuration
+beyond `NEXT_PUBLIC_SITE_URL`.
 
 ### Build modes
 
-| | Command | Output |
-|---|---|---|
-| Server build (default) | `npm run build && npm start` | `.next/`, served by Node |
-| Static export | `npm run export` | `out/`, plain files |
+| | Command | Output | API routes |
+|---|---|---|---|
+| Server build (default) | `npm run build && npm start` | `.next/`, served by Node | yes |
+| Static export | `npm run export` | `out/`, plain files | no |
 
 `NEXT_BASE_PATH` handles hosting under a subdirectory (`github.io/<repo>`)
-rather than at a domain root. Export mode is opt-in rather than the default
-because `next start` — which `npm run audit:site` drives — can't serve an
-export.
+rather than at a domain root.
+
+The two modes differ in one structural way: `force-dynamic` route handlers can't
+be prerendered, and Next fails the build outright rather than skipping them.
+`scripts/build-export.mjs` moves `src/app/api` outside the routable tree for the
+duration of an export and restores it afterwards — including on failure and on
+Ctrl-C, since leaving a repo with its API routes renamed would be a nasty thing
+to walk into. That's what lets one codebase serve both hosts.
 
 ## What's in it
 
@@ -222,7 +241,7 @@ a key takeaway.
 `npm run check` runs the whole chain: typecheck → lint → tests → content audit →
 build → rendered-site audit. Each layer catches something the others can't.
 
-**`npm test`** (288 assertions, `node --test` via tsx — no test framework
+**`npm test`** (293 assertions, `node --test` via tsx — no test framework
 dependency). The parts worth testing here aren't the components, they're the
 things that can go silently wrong:
 

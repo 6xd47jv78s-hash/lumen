@@ -23,7 +23,28 @@ So the defaults are providers that need no key at all:
 | FX | Frankfurter (ECB reference rates) | none | Daily rates, one price per day — a line, not candles. |
 | Headlines | GDELT DOC 2.0 | none | Public news index. |
 
-## Adding a key anyway
+## On a server, keys stay private
+
+When the site runs on a Node host (Vercel), `src/app/api/market/*` proxies the
+providers server-side. That buys three things the browser can't:
+
+- **Keys stay secret**, so live stock and index data becomes possible at all.
+  `TWELVE_DATA_KEY` unlocks `/api/market/candles` and `/api/market/quotes`.
+- **CORS stops mattering.** A server has no same-origin policy, so providers
+  that don't send permissive headers become usable.
+- **Regional blocks shift to the server's location**, not the visitor's.
+
+Clients try the same-origin route first and fall back to calling the keyless
+provider directly, so the identical code works on both hosts. On the static
+build these routes don't exist; a 404 is read as "no server here", a 501 as
+"server present, key not configured", and each gets its own message rather than
+a generic failure.
+
+`scripts/build-export.mjs` moves `src/app/api` aside during a static export,
+because `force-dynamic` route handlers can't be prerendered and Next refuses the
+build outright.
+
+## Adding a key to a *static* build anyway
 
 `NEXT_PUBLIC_MARKETAUX_KEY` is wired up for news and takes priority over GDELT
 when set. Before using it, understand the trade: **that key will be readable by

@@ -46,13 +46,15 @@ jobs:
       - run: npm test
       - run: npm run audit
 
+      # `npm run export` (not `next build`): the API routes are force-dynamic and
+      # can't be prerendered, so the export script parks them for the duration
+      # of the build. Setting NEXT_OUTPUT by hand would fail.
       - name: Build static export
         env:
-          NEXT_OUTPUT: export
           # Project pages live under /<repo>, not at the domain root.
           NEXT_BASE_PATH: /${{ github.event.repository.name }}
           NEXT_PUBLIC_SITE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
-        run: npm run build
+        run: npm run export
 
       - name: Publish to gh-pages
         run: |

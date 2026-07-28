@@ -171,12 +171,30 @@ async function loadMarketaux(limit: number, key: string): Promise<LiveHeadline[]
 
 /* --------------------------------------------------------------- public --- */
 
+/**
+ * Same-origin proxy, present only when the site runs on a Node host.
+ *
+ * Preferred when available: fetching server-side sidesteps CORS, isn't subject
+ * to the visitor's regional blocks, and can use a private key. A 404 or 501
+ * just means this is the static build, so the next provider takes over.
+ */
+async function loadProxy(limit: number): Promise<LiveHeadline[]> {
+  const json = await fetchJson<{ items?: LiveHeadline[] }>(
+    `/api/market/news?limit=${limit}`,
+    "MarketLab server",
+  );
+  if (!json.items?.length) throw new Error("server proxy returned no headlines");
+  // Lesson links are recomputed client-side so the mapping stays in one place.
+  return json.items.map((item) => ({ ...item, lesson: matchLesson(item.title) }));
+}
+
 export async function getLiveHeadlines(limit = 24): Promise<LiveResult<LiveHeadline[]>> {
   const key = publicKey("MARKETAUX_KEY");
 
   return firstWorking<LiveHeadline[]>([
-    // A configured provider goes first; the keyless one is the always-there
-    // baseline rather than a downgrade.
+    { name: "MarketLab server", load: () => loadProxy(limit) },
+    // A build-time key is a fallback, not the default — in a static build it
+    // would be readable by anyone. See ./README.md.
     ...(key ? [{ name: "Marketaux", load: () => loadMarketaux(limit, key) }] : []),
     { name: "GDELT", load: () => loadGdelt(limit) },
   ]);
