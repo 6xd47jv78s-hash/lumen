@@ -9,11 +9,15 @@ export function TrackCard({
   track,
   lessonSlugs,
   minutes,
+  headingLevel = 3,
 }: {
   track: Track;
   lessonSlugs: string[];
   minutes: number;
+  /** 2 when the grid follows the page h1 directly, 3 when it sits under an h2. */
+  headingLevel?: 2 | 3;
 }) {
+  const Heading = headingLevel === 2 ? "h2" : "h3";
   const lessons = useProgress((s) => s.lessons);
   const hydrated = useProgress((s) => s.hydrated);
   const done = hydrated ? lessonSlugs.filter((s) => lessons[s]).length : 0;
@@ -31,7 +35,9 @@ export function TrackCard({
         <span className="eyebrow">{track.level}</span>
       </div>
 
-      <h3 className="mt-4 text-base font-semibold tracking-tight text-ink">{track.title}</h3>
+      <Heading className="mt-4 text-base font-semibold tracking-tight text-ink">
+        {track.title}
+      </Heading>
       <p className="mt-1.5 flex-1 text-sm leading-relaxed text-muted">{track.tagline}</p>
 
       <div className="mt-4 flex items-center gap-2 font-mono text-2xs text-faint">

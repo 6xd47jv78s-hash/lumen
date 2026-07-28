@@ -60,7 +60,7 @@ export function Nav() {
             aria-label="Toggle menu"
             className="btn-ghost h-8 w-8 !px-0 md:hidden"
           >
-            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2}>
+            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden>
               {open ? <path d="M6 6l12 12M18 6L6 18" /> : <path d="M4 7h16M4 12h16M4 17h16" />}
             </svg>
           </button>
@@ -87,7 +87,7 @@ export function Nav() {
 function Mark() {
   return (
     <span className="flex h-7 w-7 items-center justify-center rounded-[7px] border border-accent/40 bg-accent-soft">
-      <svg viewBox="0 0 24 24" className="h-4 w-4 text-accent" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
+      <svg viewBox="0 0 24 24" className="h-4 w-4 text-accent" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" aria-hidden>
         <path d="M4 18l5-6 4 3 7-9" />
       </svg>
     </span>
@@ -107,7 +107,7 @@ function ThemeToggle() {
       aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
       title={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
     >
-      <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round">
+      <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" aria-hidden>
         {mounted && theme === "light" ? (
           <path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z" />
         ) : (

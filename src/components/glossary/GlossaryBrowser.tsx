@@ -35,6 +35,7 @@ export function GlossaryBrowser() {
             fill="none"
             stroke="currentColor"
             strokeWidth={2}
+            aria-hidden
           >
             <circle cx="11" cy="11" r="7" />
             <path d="M20 20l-3.5-3.5" />

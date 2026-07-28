@@ -16,6 +16,10 @@ npm run dev        # http://localhost:3000
 npm run check      # typecheck + content audit + production build
 ```
 
+Set `NEXT_PUBLIC_SITE_URL` when deploying — it feeds canonical metadata, the
+social card, `sitemap.xml` and `robots.txt`. Everything else runs without
+configuration.
+
 ## What's in it
 
 | | |
@@ -146,6 +150,14 @@ The bar the lessons are written to:
 resolves, every exercise id exists, lesson slugs are globally unique, every deep
 link from news, events and pages points at a real lesson, and every lesson lands
 a key takeaway.
+
+## Verification
+
+Beyond typecheck, lint and the content audit, the site has been crawled
+end-to-end at desktop (1280px) and mobile (390px) widths — all 45 reachable
+pages, checking for broken internal links, console errors, heading-order jumps,
+unnamed controls, unlabelled form fields, undecorated icon SVGs, and horizontal
+overflow. Current state: zero findings on all counts.
 
 ## Project layout
 

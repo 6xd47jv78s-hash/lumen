@@ -184,6 +184,51 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ----------------------------------------------------- stay current */}
+      <section className="mx-auto max-w-[86rem] px-4 pt-14 sm:px-6">
+        <div className="grid gap-6 md:grid-cols-2">
+          <Link
+            href="/watch"
+            className="group flex flex-col rounded-lg border border-line bg-surface p-6 transition-colors hover:border-accent/50"
+          >
+            <div className="flex items-center gap-2">
+              <span aria-hidden className="h-1.5 w-1.5 animate-pulse rounded-full bg-down" />
+              <p className="eyebrow">Market Watch</p>
+            </div>
+            <h2 className="mt-2 text-lg font-semibold tracking-tight text-ink">
+              Know when markets are about to move
+            </h2>
+            <p className="mt-2 flex-1 text-sm leading-relaxed text-muted">
+              Live countdowns to the scheduled events that cause the month&rsquo;s biggest moves —
+              rate decisions, inflation prints, jobs data, earnings — each with what it measures
+              and what to look for. Optional alerts before the big ones.
+            </p>
+            <p className="mt-3 text-xs leading-relaxed text-faint">
+              It tells you <strong className="text-muted">when</strong> and{" "}
+              <strong className="text-muted">why</strong> — never what to buy.
+            </p>
+          </Link>
+
+          <Link
+            href="/news"
+            className="group flex flex-col rounded-lg border border-line bg-surface p-6 transition-colors hover:border-accent/50"
+          >
+            <p className="eyebrow">Market news</p>
+            <h2 className="mt-2 text-lg font-semibold tracking-tight text-ink">
+              Headlines, with the mechanism attached
+            </h2>
+            <p className="mt-2 flex-1 text-sm leading-relaxed text-muted">
+              Most financial news is noise, and the stories that matter often move prices in a
+              direction that looks backwards. Every story here is paired with a plain-English
+              explanation of why it moves markets, tagged by which assets it touches.
+            </p>
+            <p className="mt-3 text-xs leading-relaxed text-faint">
+              Learn to read a headline for relevance instead of urgency.
+            </p>
+          </Link>
+        </div>
+      </section>
+
       {/* -------------------------------------------------------- practice */}
       <section className="mx-auto max-w-[86rem] px-4 py-14 sm:px-6">
         <div className="grid gap-6 rounded-lg border border-line bg-surface p-6 md:grid-cols-[1.2fr_1fr] md:p-8">

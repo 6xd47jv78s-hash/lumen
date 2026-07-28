@@ -38,6 +38,9 @@ export default function LearnPage() {
               track={track}
               lessonSlugs={lessons.map((l) => l.slug)}
               minutes={lessons.reduce((a, l) => a + l.minutes, 0)}
+              // The grid follows the page h1 directly here, with no section
+              // heading between, so the cards are the h2 level.
+              headingLevel={2}
             />
           );
         })}

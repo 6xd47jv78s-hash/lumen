@@ -1,17 +1,48 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import Link from "next/link";
 import { AlertRunner } from "@/components/alerts/AlertRunner";
 import { Nav } from "@/components/layout/Nav";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 import { THEME_BOOT_SCRIPT } from "@/store/theme";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "MarketLab — learn how markets actually work",
     template: "%s · MarketLab",
   },
-  description:
-    "A serious, free course in reading financial markets: chart reading, strategy, risk management and market psychology, taught to a professional standard for 14–18 year olds.",
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
+  keywords: [
+    "learn trading",
+    "chart reading",
+    "technical analysis for beginners",
+    "risk management",
+    "trading psychology",
+    "stock market for teenagers",
+    "financial literacy",
+  ],
+  openGraph: {
+    type: "website",
+    siteName: SITE_NAME,
+    title: "MarketLab — learn how markets actually work",
+    description: SITE_DESCRIPTION,
+    url: SITE_URL,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "MarketLab — learn how markets actually work",
+    description: SITE_DESCRIPTION,
+  },
+  robots: { index: true, follow: true },
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: dark)", color: "#090b10" },
+    { media: "(prefers-color-scheme: light)", color: "#fafbfd" },
+  ],
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
