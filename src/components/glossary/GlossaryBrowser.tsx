@@ -50,12 +50,15 @@ export function GlossaryBrowser() {
           />
         </div>
 
-        <div className="thin-scroll mt-3 flex gap-1.5 overflow-x-auto pb-1">
+        {/* Wraps rather than scrolls: a horizontal scroller clipped the last
+            category with no affordance saying more existed off-screen. */}
+        <div className="mt-3 flex flex-wrap gap-1.5">
           {(["all", ...GLOSSARY_CATEGORIES] as const).map((c) => (
             <button
               key={c}
               onClick={() => setCategory(c)}
-              className={`shrink-0 rounded-md border px-2.5 py-1.5 text-xs transition-colors ${
+              aria-pressed={category === c}
+              className={`rounded-md border px-2.5 py-1.5 text-xs transition-colors ${
                 category === c
                   ? "border-accent/50 bg-accent-soft text-ink"
                   : "border-line bg-surface text-muted hover:border-line-strong hover:text-ink"

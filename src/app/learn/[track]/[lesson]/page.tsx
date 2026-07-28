@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 import { Blocks } from "@/components/content/Blocks";
 import { LessonSidebar } from "@/components/learn/LessonSidebar";
 import { MobileContents } from "@/components/learn/MobileContents";
+import { SectionRail } from "@/components/learn/SectionRail";
+import { lessonSections } from "@/lib/content/headings";
 import { Quiz } from "@/components/learn/Quiz";
 import { ALL_LESSONS, getLessonRef, neighbours } from "@/lib/content/registry";
 
@@ -31,6 +33,7 @@ export default function LessonPage({ params }: Params) {
   const { track, module, lesson } = ref;
   const { prev, next } = neighbours(lesson.slug);
   const position = module.lessons.findIndex((l) => l.slug === lesson.slug) + 1;
+  const sections = lessonSections(lesson);
 
   return (
     <div className="mx-auto flex max-w-[86rem] gap-10 px-4 py-8 sm:px-6 lg:py-12">
@@ -108,6 +111,10 @@ export default function LessonPage({ params }: Params) {
           )}
         </nav>
       </article>
+
+      <aside className="sticky top-20 hidden h-fit w-52 shrink-0 xl:block">
+        <SectionRail sections={sections} />
+      </aside>
     </div>
   );
 }

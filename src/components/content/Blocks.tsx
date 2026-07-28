@@ -2,6 +2,7 @@ import type { Block } from "@/lib/content/types";
 import { ChartBlock } from "@/components/chart/ChartBlock";
 import { ExerciseBlock } from "@/components/exercise/ExerciseBlock";
 import { Figure } from "./Figures";
+import { headingId } from "@/lib/content/headings";
 import { renderInline } from "./RichText";
 
 const CALLOUT: Record<
@@ -66,7 +67,11 @@ function BlockView({ block, index }: { block: Block; index: number }) {
 
     case "h":
       return block.level === 2 ? (
-        <h2 className="mt-11 scroll-mt-24 text-xl font-semibold tracking-tight text-ink">
+        // Anchored so the "on this page" rail can jump to it.
+        <h2
+          id={headingId(block.text)}
+          className="mt-11 scroll-mt-24 text-xl font-semibold tracking-tight text-ink"
+        >
           {renderInline(block.text, `h${index}`)}
         </h2>
       ) : (

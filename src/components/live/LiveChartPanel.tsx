@@ -25,17 +25,37 @@ type Market =
   | { kind: "fx"; pair: FxPair }
   | { kind: "stock"; symbol: StockSymbol };
 
-const MARKETS: Market[] = [
-  { kind: "crypto", symbol: "BTC" },
-  { kind: "crypto", symbol: "ETH" },
-  { kind: "crypto", symbol: "SOL" },
-  { kind: "fx", pair: "EUR/USD" },
-  { kind: "fx", pair: "GBP/USD" },
-  { kind: "fx", pair: "USD/JPY" },
-  ...(Object.keys(STOCK_SYMBOLS) as StockSymbol[]).map(
-    (symbol) => ({ kind: "stock", symbol }) as const,
-  ),
+/**
+ * Grouped by asset class rather than presented as one flat row. Eleven
+ * undifferentiated tickers read as noise; the group labels also tell you why
+ * the controls change between them — FX has no candles, stocks need a server.
+ */
+const MARKET_GROUPS: { label: string; markets: Market[] }[] = [
+  {
+    label: "Crypto",
+    markets: [
+      { kind: "crypto", symbol: "BTC" },
+      { kind: "crypto", symbol: "ETH" },
+      { kind: "crypto", symbol: "SOL" },
+    ],
+  },
+  {
+    label: "FX",
+    markets: [
+      { kind: "fx", pair: "EUR/USD" },
+      { kind: "fx", pair: "GBP/USD" },
+      { kind: "fx", pair: "USD/JPY" },
+    ],
+  },
+  {
+    label: "Stocks & ETFs",
+    markets: (Object.keys(STOCK_SYMBOLS) as StockSymbol[]).map(
+      (symbol) => ({ kind: "stock", symbol }) as const,
+    ),
+  },
 ];
+
+const MARKETS: Market[] = MARKET_GROUPS.flatMap((g) => g.markets);
 
 const INTERVALS: LiveInterval[] = ["1h", "4h", "1d"];
 
@@ -131,26 +151,36 @@ export function LiveChartPanel() {
           </div>
         </div>
 
-        <div className="mt-3 flex flex-wrap gap-1.5">
-          {MARKETS.map((m) => {
-            const active = marketKey(m) === marketKey(market);
-            return (
-              <button
-                key={marketKey(m)}
-                onClick={() => setMarket(m)}
-                className={`rounded-md border px-2.5 py-1.5 font-mono text-2xs transition-colors ${
-                  active
-                    ? "border-accent/50 bg-accent-soft text-ink"
-                    : "border-line bg-raised text-muted hover:border-line-strong hover:text-ink"
-                }`}
-              >
-                {marketKey(m)}
-              </button>
-            );
-          })}
+        <div className="mt-3 space-y-2 sm:space-y-1.5">
+          {MARKET_GROUPS.map((group) => (
+            <div key={group.label} className="flex flex-wrap items-center gap-1.5">
+              {/* Full width on a phone so the label never wraps mid-group and
+                  strands the last ticker on a row of its own. */}
+              <span className="eyebrow w-full shrink-0 sm:w-28">{group.label}</span>
+              {group.markets.map((m) => {
+                const active = marketKey(m) === marketKey(market);
+                return (
+                  <button
+                    key={marketKey(m)}
+                    onClick={() => setMarket(m)}
+                    aria-pressed={active}
+                    className={`rounded-md border px-2.5 py-1.5 font-mono text-2xs transition-colors ${
+                      active
+                        ? "border-accent/50 bg-accent-soft text-ink"
+                        : "border-line bg-raised text-muted hover:border-line-strong hover:text-ink"
+                    }`}
+                  >
+                    {marketKey(m)}
+                  </button>
+                );
+              })}
+            </div>
+          ))}
         </div>
 
-        <div className="mt-2 flex flex-wrap items-center gap-1.5">
+        {/* Ruled off from the market groups above: without it the interval row
+            read as a fourth asset class. */}
+        <div className="mt-3 flex flex-wrap items-center gap-1.5 border-t border-line pt-3">
           {hasCandles ? (
             INTERVALS.map((i) => (
               <button

@@ -80,7 +80,18 @@ export function ActivityChart({ data }: { data: WeekPoint[] }) {
               formatter={(v: number) => [`${v} ${v === 1 ? "day" : "days"}`, "Studied"]}
               labelFormatter={(_, p) => p?.[0]?.payload?.range ?? ""}
             />
-            <Bar dataKey="days" fill={accent} radius={[4, 4, 0, 0]} maxBarSize={22} />
+            {/* Empty weeks are common early on, and without a track the chart
+                read as a half-drawn axis rather than "twelve weeks, three of
+                them studied". The track is deliberately a track and not a
+                minimum-height stub: a stub on a zero week would draw a bar
+                where there is no data. */}
+            <Bar
+              dataKey="days"
+              fill={accent}
+              radius={[4, 4, 0, 0]}
+              maxBarSize={22}
+              background={{ fill: line, opacity: 0.45, radius: 4 }}
+            />
           </BarChart>
         </ResponsiveContainer>
       </div>

@@ -25,36 +25,41 @@ export default function LivePage() {
         </p>
       </header>
 
-      <div className="mt-6 grid gap-3 sm:grid-cols-2">
-        <div className="rounded-lg border border-accent/35 bg-accent-soft/40 px-4 py-3.5">
-          <p className="eyebrow text-accent">How to use this</p>
-          <p className="mt-1.5 text-sm leading-relaxed text-ink/90">
-            Mark the structure before you read the news, not after. Find the swing highs and lows,
-            the levels price keeps reacting to, whether volume confirms the last move. Then check
-            the wire. Doing it in that order is the whole exercise — it&rsquo;s how you learn
-            whether you&rsquo;re reading the chart or reading your feelings.
-          </p>
+      {/* On a phone the guidance cards pushed the charts a full screen and a half
+          below the fold — the one thing the page exists for. They read before the
+          charts on desktop, after them on mobile. */}
+      <div className="mt-6 flex flex-col gap-6">
+        <div className="order-2 grid gap-3 sm:grid-cols-2 lg:order-1">
+          <div className="rounded-lg border border-accent/35 bg-accent-soft/40 px-4 py-3.5">
+            <p className="eyebrow text-accent">How to use this</p>
+            <p className="mt-1.5 text-sm leading-relaxed text-ink/90">
+              Mark the structure before you read the news, not after. Find the swing highs and lows,
+              the levels price keeps reacting to, whether volume confirms the last move. Then check
+              the wire. Doing it in that order is the whole exercise — it&rsquo;s how you learn
+              whether you&rsquo;re reading the chart or reading your feelings.
+            </p>
+          </div>
+          <div className="rounded-lg border border-line bg-surface px-4 py-3.5">
+            <p className="eyebrow">Still not a trading tool</p>
+            <p className="mt-1.5 text-sm leading-relaxed text-muted">
+              There&rsquo;s no order ticket here and there never will be. Live data is for
+              practising the reading, and the{" "}
+              <Link href="/learn/risk/following-others" className="link">
+                signals lesson
+              </Link>{" "}
+              explains why a chart plus a headline is not a reason to act. Decisions come from a{" "}
+              <Link href="/learn/strategy/trading-plan" className="link">
+                written plan
+              </Link>
+              , not from a screen.
+            </p>
+          </div>
         </div>
-        <div className="rounded-lg border border-line bg-surface px-4 py-3.5">
-          <p className="eyebrow">Still not a trading tool</p>
-          <p className="mt-1.5 text-sm leading-relaxed text-muted">
-            There&rsquo;s no order ticket here and there never will be. Live data is for practising
-            the reading, and the{" "}
-            <Link href="/learn/risk/following-others" className="link">
-              signals lesson
-            </Link>{" "}
-            explains why a chart plus a headline is not a reason to act. Decisions come from a{" "}
-            <Link href="/learn/strategy/trading-plan" className="link">
-              written plan
-            </Link>
-            , not from a screen.
-          </p>
-        </div>
-      </div>
 
-      <div className="mt-6 grid gap-4 lg:grid-cols-[1.55fr_1fr]">
-        <LiveChartPanel />
-        <LiveWire />
+        <div className="order-1 grid gap-4 lg:order-2 lg:grid-cols-[1.55fr_1fr]">
+          <LiveChartPanel />
+          <LiveWire />
+        </div>
       </div>
 
       <p className="mt-8 rounded-lg border border-line bg-raised/40 px-4 py-3 text-xs leading-relaxed text-faint">
