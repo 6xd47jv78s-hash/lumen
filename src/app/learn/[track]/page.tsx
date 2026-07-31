@@ -28,7 +28,10 @@ export default function TrackPage({ params }: Params) {
   const nextTrack = ORDERED_TRACKS[idx + 1];
 
   return (
-    <div className="mx-auto max-w-[86rem] px-4 py-10 sm:px-6 lg:py-14">
+    // A track page is a table of contents — one column of rows. At the site's
+    // full 86rem a lesson title sat a thousand pixels from its own duration,
+    // with nothing in between to carry the eye across.
+    <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:py-14">
       <Link href="/learn" className="eyebrow transition-colors hover:text-accent">
         ← All courses
       </Link>

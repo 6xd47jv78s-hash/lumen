@@ -52,7 +52,9 @@ export default function LessonPage({ params }: Params) {
           <span className="eyebrow">
             {module.title} · {position} of {module.lessons.length}
           </span>
-          <span className="ml-auto font-mono text-2xs text-faint tnum">
+          {/* Right-aligned only once it shares a line with the breadcrumb; on a
+              phone it wraps, and a lone right-floated figure read as detached. */}
+          <span className="font-mono text-2xs text-faint tnum sm:ml-auto">
             {lesson.minutes} min read
           </span>
         </div>
