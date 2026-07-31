@@ -43,9 +43,11 @@ export const useTheme = create<ThemeState>()(
   ),
 );
 
-function applyTheme(t: Theme) {
+export function applyTheme(t: Theme) {
   if (typeof document === "undefined") return;
-  document.documentElement.classList.toggle("dark", t === "dark");
+  // Light is the opt-in class, not dark — see the note in globals.css. Anything
+  // that renders without the boot script must land on dark, the real default.
+  document.documentElement.classList.toggle("light", t === "light");
   document.documentElement.style.colorScheme = t;
   // Charts read their palette from CSS variables; tell them to re-read.
   window.dispatchEvent(new CustomEvent("marketlab:theme", { detail: t }));
@@ -54,5 +56,9 @@ function applyTheme(t: Theme) {
 /**
  * Runs before first paint so a returning light-mode user never sees a dark
  * flash. Kept in sync with THEME_KEY above.
+ *
+ * It only ever *adds* the light class. If it throws, or never runs at all, the
+ * page stays dark — which is the default anyway, so the failure is invisible
+ * rather than a full inversion.
  */
-export const THEME_BOOT_SCRIPT = `(function(){try{var s=localStorage.getItem('${THEME_KEY}');var t=s?JSON.parse(s).state.theme:'dark';if(t!=='light'){document.documentElement.classList.add('dark');}document.documentElement.style.colorScheme=t;}catch(e){document.documentElement.classList.add('dark');}})();`;
+export const THEME_BOOT_SCRIPT = `(function(){try{var s=localStorage.getItem('${THEME_KEY}');var t=s?JSON.parse(s).state.theme:'dark';if(t==='light'){document.documentElement.classList.add('light');}document.documentElement.style.colorScheme=t;}catch(e){}})();`;

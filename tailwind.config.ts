@@ -9,7 +9,12 @@ import type { Config } from "tailwindcss";
  * and red keep their meaning when a student sees them.
  */
 const config: Config = {
-  darkMode: "class",
+  // Dark is the unclassed default and `.light` is the opt-in (see globals.css),
+  // so the plain "class" strategy would key `dark:` variants off a class that
+  // never exists. Nothing uses `dark:` today — the themes are entirely CSS
+  // custom properties — but this keeps the first one that does from silently
+  // never matching.
+  darkMode: ["selector", "html:not(.light)"],
   content: ["./src/**/*.{ts,tsx}"],
   theme: {
     extend: {

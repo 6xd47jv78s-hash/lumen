@@ -9,25 +9,18 @@
     --font-mono: ui-monospace, "SF Mono", SFMono-Regular, "JetBrains Mono",
       "Roboto Mono", Menlo, Consolas, monospace;
 
-    /* Light theme — paper, for daytime reading. */
-    --c-base: 250 251 253;
-    --c-surface: 255 255 255;
-    --c-raised: 244 246 250;
-    --c-line: 226 231 239;
-    --c-line-strong: 203 211 224;
-    --c-ink: 13 18 28;
-    --c-muted: 88 99 118;
-    --c-faint: 133 143 161;
-    --c-accent: 21 101 216;
-    --c-accent-soft: 224 235 253;
-    --c-signal: 176 106 6;
-    --c-up: 13 138 118;
-    --c-down: 199 52 48;
-  }
+    /* Dark theme — the default, and deliberately the *unclassed* one.
+       Light mode opts in with `.light` rather than dark opting in with `.dark`,
+       so that anything which renders without the pre-paint boot script falls
+       back to the theme the site actually defaults to. That is not
+       hypothetical: `notFound()` from a nested route renders inside Next's
+       `__next_error__` shell, which discards the root layout's <head> and with
+       it the boot script. Under the old polarity a mistyped lesson URL threw a
+       dark-mode reader into a white page. Same for JS being off entirely.
 
-  .dark {
-    /* Dark theme — the default. Terminal, not black-hole: panels lift off the
-       background so dense data tables stay readable. */
+       Terminal, not black-hole: panels lift off the background so dense data
+       tables stay readable. */
+    color-scheme: dark;
     --c-base: 9 11 16;
     --c-surface: 16 19 26;
     --c-raised: 23 27 36;
@@ -41,6 +34,26 @@
     --c-signal: 232 168 56;
     --c-up: 38 166 154;
     --c-down: 239 83 80;
+  }
+
+  .light {
+    /* Light theme — paper, for daytime reading. Declared in CSS as well as from
+       the store so scrollbars and the glossary's search input follow the theme
+       even before (or without) any script running. */
+    color-scheme: light;
+    --c-base: 250 251 253;
+    --c-surface: 255 255 255;
+    --c-raised: 244 246 250;
+    --c-line: 226 231 239;
+    --c-line-strong: 203 211 224;
+    --c-ink: 13 18 28;
+    --c-muted: 88 99 118;
+    --c-faint: 133 143 161;
+    --c-accent: 21 101 216;
+    --c-accent-soft: 224 235 253;
+    --c-signal: 176 106 6;
+    --c-up: 13 138 118;
+    --c-down: 199 52 48;
   }
 
   html {
