@@ -643,7 +643,7 @@ export const GLOSSARY: GlossaryEntry[] = [
   },
   {
     term: "Indicator",
-    aliases: ["indicators", "oscillator", "RSI"],
+    aliases: ["indicators", "oscillator", "RSI", "MACD", "Bollinger Bands"],
     category: "Chart reading",
     definition:
       "A calculation derived from price and/or volume, plotted to make a specific property (momentum, volatility, trend) easier to see.",

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { SearchDialog } from "@/components/search/SearchDialog";
 import { useProgress } from "@/store/progress";
 import { useTheme } from "@/store/theme";
 import { NextEvent } from "./NextEvent";
@@ -54,6 +55,7 @@ export function Nav() {
         <div className="ml-auto flex items-center gap-1.5">
           <NextEvent />
           <Streak />
+          <SearchDialog />
           <ThemeToggle />
           <button
             onClick={() => setOpen((o) => !o)}
